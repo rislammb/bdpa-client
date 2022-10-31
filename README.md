@@ -2,4 +2,4 @@
 
 ### For open live
 
-[Click](https://bdpa.hetlify.app)
+[Click](https://bdpa.netlify.app)
