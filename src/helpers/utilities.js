@@ -5,13 +5,9 @@ import { divisions } from '../constants/divisions';
 import { upazilas } from '../constants/upazilas';
 
 export const arraySortByDate = (array) => {
-  return array
-    .sort((a, b) =>
-      a.dateOfJoin > b.dateOfJoin ? 1 : a.dateOfJoin < b.dateOfJoin ? -1 : 0
-    )
-    .sort((a, b) =>
-      a.dateOfBirth > b.dateOfBirth ? 1 : a.dateOfBirth < b.dateOfBirth ? -1 : 0
-    );
+  return array.sort((a, b) =>
+    a.dateOfJoin > b.dateOfJoin ? 1 : a.dateOfJoin < b.dateOfJoin ? -1 : 0
+  );
 };
 
 export const pharmacistFromState = (
