@@ -2,27 +2,53 @@ import Close from '@mui/icons-material/Close';
 import Done from '@mui/icons-material/Done';
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import { IconButton, TableCell, TableRow, TextField } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import DatePickerComp from './DatePickerComp';
 
-const DetailsTableRow = ({ row }) => {
+import { axiosInstance } from '../config';
+
+const DetailsTableRow = ({ row, pharmacist }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(null);
 
   const handleIsEditOpen = () => {
     if (isEditOpen) {
+      setInputValue(row.td);
       setIsEditOpen(false);
-      setInputValue('');
     } else {
       setIsEditOpen(true);
-      setInputValue(row.td);
+    }
+  };
+
+  const handleChange = (e, name) => {
+    if (name === 'dateOfBirth' || name === 'dateOfJoin') {
+      setInputValue(e);
+    } else {
+      setInputValue(e.target.value);
     }
   };
 
   const handleSubmit = () => {
-    console.log(inputValue);
-    setIsEditOpen(false);
-    alert('This part is in progress. Try again later!');
+    if (inputValue !== row.td) {
+      axiosInstance
+        .put(`/list/${pharmacist.regNumber}`, { [row.name]: inputValue })
+        .then(() => {
+          setIsEditOpen(false);
+        })
+        .catch((e) => {
+          setIsEditOpen(false);
+          setInputValue(row.td);
+          alert("Data doesn't update!");
+          console.log('Error', e);
+        });
+    } else {
+      setIsEditOpen(false);
+    }
   };
+
+  useEffect(() => {
+    setInputValue(row.td);
+  }, [row.td]);
 
   return (
     <TableRow
@@ -48,14 +74,24 @@ const DetailsTableRow = ({ row }) => {
       </TableCell>
       <TableCell sx={{ padding: { xs: '5px 8px', sm: '6px 16px' } }}>
         {isEditOpen ? (
-          <TextField
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            variant='standard'
-            sx={{ width: '100%' }}
-          />
+          row.type === 'text' ? (
+            <TextField
+              value={inputValue}
+              onChange={handleChange}
+              variant='standard'
+              sx={{ width: '100%' }}
+            />
+          ) : row.type === 'date' ? (
+            <DatePickerComp
+              name={row.name}
+              value={inputValue}
+              onChange={handleChange}
+            />
+          ) : (
+            <p>This part is in progress</p>
+          )
         ) : (
-          row.td
+          inputValue
         )}
       </TableCell>
       <TableCell

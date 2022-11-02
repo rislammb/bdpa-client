@@ -12,7 +12,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import DetailsTableRow from '../components/DetailsTableRow';
 import { axiosInstance } from '../config';
 
-const createRow = (name, value, edit) => ({ th: name, td: value, edit });
+const createRow = (th, value, name, type, edit) => ({
+  th,
+  td: value,
+  name,
+  type,
+  edit,
+});
 
 const DetailsTable = () => {
   const navigate = useNavigate();
@@ -24,53 +30,91 @@ const DetailsTable = () => {
   useEffect(() => {
     if (pharmacist) {
       const rows = [
-        createRow('Registration Number', pharmacist.regNumber, false),
-        createRow('Name (English)', pharmacist.name, true),
-        createRow('Name (Bengali)', pharmacist.bn_name, true),
-        createRow('Email', pharmacist.email, false),
-        createRow('Mobile', pharmacist.mobile, true),
-        createRow('Gender', pharmacist.gender, true),
+        createRow(
+          'Registration Number',
+          pharmacist.regNumber || '',
+          'regNumber',
+          '',
+          false
+        ),
+        createRow(
+          'Name (English)',
+          pharmacist.name || '',
+          'name',
+          'text',
+          true
+        ),
+        createRow(
+          'Name (Bengali)',
+          pharmacist.bn_name || '',
+          'bn_name',
+          'text',
+          true
+        ),
+        createRow('Email', pharmacist.email || '', 'email', 'text', false),
+        createRow('Mobile', pharmacist.mobile || '', 'mobile', 'text', true),
+        createRow('Gender', pharmacist.gender || '', 'gender', 'select', true),
         createRow(
           'Date of Birth',
-          dayjs(pharmacist.dateOfBirth).format('DD MMM YYYY'),
+          dayjs(pharmacist.dateOfBirth).format('DD MMM YYYY') || '',
+          'dateOfBirth',
+          'date',
           true
         ),
-        createRow('Passing Year', pharmacist.passingYear, true),
+        createRow(
+          'Passing Year',
+          pharmacist.passingYear || '',
+          'passingYear',
+          'text',
+          true
+        ),
         createRow(
           'Date of Join',
-          dayjs(pharmacist.dateOfJoin).format('DD MMM YYYY'),
+          dayjs(pharmacist.dateOfJoin).format('DD MMM YYYY') || '',
+          'dateOfJoin',
+          'date',
           true
         ),
-        createRow('Job Depertment', pharmacist.jobDepertment, true),
+        createRow(
+          'Job Depertment',
+          pharmacist.jobDepertment || '',
+          'jobDepertment',
+          'select',
+          true
+        ),
         createRow(
           'Main Posting',
           `${pharmacist.postingPlace ? `${pharmacist.postingPlace}, ` : ''}${
-            pharmacist.postingUpazila.name
-              ? `${pharmacist.postingUpazila.name}, `
+            pharmacist.postingUpazila?.name
+              ? `${pharmacist.postingUpazila?.name}, `
               : ''
           }${
-            pharmacist.postingDistrict.name
-              ? pharmacist.postingDistrict.name
+            pharmacist.postingDistrict?.name
+              ? pharmacist.postingDistrict?.name
               : ''
           }`,
+          'mainPosting',
           false
         ),
         createRow(
           'Voter Area',
           `${
-            pharmacist.voterDistrict.name
-              ? `${pharmacist.voterDistrict.name}, `
+            pharmacist.voterDistrict?.name
+              ? `${pharmacist.voterDistrict?.name}, `
               : ''
           }${
-            pharmacist.voterDivision.name
-              ? `${pharmacist.voterDivision.name} Division`
+            pharmacist.voterDivision?.name
+              ? `${pharmacist.voterDivision?.name} Division`
               : ''
           }`,
+          'voterArea',
           true
         ),
         createRow(
           'On Deputation',
           pharmacist.onDeputation ? 'Yes' : 'No',
+          'onDeputation',
+          'select',
           true
         ),
       ];
@@ -83,14 +127,15 @@ const DetailsTable = () => {
                 ? `${pharmacist.deputationPlace}, `
                 : ''
             }${
-              pharmacist.deputationUpazila.name
-                ? `${pharmacist.deputationUpazila.name}, `
+              pharmacist.deputationUpazila?.name
+                ? `${pharmacist.deputationUpazila?.name}, `
                 : ''
             }${
-              pharmacist.deputationDistrict.name
-                ? pharmacist.deputationDistrict.name
+              pharmacist.deputationDistrict?.name
+                ? pharmacist.deputationDistrict?.name
                 : ''
             }`,
+            'deputationPosting',
             true
           )
         );
@@ -128,6 +173,16 @@ const DetailsTable = () => {
         setLoading(false);
         setPharmacist(null);
       });
+    // setPharmacist({
+    //   regNumber: 'B-9239',
+    //   name: 'hsdsjd',
+    //   email: 'djsdksdlsd@co',
+    //   mobile: 'dsds',
+    //   gender: 'Male',
+    //   dateOfBirth: '',
+    //   dateOfJoin: '',
+    // });
+    // setLoading(false);
   }, [regNumber]);
 
   return loading ? (
@@ -146,7 +201,11 @@ const DetailsTable = () => {
           {pharmacist && tableRows.length > 0 ? (
             <>
               {tableRows.map((row) => (
-                <DetailsTableRow key={row.th} row={row} />
+                <DetailsTableRow
+                  key={row.th}
+                  row={row}
+                  pharmacist={pharmacist}
+                />
               ))}
               <TableRow sx={{ border: 0 }}>
                 <TableCell
