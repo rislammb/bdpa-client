@@ -1,14 +1,8 @@
 import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useEffect } from 'react';
-import { axiosInstance } from '../config';
 
 const Home = () => {
   const theme = useTheme();
-
-  useEffect(() => {
-    axiosInstance.get('/');
-  }, []);
 
   return (
     <Box sx={{ my: 3, mx: 1 }}>

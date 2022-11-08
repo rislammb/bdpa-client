@@ -5,15 +5,32 @@ import { IconButton, TableCell, TableRow, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import DatePickerComp from './DatePickerComp';
 
+import dayjs from 'dayjs';
 import { axiosInstance } from '../config';
+import {
+  changeHandlerForPostingGroup,
+  postingFieldsFromPharmacist,
+  postingValueFromState,
+} from '../helpers/utilities';
+import PostingGroup from './PostingGroup';
 
 const DetailsTableRow = ({ row, pharmacist }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [inputValue, setInputValue] = useState(null);
+  const [postingFields, setPostingFields] = useState(
+    postingFieldsFromPharmacist(pharmacist)
+  );
+  const postingFieldsArray = Object.keys(postingFields).reduce((acc, cur) => {
+    acc.push(postingFields[cur]);
+    return acc;
+  }, []);
+  const [error, setError] = useState({});
 
   const handleIsEditOpen = () => {
+    setError({});
     if (isEditOpen) {
       setInputValue(row.td);
+      postingFieldsFromPharmacist(pharmacist);
       setIsEditOpen(false);
     } else {
       setIsEditOpen(true);
@@ -28,21 +45,60 @@ const DetailsTableRow = ({ row, pharmacist }) => {
     }
   };
 
+  const handlePostingChange = (e) => {
+    setPostingFields((prevState) => {
+      return changeHandlerForPostingGroup(
+        prevState,
+        e.target.name,
+        e.target.value
+      );
+    });
+  };
+
   const handleSubmit = () => {
-    if (inputValue !== row.td) {
+    setError({});
+    if (row.name === 'mainPosting') {
+      const editedPostingData = postingValueFromState(postingFields);
+      axiosInstance
+        .put(`/list/${pharmacist.regNumber}`, editedPostingData)
+        .then((res) => {
+          setInputValue(
+            `${
+              editedPostingData.postingPlace
+                ? `${editedPostingData.postingPlace}, `
+                : ''
+            }${
+              editedPostingData.postingUpazila?.name
+                ? `${editedPostingData.postingUpazila?.name}, `
+                : ''
+            }${
+              editedPostingData.postingDistrict?.name
+                ? editedPostingData.postingDistrict?.name
+                : ''
+            }`
+          );
+        })
+        .then(() => setIsEditOpen(false))
+        .catch((e) => {
+          if (typeof e.response.data === 'object') {
+            setError(e.response.data);
+          }
+          setIsEditOpen(false);
+          setInputValue(row.td);
+        });
+    } else {
       axiosInstance
         .put(`/list/${pharmacist.regNumber}`, { [row.name]: inputValue })
         .then(() => {
           setIsEditOpen(false);
         })
         .catch((e) => {
+          if (typeof e.response.data === 'object') {
+            setError(e.response.data);
+          }
           setIsEditOpen(false);
           setInputValue(row.td);
-          alert("Data doesn't update!");
-          console.log('Error', e);
         });
-    } else {
-      setIsEditOpen(false);
     }
   };
 
@@ -79,7 +135,9 @@ const DetailsTableRow = ({ row, pharmacist }) => {
               value={inputValue}
               onChange={handleChange}
               variant='standard'
+              error={error[row.name] ? true : false}
               sx={{ width: '100%' }}
+              helperText={error[row.name] || ''}
             />
           ) : row.type === 'date' ? (
             <DatePickerComp
@@ -87,9 +145,17 @@ const DetailsTableRow = ({ row, pharmacist }) => {
               value={inputValue}
               onChange={handleChange}
             />
+          ) : row.name === 'mainPosting' ? (
+            <PostingGroup
+              postingInfo={postingFieldsArray}
+              onChange={handlePostingChange}
+              error={{}}
+            />
           ) : (
             <p>This part is in progress</p>
           )
+        ) : row.type === 'date' ? (
+          dayjs(inputValue).format('DD MMM YYYY')
         ) : (
           inputValue
         )}
@@ -123,7 +189,7 @@ const DetailsTableRow = ({ row, pharmacist }) => {
                 sx={{ textAlign: 'center' }}
                 edge='end'
                 aria-label='edit'
-                onClick={handleIsEditOpen}
+                onClick={() => handleIsEditOpen(row.name)}
                 disabled={!row.edit}
               >
                 <EditOutlined />

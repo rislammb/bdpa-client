@@ -51,7 +51,7 @@ const DetailsTable = () => {
           'text',
           true
         ),
-        createRow('Email', pharmacist.email || '', 'email', 'text', false),
+        createRow('Email', pharmacist.email || '', 'email', 'text', true),
         createRow('Mobile', pharmacist.mobile || '', 'mobile', 'text', true),
         createRow('Gender', pharmacist.gender || '', 'gender', 'select', true),
         createRow(
@@ -94,7 +94,8 @@ const DetailsTable = () => {
               : ''
           }`,
           'mainPosting',
-          false
+          'select',
+          true
         ),
         createRow(
           'Voter Area',
@@ -198,31 +199,43 @@ const DetailsTable = () => {
     >
       <Table size='small'>
         <TableBody>
-          {pharmacist && tableRows.length > 0 ? (
-            <>
-              {tableRows.map((row) => (
-                <DetailsTableRow
-                  key={row.th}
-                  row={row}
-                  pharmacist={pharmacist}
-                />
-              ))}
-              <TableRow sx={{ border: 0 }}>
-                <TableCell
-                  colSpan={3}
-                  sx={{ padding: 1.5, textAlign: 'center' }}
-                >
-                  <Button
-                    onClick={handleDelete}
-                    variant='contained'
-                    startIcon={<DeleteIcon />}
-                    color='error'
+          {pharmacist ? (
+            tableRows.length > 0 ? (
+              <>
+                {tableRows.map((row) => (
+                  <DetailsTableRow
+                    key={row.th}
+                    row={row}
+                    pharmacist={pharmacist}
+                  />
+                ))}
+                <TableRow sx={{ border: 0 }}>
+                  <TableCell
+                    colSpan={3}
+                    sx={{ padding: 1.5, textAlign: 'center' }}
                   >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            </>
+                    <Button
+                      onClick={handleDelete}
+                      variant='contained'
+                      startIcon={<DeleteIcon />}
+                      color='error'
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              </>
+            ) : (
+              [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map((num) => (
+                <TableRow key={num}>
+                  <TableCell
+                    sx={{
+                      padding: 2.3,
+                    }}
+                  ></TableCell>
+                </TableRow>
+              ))
+            )
           ) : (
             <TableRow>
               <TableCell

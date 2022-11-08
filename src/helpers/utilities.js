@@ -1,4 +1,5 @@
 import { genderOptions } from '../constants/addFormFields';
+import { addPostingFields } from '../constants/addPostingFields';
 import { depertmentOptions } from '../constants/depertmentOptions';
 import { districts } from '../constants/districts';
 import { divisions } from '../constants/divisions';
@@ -10,29 +11,95 @@ export const arraySortByDate = (array) => {
   );
 };
 
-export const pharmacistFromState = (
-  formFields,
-  postingFields,
-  voterArea,
-  onDeputation,
-  deputationFields
-) => {
-  const formValues = Object.keys(formFields).reduce((acc, cur) => {
-    if (cur === 'gender') {
-      const gender = genderOptions.find(
-        (item) => item.id === formFields[cur].value
-      );
-      acc[cur] = gender ? gender.name : '';
-    } else if (cur === 'jobDepertment') {
-      const depertment = depertmentOptions.find(
-        (item) => item.id === formFields[cur].value
-      );
-      acc[cur] = depertment ? depertment.name : '';
-    } else acc[cur] = formFields[cur].value;
-    return acc;
-  }, {});
+export const postingFieldsFromPharmacist = (pharmacist) => {
+  return {
+    ...Object.keys({ ...addPostingFields }).reduce((acc, cur) => {
+      acc[cur] = { ...addPostingFields[cur] };
+      if (cur === 'postingDivision') {
+        if (pharmacist[cur].id) {
+          acc[cur].value = pharmacist[cur].id;
+        }
+      } else if (cur === 'postingDistrict') {
+        if (pharmacist[cur].id) {
+          acc[cur].options = [
+            ...addPostingFields[cur].options,
+            ...districts.filter(
+              (district) =>
+                district.division_id === pharmacist['postingDivision'].id
+            ),
+          ];
+          acc[cur].value = pharmacist[cur].id;
+        }
+      } else if (cur === 'postingUpazila') {
+        if (pharmacist[cur].id) {
+          acc[cur].options = [
+            ...addPostingFields[cur].options,
+            ...upazilas.filter(
+              (upazila) =>
+                upazila.district_id === pharmacist['postingDistrict'].id
+            ),
+          ];
+          acc[cur].value = pharmacist[cur].id;
+        }
+      } else {
+        acc[cur].value = pharmacist[cur] || '';
+      }
+      return acc;
+    }, {}),
+  };
+};
 
-  const postingValues = Object.keys(postingFields).reduce((acc, cur) => {
+export const changeHandlerForPostingGroup = (prevState, name, value) => {
+  if (name === 'postingDivision') {
+    return {
+      ...prevState,
+      [name]: {
+        ...prevState[name],
+        value: value,
+      },
+      postingDistrict: {
+        ...prevState['postingDistrict'],
+        options: [
+          ...addPostingFields['postingDistrict'].options,
+          ...districts.filter((district) => district.division_id === value),
+        ],
+        value: '0',
+      },
+      postingUpazila: {
+        ...prevState['postingUpazila'],
+        options: [...addPostingFields['postingUpazila'].options],
+        value: '0',
+      },
+    };
+  } else if (name === 'postingDistrict') {
+    return {
+      ...prevState,
+      [name]: {
+        ...prevState[name],
+        value: value,
+      },
+      postingUpazila: {
+        ...prevState['postingUpazila'],
+        options: [
+          ...addPostingFields['postingUpazila'].options,
+          ...upazilas.filter((upazila) => upazila.district_id === value),
+        ],
+        value: '0',
+      },
+    };
+  } else {
+    return {
+      ...prevState,
+      [name]: {
+        ...prevState[name],
+        value: value,
+      },
+    };
+  }
+};
+
+export const postingValueFromState = (postingFields) => {
+  return Object.keys(postingFields).reduce((acc, cur) => {
     if (cur === 'postingDivision') {
       const division = divisions.find(
         (item) => item.id === postingFields[cur].value
@@ -66,6 +133,31 @@ export const pharmacistFromState = (
     } else acc[cur] = postingFields[cur].value;
     return acc;
   }, {});
+};
+
+export const pharmacistFromState = (
+  formFields,
+  postingFields,
+  voterArea,
+  onDeputation,
+  deputationFields
+) => {
+  const formValues = Object.keys(formFields).reduce((acc, cur) => {
+    if (cur === 'gender') {
+      const gender = genderOptions.find(
+        (item) => item.id === formFields[cur].value
+      );
+      acc[cur] = gender ? gender.name : '';
+    } else if (cur === 'jobDepertment') {
+      const depertment = depertmentOptions.find(
+        (item) => item.id === formFields[cur].value
+      );
+      acc[cur] = depertment ? depertment.name : '';
+    } else acc[cur] = formFields[cur].value;
+    return acc;
+  }, {});
+
+  const postingValues = postingValueFromState(postingFields);
 
   const voterAreaValues = Object.keys(voterArea).reduce((acc, cur) => {
     if (cur === 'voterDivision') {
