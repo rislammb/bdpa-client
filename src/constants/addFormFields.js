@@ -1,9 +1,5 @@
-import { depertmentOptions } from './depertmentOptions';
-export const genderOptions = [
-  { id: '1', name: 'Male' },
-  { id: '2', name: 'Female' },
-  { id: '3', name: 'Other' },
-];
+import { genderField } from './gender';
+import { jobDepertmentField } from './jobDepertment';
 
 export const addFormFields = {
   regNumber: {
@@ -47,14 +43,7 @@ export const addFormFields = {
     label: 'Date of Birth',
     value: new Date(),
   },
-  gender: {
-    type: 'select',
-    options: [{ id: '0', name: '--- Select ---' }, ...genderOptions],
-    name: 'gender',
-    label: 'Gender',
-    placeholder: 'Male',
-    value: '0',
-  },
+  gender: { ...genderField },
   passingYear: {
     type: 'text',
     name: 'passingYear',
@@ -68,17 +57,5 @@ export const addFormFields = {
     label: 'Date of Join',
     value: new Date(),
   },
-  jobDepertment: {
-    type: 'select',
-    options: [
-      {
-        id: '0',
-        name: '--- Select ---',
-      },
-      ...depertmentOptions,
-    ],
-    name: 'jobDepertment',
-    label: 'Job Depertment',
-    value: '0',
-  },
+  jobDepertment: { ...jobDepertmentField },
 };

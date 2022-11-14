@@ -1,4 +1,4 @@
-export const depertmentOptions = [
+export const jobDepertmentOptions = [
   {
     id: '1',
     name: 'Directorate General of Family Planning',
@@ -15,3 +15,17 @@ export const depertmentOptions = [
   },
   { id: '5', name: 'Bangladesh Police' },
 ];
+
+export const jobDepertmentField = {
+  type: 'select',
+  options: [
+    {
+      id: '0',
+      name: '--- Select ---',
+    },
+    ...jobDepertmentOptions,
+  ],
+  name: 'jobDepertment',
+  label: 'Job Depertment',
+  value: '0',
+};

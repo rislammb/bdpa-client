@@ -109,6 +109,7 @@ const DetailsTable = () => {
               : ''
           }`,
           'voterArea',
+          'select',
           true
         ),
         createRow(
@@ -226,11 +227,11 @@ const DetailsTable = () => {
                 </TableRow>
               </>
             ) : (
-              [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map((num) => (
+              [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((num) => (
                 <TableRow key={num}>
                   <TableCell
                     sx={{
-                      padding: 2.3,
+                      padding: 3,
                     }}
                   ></TableCell>
                 </TableRow>

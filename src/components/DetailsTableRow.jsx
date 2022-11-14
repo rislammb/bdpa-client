@@ -7,32 +7,41 @@ import DatePickerComp from './DatePickerComp';
 
 import dayjs from 'dayjs';
 import { axiosInstance } from '../config';
+import { genderField, genderOptions } from '../constants/gender';
+import {
+  jobDepertmentField,
+  jobDepertmentOptions,
+} from '../constants/jobDepertment';
 import {
   changeHandlerForPostingGroup,
   postingFieldsFromPharmacist,
   postingValueFromState,
 } from '../helpers/utilities';
 import PostingGroup from './PostingGroup';
+import SelectComponent from './SelectComponent';
 
 const DetailsTableRow = ({ row, pharmacist }) => {
+  const [tableData, setTableData] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [inputValue, setInputValue] = useState(null);
-  const [postingFields, setPostingFields] = useState(
-    postingFieldsFromPharmacist(pharmacist)
-  );
-  const postingFieldsArray = Object.keys(postingFields).reduce((acc, cur) => {
-    acc.push(postingFields[cur]);
-    return acc;
-  }, []);
+  const [gender, setGender] = useState(null);
+  const [jobDepertment, setJobDepertment] = useState(null);
+  const [postingFields, setPostingFields] = useState(null);
+  const postingFieldsArray =
+    postingFields &&
+    Object.keys(postingFields).reduce((acc, cur) => {
+      acc.push(postingFields[cur]);
+      return acc;
+    }, []);
   const [error, setError] = useState({});
 
   const handleIsEditOpen = () => {
     setError({});
     if (isEditOpen) {
-      setInputValue(row.td);
-      postingFieldsFromPharmacist(pharmacist);
       setIsEditOpen(false);
     } else {
+      // postingFieldsFromPharmacist(pharmacist);
+      setInputValue(tableData);
       setIsEditOpen(true);
     }
   };
@@ -57,54 +66,75 @@ const DetailsTableRow = ({ row, pharmacist }) => {
 
   const handleSubmit = () => {
     setError({});
-    if (row.name === 'mainPosting') {
-      const editedPostingData = postingValueFromState(postingFields);
-      axiosInstance
-        .put(`/list/${pharmacist.regNumber}`, editedPostingData)
-        .then((res) => {
-          setInputValue(
-            `${
-              editedPostingData.postingPlace
-                ? `${editedPostingData.postingPlace}, `
-                : ''
-            }${
-              editedPostingData.postingUpazila?.name
-                ? `${editedPostingData.postingUpazila?.name}, `
-                : ''
-            }${
-              editedPostingData.postingDistrict?.name
-                ? editedPostingData.postingDistrict?.name
-                : ''
-            }`
-          );
-        })
-        .then(() => setIsEditOpen(false))
-        .catch((e) => {
-          if (typeof e.response.data === 'object') {
-            setError(e.response.data);
-          }
-          setIsEditOpen(false);
-          setInputValue(row.td);
-        });
+    let dataForSubmit = null;
+    let dataForTd = '';
+    if (row.name === 'gender') {
+      const strGender =
+        genderOptions.find((option) => option.id === gender.value)?.name || '';
+      dataForSubmit = { gender: strGender };
+      dataForTd = strGender;
+    } else if (row.name === 'jobDepertment') {
+      const strJobDepertment =
+        jobDepertmentOptions.find((option) => option.id === jobDepertment.value)
+          ?.name || '';
+      dataForSubmit = { jobDepertment: strJobDepertment };
+      dataForTd = strJobDepertment;
+    } else if (row.name === 'mainPosting') {
+      dataForSubmit = postingValueFromState(postingFields);
+      dataForTd = `${
+        dataForSubmit.postingPlace ? `${dataForSubmit.postingPlace}, ` : ''
+      }${
+        dataForSubmit.postingUpazila?.name
+          ? `${dataForSubmit.postingUpazila?.name}, `
+          : ''
+      }${
+        dataForSubmit.postingDistrict?.name
+          ? dataForSubmit.postingDistrict?.name
+          : ''
+      }`;
     } else {
-      axiosInstance
-        .put(`/list/${pharmacist.regNumber}`, { [row.name]: inputValue })
-        .then(() => {
-          setIsEditOpen(false);
-        })
-        .catch((e) => {
-          if (typeof e.response.data === 'object') {
-            setError(e.response.data);
-          }
-          setIsEditOpen(false);
-          setInputValue(row.td);
-        });
+      dataForSubmit = { [row.name]: inputValue };
+      dataForTd = inputValue;
     }
+    axiosInstance
+      .put(`/list/${pharmacist.regNumber}`, dataForSubmit)
+      .then(() => {
+        setTableData(dataForTd);
+        setIsEditOpen(false);
+      })
+      .catch((e) => {
+        if (typeof e.response.data === 'object') {
+          setError(e.response.data);
+        }
+        setTableData(row.td);
+      });
   };
 
   useEffect(() => {
-    setInputValue(row.td);
-  }, [row.td]);
+    setTableData(row.td);
+    if (row.name === 'gender') {
+      const tempGender = { ...genderField };
+      if (pharmacist.gender) {
+        tempGender.value =
+          genderOptions.find((option) => option.name === pharmacist.gender)
+            ?.id || '0';
+        setGender(tempGender);
+      } else setGender(tempGender);
+    } else if (row.name === 'jobDepertment') {
+      const tempJobDepertment = { ...jobDepertmentField };
+      if (pharmacist.jobDepertment) {
+        tempJobDepertment.value =
+          jobDepertmentOptions.find(
+            (option) => option.name === pharmacist.jobDepertment
+          )?.id || '0';
+        setJobDepertment(tempJobDepertment);
+      } else {
+        setJobDepertment(tempJobDepertment);
+      }
+    } else if (row.name === 'mainPosting') {
+      setPostingFields(postingFieldsFromPharmacist(pharmacist));
+    }
+  }, []);
 
   return (
     <TableRow
@@ -149,15 +179,37 @@ const DetailsTableRow = ({ row, pharmacist }) => {
             <PostingGroup
               postingInfo={postingFieldsArray}
               onChange={handlePostingChange}
-              error={{}}
+              error={error}
+            />
+          ) : row.name === 'jobDepertment' ? (
+            <SelectComponent
+              name='jobDepertment'
+              value={jobDepertment.value}
+              options={jobDepertment.options}
+              onChange={(e) =>
+                setJobDepertment((prev) => {
+                  return { ...prev, value: e.target.value };
+                })
+              }
+            />
+          ) : row.name === 'gender' ? (
+            <SelectComponent
+              name='gender'
+              value={gender.value}
+              options={gender.options}
+              onChange={(e) =>
+                setGender((prev) => {
+                  return { ...prev, value: e.target.value };
+                })
+              }
             />
           ) : (
             <p>This part is in progress</p>
           )
         ) : row.type === 'date' ? (
-          dayjs(inputValue).format('DD MMM YYYY')
+          dayjs(tableData).format('DD MMM YYYY')
         ) : (
-          inputValue
+          tableData
         )}
       </TableCell>
       <TableCell

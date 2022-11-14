@@ -1,8 +1,8 @@
-import { genderOptions } from '../constants/addFormFields';
 import { addPostingFields } from '../constants/addPostingFields';
-import { depertmentOptions } from '../constants/depertmentOptions';
 import { districts } from '../constants/districts';
 import { divisions } from '../constants/divisions';
+import { genderOptions } from '../constants/gender';
+import { jobDepertmentOptions } from '../constants/jobDepertment';
 import { upazilas } from '../constants/upazilas';
 
 export const arraySortByDate = (array) => {
@@ -149,7 +149,7 @@ export const pharmacistFromState = (
       );
       acc[cur] = gender ? gender.name : '';
     } else if (cur === 'jobDepertment') {
-      const depertment = depertmentOptions.find(
+      const depertment = jobDepertmentOptions.find(
         (item) => item.id === formFields[cur].value
       );
       acc[cur] = depertment ? depertment.name : '';
