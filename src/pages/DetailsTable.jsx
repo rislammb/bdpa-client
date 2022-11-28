@@ -175,16 +175,6 @@ const DetailsTable = () => {
         setLoading(false);
         setPharmacist(null);
       });
-    // setPharmacist({
-    //   regNumber: 'B-9239',
-    //   name: 'hsdsjd',
-    //   email: 'djsdksdlsd@co',
-    //   mobile: 'dsds',
-    //   gender: 'Male',
-    //   dateOfBirth: '',
-    //   dateOfJoin: '',
-    // });
-    // setLoading(false);
   }, [regNumber]);
 
   return loading ? (

@@ -14,8 +14,11 @@ import {
 } from '../constants/jobDepertment';
 import {
   changeHandlerForPostingGroup,
+  changeHandlerForVoterGroup,
   postingFieldsFromPharmacist,
   postingValueFromState,
+  voterFieldsFromPharmacist,
+  voterValueFromState,
 } from '../helpers/utilities';
 import PostingGroup from './PostingGroup';
 import SelectComponent from './SelectComponent';
@@ -27,13 +30,22 @@ const DetailsTableRow = ({ row, pharmacist }) => {
   const [gender, setGender] = useState(null);
   const [jobDepertment, setJobDepertment] = useState(null);
   const [postingFields, setPostingFields] = useState(null);
+  const [voterFields, setVoterFields] = useState(null);
+  const [error, setError] = useState({});
+
   const postingFieldsArray =
     postingFields &&
     Object.keys(postingFields).reduce((acc, cur) => {
       acc.push(postingFields[cur]);
       return acc;
     }, []);
-  const [error, setError] = useState({});
+
+  const voterAreaArray =
+    voterFields &&
+    Object.keys(voterFields).reduce((acc, cur) => {
+      acc.push(voterFields[cur]);
+      return acc;
+    }, []);
 
   const handleIsEditOpen = () => {
     setError({});
@@ -57,6 +69,16 @@ const DetailsTableRow = ({ row, pharmacist }) => {
   const handlePostingChange = (e) => {
     setPostingFields((prevState) => {
       return changeHandlerForPostingGroup(
+        prevState,
+        e.target.name,
+        e.target.value
+      );
+    });
+  };
+
+  const handleVoterAreaChange = (e) => {
+    setVoterFields((prevState) => {
+      return changeHandlerForVoterGroup(
         prevState,
         e.target.name,
         e.target.value
@@ -90,6 +112,17 @@ const DetailsTableRow = ({ row, pharmacist }) => {
       }${
         dataForSubmit.postingDistrict?.name
           ? dataForSubmit.postingDistrict?.name
+          : ''
+      }`;
+    } else if (row.name === 'voterArea') {
+      dataForSubmit = voterValueFromState(voterFields);
+      dataForTd = `${
+        dataForSubmit.voterDistrict?.name
+          ? `${dataForSubmit.voterDistrict?.name}, `
+          : ''
+      }${
+        dataForSubmit.voterDivision?.name
+          ? `${dataForSubmit.voterDivision?.name} Division`
           : ''
       }`;
     } else {
@@ -133,6 +166,8 @@ const DetailsTableRow = ({ row, pharmacist }) => {
       }
     } else if (row.name === 'mainPosting') {
       setPostingFields(postingFieldsFromPharmacist(pharmacist));
+    } else if (row.name === 'voterArea') {
+      setVoterFields(voterFieldsFromPharmacist(pharmacist));
     }
   }, []);
 
@@ -166,7 +201,7 @@ const DetailsTableRow = ({ row, pharmacist }) => {
               onChange={handleChange}
               variant='standard'
               error={error[row.name] ? true : false}
-              sx={{ width: '100%' }}
+              sx={{ width: '100%', fontSize: '7px' }}
               helperText={error[row.name] || ''}
             />
           ) : row.type === 'date' ? (
@@ -191,6 +226,12 @@ const DetailsTableRow = ({ row, pharmacist }) => {
                   return { ...prev, value: e.target.value };
                 })
               }
+            />
+          ) : row.name === 'voterArea' ? (
+            <PostingGroup
+              postingInfo={voterAreaArray}
+              onChange={handleVoterAreaChange}
+              error={error}
             />
           ) : row.name === 'gender' ? (
             <SelectComponent

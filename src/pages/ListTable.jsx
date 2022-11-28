@@ -41,7 +41,7 @@ const ListTable = () => {
   const [pharmacists, setPharmacists] = useState([]);
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -83,7 +83,7 @@ const ListTable = () => {
     <Box
       sx={{
         width: '100%',
-        maxWidth: '960px',
+        maxWidth: '1150px',
         margin: 'auto',
       }}
     >
@@ -98,7 +98,10 @@ const ListTable = () => {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth, padding: '5px' }}
+                    style={{
+                      minWidth: column.minWidth,
+                      padding: { xs: '5px', sm: '7px' },
+                    }}
                   >
                     {column.label}
                   </TableCell>
@@ -118,7 +121,9 @@ const ListTable = () => {
                             <TableCell
                               key={column.id}
                               align={column.align}
-                              style={{ padding: '5px' }}
+                              style={{
+                                padding: '7px 5px',
+                              }}
                             >
                               {column.id === 'dateOfJoin' ? (
                                 dayjs(value).format('DD MMM YYYY')

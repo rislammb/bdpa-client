@@ -4,6 +4,7 @@ import { divisions } from '../constants/divisions';
 import { genderOptions } from '../constants/gender';
 import { jobDepertmentOptions } from '../constants/jobDepertment';
 import { upazilas } from '../constants/upazilas';
+import { voterAreaFields } from '../constants/voterAreaFields';
 
 export const arraySortByDate = (array) => {
   return array.sort((a, b) =>
@@ -43,6 +44,31 @@ export const postingFieldsFromPharmacist = (pharmacist) => {
         }
       } else {
         acc[cur].value = pharmacist[cur] || '';
+      }
+      return acc;
+    }, {}),
+  };
+};
+
+export const voterFieldsFromPharmacist = (pharmacist) => {
+  return {
+    ...Object.keys({ ...voterAreaFields }).reduce((acc, cur) => {
+      acc[cur] = { ...voterAreaFields[cur] };
+      if (cur === 'voterDivision') {
+        if (pharmacist[cur].id) {
+          acc[cur].value = pharmacist[cur].id;
+        }
+      } else if (cur === 'voterDistrict') {
+        if (pharmacist[cur].id) {
+          acc[cur].options = [
+            ...voterAreaFields[cur].options,
+            ...districts.filter(
+              (district) =>
+                district.division_id === pharmacist['voterDivision'].id
+            ),
+          ];
+          acc[cur].value = pharmacist[cur].id;
+        }
       }
       return acc;
     }, {}),
@@ -98,6 +124,34 @@ export const changeHandlerForPostingGroup = (prevState, name, value) => {
   }
 };
 
+export const changeHandlerForVoterGroup = (prevState, name, value) => {
+  if (name === 'voterDivision') {
+    return {
+      ...prevState,
+      [name]: {
+        ...prevState[name],
+        value: value,
+      },
+      voterDistrict: {
+        ...prevState['voterDistrict'],
+        options: [
+          ...voterAreaFields['voterDistrict'].options,
+          ...districts.filter((district) => district.division_id === value),
+        ],
+        value: '0',
+      },
+    };
+  } else {
+    return {
+      ...prevState,
+      [name]: {
+        ...prevState[name],
+        value: value,
+      },
+    };
+  }
+};
+
 export const postingValueFromState = (postingFields) => {
   return Object.keys(postingFields).reduce((acc, cur) => {
     if (cur === 'postingDivision') {
@@ -131,6 +185,31 @@ export const postingValueFromState = (postingFields) => {
             bn_name: '',
           };
     } else acc[cur] = postingFields[cur].value;
+    return acc;
+  }, {});
+};
+
+export const voterValueFromState = (voterAreaFields) => {
+  return Object.keys(voterAreaFields).reduce((acc, cur) => {
+    if (cur === 'voterDivision') {
+      const division = divisions.find(
+        (item) => item.id === voterAreaFields[cur].value
+      );
+      acc[cur] = division
+        ? division
+        : {
+            id: '',
+            name: '',
+            bn_name: '',
+          };
+    } else {
+      const district = districts.find(
+        (item) => item.id === voterAreaFields[cur].value
+      );
+      acc[cur] = district
+        ? district
+        : { id: '', division_id: '', name: '', bn_name: '' };
+    }
     return acc;
   }, {});
 };
