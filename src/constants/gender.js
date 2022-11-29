@@ -6,9 +6,9 @@ export const genderOptions = [
 
 export const genderField = {
   type: 'select',
-  options: [{ id: '0', name: '--- Select ---' }, ...genderOptions],
   name: 'gender',
   label: 'Gender',
+  options: [{ id: '0', name: '--- Select ---' }, ...genderOptions],
   placeholder: 'Male',
   value: '0',
 };

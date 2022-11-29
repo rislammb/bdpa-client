@@ -114,13 +114,13 @@ const DetailsTable = () => {
         ),
         createRow(
           'On Deputation',
-          pharmacist.onDeputation ? 'Yes' : 'No',
+          pharmacist.onDeputation,
           'onDeputation',
           'select',
           true
         ),
       ];
-      pharmacist.onDeputation &&
+      pharmacist.onDeputation === 'Yes' &&
         rows.push(
           createRow(
             'Deputation Posting',

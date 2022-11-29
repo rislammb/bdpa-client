@@ -3,6 +3,7 @@ import { districts } from '../constants/districts';
 import { divisions } from '../constants/divisions';
 import { genderOptions } from '../constants/gender';
 import { jobDepertmentOptions } from '../constants/jobDepertment';
+import { onDeputationOptions } from '../constants/onDeputationFields';
 import { upazilas } from '../constants/upazilas';
 import { voterAreaFields } from '../constants/voterAreaFields';
 
@@ -295,7 +296,8 @@ export const pharmacistFromState = (
     ...formValues,
     ...postingValues,
     ...voterAreaValues,
-    onDeputation,
+    onDeputation: onDeputationOptions.find((opt) => opt.id === onDeputation)
+      ?.name,
     ...deputationValues,
   };
 };

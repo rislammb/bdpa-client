@@ -4,12 +4,13 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
 
-const PostingGroup = ({ postingInfo, onChange, label, error }) => {
+const PostingGroup = ({ postingInfo, onChange, label, error, style }) => {
   return (
     <FormControl
       sx={{
         m: 1,
         width: '33.33333ch',
+        ...style,
       }}
       component='fieldset'
       variant='standard'

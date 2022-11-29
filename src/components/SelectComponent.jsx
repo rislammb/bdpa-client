@@ -1,7 +1,7 @@
 import { MenuItem, TextField } from '@mui/material';
 import React from 'react';
 
-const SelectComponent = ({ name, label, value, options, onChange }) => {
+const SelectComponent = ({ name, label, value, options, onChange, style }) => {
   return (
     <TextField
       InputLabelProps={{ color: 'info' }}
@@ -11,7 +11,7 @@ const SelectComponent = ({ name, label, value, options, onChange }) => {
       value={value}
       onChange={onChange}
       variant='standard'
-      style={{ textAlign: 'left' }}
+      style={{ textAlign: 'left', ...style }}
     >
       {options.map((option) => (
         <MenuItem key={option.id} value={option.id}>

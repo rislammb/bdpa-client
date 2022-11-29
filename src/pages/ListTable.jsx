@@ -98,9 +98,9 @@ const ListTable = () => {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{
+                    sx={{
                       minWidth: column.minWidth,
-                      padding: { xs: '5px', sm: '7px' },
+                      padding: '7px 5px',
                     }}
                   >
                     {column.label}
@@ -121,7 +121,8 @@ const ListTable = () => {
                             <TableCell
                               key={column.id}
                               align={column.align}
-                              style={{
+                              sx={{
+                                minWidth: column.minWidth,
                                 padding: '7px 5px',
                               }}
                             >

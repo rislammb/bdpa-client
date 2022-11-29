@@ -12,6 +12,7 @@ import {
   jobDepertmentField,
   jobDepertmentOptions,
 } from '../constants/jobDepertment';
+import { onDeputationOptions } from '../constants/onDeputationFields';
 import {
   changeHandlerForPostingGroup,
   changeHandlerForVoterGroup,
@@ -31,6 +32,8 @@ const DetailsTableRow = ({ row, pharmacist }) => {
   const [jobDepertment, setJobDepertment] = useState(null);
   const [postingFields, setPostingFields] = useState(null);
   const [voterFields, setVoterFields] = useState(null);
+  const [onDeputation, setOnDeputation] = useState(null);
+  // const [deputationFields, setDeputationFields] = useState(null);
   const [error, setError] = useState({});
 
   const postingFieldsArray =
@@ -114,6 +117,12 @@ const DetailsTableRow = ({ row, pharmacist }) => {
           ? dataForSubmit.postingDistrict?.name
           : ''
       }`;
+    } else if (row.name === 'onDeputation') {
+      const data = onDeputationOptions.find(
+        (opt) => opt.id === onDeputation
+      )?.name;
+      dataForSubmit = { onDeputation: data };
+      dataForTd = data;
     } else if (row.name === 'voterArea') {
       dataForSubmit = voterValueFromState(voterFields);
       dataForTd = `${
@@ -168,6 +177,11 @@ const DetailsTableRow = ({ row, pharmacist }) => {
       setPostingFields(postingFieldsFromPharmacist(pharmacist));
     } else if (row.name === 'voterArea') {
       setVoterFields(voterFieldsFromPharmacist(pharmacist));
+    } else if (row.name === 'onDeputation') {
+      setOnDeputation(
+        onDeputationOptions.find((opt) => opt.name === pharmacist.onDeputation)
+          ?.id
+      );
     }
   }, []);
 
@@ -210,11 +224,17 @@ const DetailsTableRow = ({ row, pharmacist }) => {
               value={inputValue}
               onChange={handleChange}
             />
-          ) : row.name === 'mainPosting' ? (
-            <PostingGroup
-              postingInfo={postingFieldsArray}
-              onChange={handlePostingChange}
-              error={error}
+          ) : row.name === 'gender' ? (
+            <SelectComponent
+              name='gender'
+              value={gender.value}
+              options={gender.options}
+              onChange={(e) =>
+                setGender((prev) => {
+                  return { ...prev, value: e.target.value };
+                })
+              }
+              style={{ width: '100%' }}
             />
           ) : row.name === 'jobDepertment' ? (
             <SelectComponent
@@ -227,22 +247,27 @@ const DetailsTableRow = ({ row, pharmacist }) => {
                 })
               }
             />
+          ) : row.name === 'mainPosting' ? (
+            <PostingGroup
+              postingInfo={postingFieldsArray}
+              onChange={handlePostingChange}
+              error={error}
+              style={{ width: '100%' }}
+            />
           ) : row.name === 'voterArea' ? (
             <PostingGroup
               postingInfo={voterAreaArray}
               onChange={handleVoterAreaChange}
               error={error}
+              style={{ width: '100%' }}
             />
-          ) : row.name === 'gender' ? (
+          ) : row.name === 'onDeputation' ? (
             <SelectComponent
-              name='gender'
-              value={gender.value}
-              options={gender.options}
-              onChange={(e) =>
-                setGender((prev) => {
-                  return { ...prev, value: e.target.value };
-                })
-              }
+              name='onDeputation'
+              value={onDeputation}
+              options={[...onDeputationOptions]}
+              onChange={(e) => setOnDeputation(e.target.value)}
+              style={{ width: '100%' }}
             />
           ) : (
             <p>This part is in progress</p>

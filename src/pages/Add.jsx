@@ -1,6 +1,5 @@
-import { Button, FormControlLabel } from '@mui/material';
+import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { useEffect, useState } from 'react';
@@ -10,11 +9,13 @@ import { axiosInstance } from '../config';
 import DatePickerComp from '../components/DatePickerComp';
 import PostingGroup from '../components/PostingGroup';
 
+import SelectComponent from '../components/SelectComponent';
 import SnackbarComp from '../components/Snackbar';
 import { addDeputationFields } from '../constants/addDeputationFields';
 import { addFormFields } from '../constants/addFormFields';
 import { addPostingFields } from '../constants/addPostingFields';
 import { districts } from '../constants/districts';
+import { onDeputationOptions } from '../constants/onDeputationFields';
 import { upazilas } from '../constants/upazilas';
 import { voterAreaFields } from '../constants/voterAreaFields';
 import { pharmacistFromState } from '../helpers/utilities';
@@ -23,7 +24,7 @@ const Add = () => {
   const [formFields, setFormFields] = useState({ ...addFormFields });
   const [postingFields, setPostingFields] = useState({ ...addPostingFields });
   const [voterArea, setVoterArea] = useState({ ...voterAreaFields });
-  const [onDeputation, setOnDeputation] = useState(false);
+  const [onDeputation, setOnDeputation] = useState('1');
   const [deputationFields, setDeputationFields] = useState({
     ...addDeputationFields,
   });
@@ -224,7 +225,7 @@ const Add = () => {
         setFormFields({ ...addFormFields });
         setPostingFields({ ...addPostingFields });
         setVoterArea({ ...voterAreaFields });
-        setOnDeputation(false);
+        setOnDeputation('1');
         setDeputationFields({ ...addDeputationFields });
       })
       .catch((e) => {
@@ -312,14 +313,12 @@ const Add = () => {
             width: '33.33333ch',
           }}
         >
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={onDeputation}
-                onChange={() => setOnDeputation(!onDeputation)}
-              />
-            }
+          <SelectComponent
+            name='onDeputation'
             label='On Deputation'
+            value={onDeputation}
+            options={[...onDeputationOptions]}
+            onChange={(e) => setOnDeputation(e.target.value)}
           />
         </Box>
         {onDeputation && (

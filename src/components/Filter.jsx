@@ -11,10 +11,10 @@ const Filter = ({ searchTearm, onChange }) => {
       <TextField
         InputLabelProps={{ color: 'info' }}
         sx={{ width: 175 }}
-        label='Search by Name or Registration'
+        label='Search'
         value={searchTearm}
         onChange={onChange}
-        placeholder='Abdullah or B-0182'
+        placeholder='Name or Registration'
         variant='standard'
       />
     </Box>
