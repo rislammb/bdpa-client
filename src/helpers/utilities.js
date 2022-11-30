@@ -1,3 +1,4 @@
+import { addDeputationFields } from '../constants/addDeputationFields';
 import { addPostingFields } from '../constants/addPostingFields';
 import { districts } from '../constants/districts';
 import { divisions } from '../constants/divisions';
@@ -70,6 +71,44 @@ export const voterFieldsFromPharmacist = (pharmacist) => {
           ];
           acc[cur].value = pharmacist[cur].id;
         }
+      }
+      return acc;
+    }, {}),
+  };
+};
+
+export const deputationFieldsFromPharmacist = (pharmacist) => {
+  return {
+    ...Object.keys({ ...addDeputationFields }).reduce((acc, cur) => {
+      acc[cur] = { ...addDeputationFields[cur] };
+      if (cur === 'deputationDivision') {
+        if (pharmacist[cur].id) {
+          acc[cur].value = pharmacist[cur].id;
+        }
+      } else if (cur === 'deputationDistrict') {
+        if (pharmacist[cur].id) {
+          acc[cur].options = [
+            ...addDeputationFields[cur].options,
+            ...districts.filter(
+              (district) =>
+                district.division_id === pharmacist['deputationDivision'].id
+            ),
+          ];
+          acc[cur].value = pharmacist[cur].id;
+        }
+      } else if (cur === 'deputationUpazila') {
+        if (pharmacist[cur].id) {
+          acc[cur].options = [
+            ...addDeputationFields[cur].options,
+            ...upazilas.filter(
+              (upazila) =>
+                upazila.district_id === pharmacist['deputationDistrict'].id
+            ),
+          ];
+          acc[cur].value = pharmacist[cur].id;
+        }
+      } else {
+        acc[cur].value = pharmacist[cur] || '';
       }
       return acc;
     }, {}),
@@ -153,6 +192,55 @@ export const changeHandlerForVoterGroup = (prevState, name, value) => {
   }
 };
 
+export const changeHandlerForDeputationGroup = (prevState, name, value) => {
+  if (name === 'deputationDivision') {
+    return {
+      ...prevState,
+      [name]: {
+        ...prevState[name],
+        value: value,
+      },
+      deputationDistrict: {
+        ...prevState['deputationDistrict'],
+        options: [
+          ...addDeputationFields['deputationDistrict'].options,
+          ...districts.filter((district) => district.division_id === value),
+        ],
+        value: '0',
+      },
+      deputationUpazila: {
+        ...prevState['deputationUpazila'],
+        options: [...addDeputationFields['deputationUpazila'].options],
+        value: '0',
+      },
+    };
+  } else if (name === 'deputationDistrict') {
+    return {
+      ...prevState,
+      [name]: {
+        ...prevState[name],
+        value: value,
+      },
+      deputationUpazila: {
+        ...prevState['deputationUpazila'],
+        options: [
+          ...addDeputationFields['deputationUpazila'].options,
+          ...upazilas.filter((upazila) => upazila.district_id === value),
+        ],
+        value: '0',
+      },
+    };
+  } else {
+    return {
+      ...prevState,
+      [name]: {
+        ...prevState[name],
+        value: value,
+      },
+    };
+  }
+};
+
 export const postingValueFromState = (postingFields) => {
   return Object.keys(postingFields).reduce((acc, cur) => {
     if (cur === 'postingDivision') {
@@ -211,6 +299,43 @@ export const voterValueFromState = (voterAreaFields) => {
         ? district
         : { id: '', division_id: '', name: '', bn_name: '' };
     }
+    return acc;
+  }, {});
+};
+
+export const deputationValueFromState = (deputationFields) => {
+  return Object.keys(deputationFields).reduce((acc, cur) => {
+    if (cur === 'deputationDivision') {
+      const division = divisions.find(
+        (item) => item.id === deputationFields[cur].value
+      );
+      acc[cur] = division
+        ? division
+        : {
+            id: '',
+            name: '',
+            bn_name: '',
+          };
+    } else if (cur === 'deputationDistrict') {
+      const district = districts.find(
+        (item) => item.id === deputationFields[cur].value
+      );
+      acc[cur] = district
+        ? district
+        : { id: '', division_id: '', name: '', bn_name: '' };
+    } else if (cur === 'deputationUpazila') {
+      const upazila = upazilas.find(
+        (item) => item.id === deputationFields[cur].value
+      );
+      acc[cur] = upazila
+        ? upazila
+        : {
+            id: '',
+            district_id: '',
+            name: '',
+            bn_name: '',
+          };
+    } else acc[cur] = deputationFields[cur].value;
     return acc;
   }, {});
 };

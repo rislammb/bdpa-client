@@ -14,8 +14,11 @@ import {
 } from '../constants/jobDepertment';
 import { onDeputationOptions } from '../constants/onDeputationFields';
 import {
+  changeHandlerForDeputationGroup,
   changeHandlerForPostingGroup,
   changeHandlerForVoterGroup,
+  deputationFieldsFromPharmacist,
+  deputationValueFromState,
   postingFieldsFromPharmacist,
   postingValueFromState,
   voterFieldsFromPharmacist,
@@ -24,15 +27,26 @@ import {
 import PostingGroup from './PostingGroup';
 import SelectComponent from './SelectComponent';
 
-const DetailsTableRow = ({ row, pharmacist }) => {
+const DetailsTableRow = ({
+  row,
+  pharmacist,
+  showDeputationRow,
+  handleShowDeputation,
+}) => {
   const [tableData, setTableData] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [inputValue, setInputValue] = useState(null);
   const [gender, setGender] = useState(null);
   const [jobDepertment, setJobDepertment] = useState(null);
   const [postingFields, setPostingFields] = useState(null);
-  const [voterFields, setVoterFields] = useState(null);
-  const [onDeputation, setOnDeputation] = useState(null);
+  const [voterFields, setVoterFields] = useState(
+    voterFieldsFromPharmacist(pharmacist)
+  );
+  const [onDeputation, setOnDeputation] = useState(
+    onDeputationOptions.find((opt) => opt.name === pharmacist.onDeputation)?.id
+  );
+  const [deputationFields, setDeputationFields] = useState(null);
+
   // const [deputationFields, setDeputationFields] = useState(null);
   const [error, setError] = useState({});
 
@@ -47,6 +61,12 @@ const DetailsTableRow = ({ row, pharmacist }) => {
     voterFields &&
     Object.keys(voterFields).reduce((acc, cur) => {
       acc.push(voterFields[cur]);
+      return acc;
+    }, []);
+  const deputationFieldsArray =
+    deputationFields &&
+    Object.keys(deputationFields).reduce((acc, cur) => {
+      acc.push(deputationFields[cur]);
       return acc;
     }, []);
 
@@ -78,7 +98,15 @@ const DetailsTableRow = ({ row, pharmacist }) => {
       );
     });
   };
-
+  const handleDeputationChange = (e) => {
+    setDeputationFields((prevState) => {
+      return changeHandlerForDeputationGroup(
+        prevState,
+        e.target.name,
+        e.target.value
+      );
+    });
+  };
   const handleVoterAreaChange = (e) => {
     setVoterFields((prevState) => {
       return changeHandlerForVoterGroup(
@@ -134,6 +162,21 @@ const DetailsTableRow = ({ row, pharmacist }) => {
           ? `${dataForSubmit.voterDivision?.name} Division`
           : ''
       }`;
+    } else if (row.name === 'deputationPosting') {
+      dataForSubmit = deputationValueFromState(deputationFields);
+      dataForTd = `${
+        dataForSubmit.deputationPlace
+          ? `${dataForSubmit.deputationPlace}, `
+          : ''
+      }${
+        dataForSubmit.deputationUpazila?.name
+          ? `${dataForSubmit.deputationUpazila?.name}, `
+          : ''
+      }${
+        dataForSubmit.deputationDistrict?.name
+          ? dataForSubmit.deputationDistrict?.name
+          : ''
+      }`;
     } else {
       dataForSubmit = { [row.name]: inputValue };
       dataForTd = inputValue;
@@ -141,6 +184,9 @@ const DetailsTableRow = ({ row, pharmacist }) => {
     axiosInstance
       .put(`/list/${pharmacist.regNumber}`, dataForSubmit)
       .then(() => {
+        if (row.name === 'onDeputation') {
+          handleShowDeputation(dataForSubmit['onDeputation']);
+        }
         setTableData(dataForTd);
         setIsEditOpen(false);
       })
@@ -175,13 +221,8 @@ const DetailsTableRow = ({ row, pharmacist }) => {
       }
     } else if (row.name === 'mainPosting') {
       setPostingFields(postingFieldsFromPharmacist(pharmacist));
-    } else if (row.name === 'voterArea') {
-      setVoterFields(voterFieldsFromPharmacist(pharmacist));
-    } else if (row.name === 'onDeputation') {
-      setOnDeputation(
-        onDeputationOptions.find((opt) => opt.name === pharmacist.onDeputation)
-          ?.id
-      );
+    } else if (row.name === 'deputationPosting') {
+      setDeputationFields(deputationFieldsFromPharmacist(pharmacist));
     }
   }, []);
 
@@ -246,6 +287,7 @@ const DetailsTableRow = ({ row, pharmacist }) => {
                   return { ...prev, value: e.target.value };
                 })
               }
+              style={{ width: '100%' }}
             />
           ) : row.name === 'mainPosting' ? (
             <PostingGroup
@@ -269,11 +311,24 @@ const DetailsTableRow = ({ row, pharmacist }) => {
               onChange={(e) => setOnDeputation(e.target.value)}
               style={{ width: '100%' }}
             />
+          ) : row.name === 'deputationPosting' ? (
+            <PostingGroup
+              postingInfo={deputationFieldsArray}
+              onChange={handleDeputationChange}
+              error={error}
+              style={{ width: '100%' }}
+            />
           ) : (
-            <p>This part is in progress</p>
+            ''
           )
         ) : row.type === 'date' ? (
           dayjs(tableData).format('DD MMM YYYY')
+        ) : row.type === 'deputationPosting' ? (
+          showDeputationRow ? (
+            tableData
+          ) : (
+            ''
+          )
         ) : (
           tableData
         )}

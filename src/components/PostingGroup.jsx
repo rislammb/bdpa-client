@@ -17,7 +17,7 @@ const PostingGroup = ({ postingInfo, onChange, label, error, style }) => {
     >
       <FormLabel component='legend'>{label || ''}</FormLabel>
       <FormGroup>
-        {postingInfo.length > 0 &&
+        {postingInfo?.length > 0 &&
           postingInfo.map((field) => {
             if (field.type === 'select') {
               return (

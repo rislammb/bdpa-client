@@ -25,10 +25,12 @@ const DetailsTable = () => {
   const [loading, setLoading] = useState(true);
   let { regNumber } = useParams();
   const [pharmacist, setPharmacist] = useState(null);
+  const [showDeputationRow, setShowDeputationRow] = useState(null);
   const [tableRows, setTableRows] = useState([]);
 
   useEffect(() => {
     if (pharmacist) {
+      setShowDeputationRow(pharmacist.onDeputation === 'Yes' ? true : false);
       const rows = [
         createRow(
           'Registration Number',
@@ -120,31 +122,37 @@ const DetailsTable = () => {
           true
         ),
       ];
-      pharmacist.onDeputation === 'Yes' &&
-        rows.push(
-          createRow(
-            'Deputation Posting',
-            `${
-              pharmacist.deputationPlace
-                ? `${pharmacist.deputationPlace}, `
-                : ''
-            }${
-              pharmacist.deputationUpazila?.name
-                ? `${pharmacist.deputationUpazila?.name}, `
-                : ''
-            }${
-              pharmacist.deputationDistrict?.name
-                ? pharmacist.deputationDistrict?.name
-                : ''
-            }`,
-            'deputationPosting',
-            true
-          )
-        );
 
       setTableRows(rows);
     } else setTableRows([]);
   }, [pharmacist]);
+
+  useEffect(() => {
+    if (showDeputationRow) {
+      const row = createRow(
+        'Deputation Posting',
+        `${
+          pharmacist.deputationPlace ? `${pharmacist.deputationPlace}, ` : ''
+        }${
+          pharmacist.deputationUpazila?.name
+            ? `${pharmacist.deputationUpazila?.name}, `
+            : ''
+        }${
+          pharmacist.deputationDistrict?.name
+            ? pharmacist.deputationDistrict?.name
+            : ''
+        }`,
+        'deputationPosting',
+        'select',
+        true
+      );
+      setTableRows([...tableRows, row]);
+    } else {
+      setTableRows((prevState) => {
+        return prevState.filter((item) => item.name !== 'deputationPosting');
+      });
+    }
+  }, [showDeputationRow]);
 
   const handleDelete = () => {
     if (
@@ -168,7 +176,9 @@ const DetailsTable = () => {
   useEffect(() => {
     axiosInstance
       .get(`/list/${regNumber}`)
-      .then((res) => setPharmacist(res.data))
+      .then((res) => {
+        setPharmacist(res.data);
+      })
       .then(() => setLoading(false))
       .catch((e) => {
         console.log(e.message);
@@ -198,6 +208,10 @@ const DetailsTable = () => {
                     key={row.th}
                     row={row}
                     pharmacist={pharmacist}
+                    showDeputationRow={showDeputationRow}
+                    handleShowDeputation={(data) =>
+                      setShowDeputationRow(data === 'Yes' ? true : false)
+                    }
                   />
                 ))}
                 <TableRow sx={{ border: 0 }}>
