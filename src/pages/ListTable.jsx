@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Filter from '../components/Filter';
+import FilterByLocation from '../components/FilterByLocation';
 import { axiosInstance } from '../config';
 import { arraySortByDate } from '../helpers/utilities';
 
@@ -39,6 +40,8 @@ const ListTable = () => {
   const [dbPharmacists, setDbPharmacists] = useState([]);
   const [searchTearm, setSearchTearm] = useState('');
   const [pharmacists, setPharmacists] = useState([]);
+  const [pharmacistsAfterLocationFilter, setPharmacistsAfterLocationFilter] =
+    useState([]);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -69,13 +72,13 @@ const ListTable = () => {
 
   useEffect(() => {
     setPharmacists(
-      dbPharmacists.filter(
+      pharmacistsAfterLocationFilter.filter(
         (item) =>
           item.name.toLowerCase().includes(searchTearm.toLowerCase()) ||
           item.regNumber.toLowerCase().includes(searchTearm.toLowerCase())
       )
     );
-  }, [dbPharmacists, searchTearm]);
+  }, [pharmacistsAfterLocationFilter, searchTearm]);
 
   return loading ? (
     <Typography sx={{ p: 3 }}>loading...</Typography>
@@ -87,7 +90,21 @@ const ListTable = () => {
         margin: 'auto',
       }}
     >
-      <Filter searchTearm={searchTearm} onChange={handleChangeSearchTearm} />
+      <Box
+        sx={{
+          display: 'flex',
+          width: 320,
+          m: 'auto',
+          justifyContent: 'space-between',
+          mb: 1,
+        }}
+      >
+        <FilterByLocation
+          pharmacists={dbPharmacists}
+          onChange={(value) => setPharmacistsAfterLocationFilter(value)}
+        />
+        <Filter searchTearm={searchTearm} onChange={handleChangeSearchTearm} />
+      </Box>
 
       <Paper sx={{ overflow: 'hidden' }}>
         <TableContainer>
