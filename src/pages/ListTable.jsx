@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Filter from '../components/Filter';
+import FilterByJobDepertment from '../components/FilterByJobDepertment';
 import FilterByLocation from '../components/FilterByLocation';
 import { axiosInstance } from '../config';
 import { arraySortByDate } from '../helpers/utilities';
@@ -38,19 +39,19 @@ const ListTable = () => {
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [dbPharmacists, setDbPharmacists] = useState([]);
-  const [searchTearm, setSearchTearm] = useState('');
-  const [pharmacists, setPharmacists] = useState([]);
+  const [
+    phramacistsAfterDepertmentFilter,
+    setPhramacistsAfterDepertmentFilter,
+  ] = useState([]);
   const [pharmacistsAfterLocationFilter, setPharmacistsAfterLocationFilter] =
     useState([]);
-
+  const [pharmacists, setPharmacists] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
-  const handleChangeSearchTearm = (e) => setSearchTearm(e.target.value);
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -71,14 +72,10 @@ const ListTable = () => {
   }, []);
 
   useEffect(() => {
-    setPharmacists(
-      pharmacistsAfterLocationFilter.filter(
-        (item) =>
-          item.name.toLowerCase().includes(searchTearm.toLowerCase()) ||
-          item.regNumber.toLowerCase().includes(searchTearm.toLowerCase())
-      )
-    );
-  }, [pharmacistsAfterLocationFilter, searchTearm]);
+    setPhramacistsAfterDepertmentFilter(dbPharmacists);
+    setPharmacistsAfterLocationFilter(dbPharmacists);
+    setPharmacists(dbPharmacists);
+  }, [dbPharmacists]);
 
   return loading ? (
     <Typography sx={{ p: 3 }}>loading...</Typography>
@@ -90,21 +87,32 @@ const ListTable = () => {
         margin: 'auto',
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          width: 320,
-          m: 'auto',
-          justifyContent: 'space-between',
-          mb: 1,
-        }}
-      >
-        <FilterByLocation
-          pharmacists={dbPharmacists}
-          onChange={(value) => setPharmacistsAfterLocationFilter(value)}
-        />
-        <Filter searchTearm={searchTearm} onChange={handleChangeSearchTearm} />
-      </Box>
+      <div style={{ maxWidth: 750, margin: 'auto' }}>
+        <Box
+          sx={{
+            my: 2,
+            ml: 2,
+            mr: -2,
+            display: 'flex',
+            gap: 1,
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+          }}
+        >
+          <FilterByJobDepertment
+            pharmacists={dbPharmacists}
+            onChange={(value) => setPhramacistsAfterDepertmentFilter(value)}
+          />
+          <FilterByLocation
+            pharmacists={phramacistsAfterDepertmentFilter}
+            onChange={(value) => setPharmacistsAfterLocationFilter(value)}
+          />
+          <Filter
+            pharmacists={pharmacistsAfterLocationFilter}
+            onChange={(value) => setPharmacists(value)}
+          />
+        </Box>
+      </div>
 
       <Paper sx={{ overflow: 'hidden' }}>
         <TableContainer>

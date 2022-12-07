@@ -11,15 +11,15 @@ import { districts } from '../constants/districts';
 import { divisions } from '../constants/divisions';
 import { upazilas } from '../constants/upazilas';
 
-const initialLocationInfo = {
+const INITIAL_LOCATION_INFO = {
   locationType: {
     name: 'locationType',
     label: 'Location Type',
-    value: '0',
+    value: 'all',
     options: [
       {
-        id: '0',
-        name: '--- select ---',
+        id: 'all',
+        name: 'All',
       },
       {
         id: '1',
@@ -38,25 +38,27 @@ const initialLocationInfo = {
   division: {
     name: 'division',
     label: 'Division',
-    value: '0',
-    options: [{ id: '0', name: '--- select ---' }, ...divisions],
+    value: 'all',
+    options: [{ id: 'all', name: 'All' }, ...divisions],
   },
   district: {
     name: 'district',
     label: 'District',
-    value: '0',
-    options: [{ id: '0', name: '--- select ---' }],
+    value: 'all',
+    options: [{ id: 'all', name: 'All' }],
   },
   upazila: {
     name: 'upazila',
     label: 'Upazila',
-    value: '0',
-    options: [{ id: '0', name: '--- select ---' }],
+    value: 'all',
+    options: [{ id: 'all', name: 'All' }],
   },
 };
 
 const FilterByLocation = ({ pharmacists, onChange }) => {
-  const [locationInfo, setLocationInfo] = useState({ ...initialLocationInfo });
+  const [locationInfo, setLocationInfo] = useState({
+    ...INITIAL_LOCATION_INFO,
+  });
   const locationInfoArray = Object.keys(locationInfo).reduce((acc, cur) => {
     acc.push(locationInfo[cur]);
     return acc;
@@ -70,9 +72,9 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
           ...prevState['locationType'],
           value: e.target.value,
         },
-        division: { ...initialLocationInfo.division },
-        district: { ...initialLocationInfo.district },
-        upazila: { ...initialLocationInfo.upazila },
+        division: { ...INITIAL_LOCATION_INFO.division },
+        district: { ...INITIAL_LOCATION_INFO.district },
+        upazila: { ...INITIAL_LOCATION_INFO.upazila },
       }));
       onChange(pharmacists);
     } else if (e.target.name === 'division') {
@@ -84,17 +86,17 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
         },
         district: {
           ...prevState['district'],
-          value: '0',
+          value: 'all',
           options: [
-            { id: '0', name: '--- select ---' },
+            { id: 'all', name: 'All' },
             ...districts.filter((dist) => dist.division_id === e.target.value),
           ],
         },
         upazila: {
-          ...initialLocationInfo.upazila,
+          ...INITIAL_LOCATION_INFO.upazila,
         },
       }));
-      if (e.target.value === '0') {
+      if (e.target.value === 'all') {
         onChange(pharmacists);
       } else {
         let valueForChange = [];
@@ -122,16 +124,16 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
         },
         upazila: {
           ...prevState['upazila'],
-          value: '0',
+          value: 'all',
           options: [
-            { id: '0', name: '--- select ---' },
+            { id: 'all', name: 'All' },
             ...upazilas.filter(
               (upazila) => upazila.district_id === e.target.value
             ),
           ],
         },
       }));
-      if (e.target.value === '0') {
+      if (e.target.value === 'all') {
         let valueForChange = [];
         if (locationInfo.locationType.value === '1') {
           valueForChange = pharmacists.filter(
@@ -175,7 +177,7 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
           value: e.target.value,
         },
       }));
-      if (e.target.value === '0') {
+      if (e.target.value === 'all') {
         let valueForChange = [];
         if (locationInfo.locationType.value === '1') {
           valueForChange = pharmacists.filter(
@@ -212,18 +214,14 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
 
   useEffect(() => {
     onChange(pharmacists);
+    setLocationInfo({ ...INITIAL_LOCATION_INFO });
   }, [pharmacists]);
 
   return (
     <FormControl
-      sx={
-        {
-          // width: '33.33333ch',
-          // ...style,
-        }
-      }
       component='fieldset'
       variant='standard'
+      sx={{ flex: '1 200px' }}
     >
       <FormLabel component='legend'>Filter by location</FormLabel>
       <FormGroup>
@@ -232,7 +230,6 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
             return (
               <FormControlLabel
                 key={field.name}
-                sx={{ fontSize: 6 }}
                 control={
                   <TextField
                     InputLabelProps={{ color: 'info' }}
@@ -242,12 +239,10 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
                     value={field.value}
                     onChange={handleLocationChange}
                     variant='standard'
-                    sx={
-                      {
-                        // textAlign: 'left',
-                        // width: '100%',
-                      }
-                    }
+                    sx={{
+                      textAlign: 'left',
+                      width: '100%',
+                    }}
                   >
                     {field.options.length > 0 ? (
                       field.options.map((option) => (
