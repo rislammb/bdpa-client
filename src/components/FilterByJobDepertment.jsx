@@ -6,7 +6,7 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { jobDepertmentOptions } from '../constants/jobDepertment';
 
 const INITIAL_DEPERTMENT_INFO = {
@@ -45,16 +45,13 @@ const FilterByJobDepertment = ({ pharmacists, onChange }) => {
     }
   };
 
-  useEffect(() => {
-    onChange(pharmacists);
-    setJobDepertmentInfo({ ...INITIAL_DEPERTMENT_INFO });
-  }, [pharmacists]);
-
   return (
     <FormControl
       component='fieldset'
       variant='standard'
-      sx={{ flex: '1 300px' }}
+      sx={{
+        flex: '1 250px',
+      }}
     >
       <FormLabel component='legend'>Filter by Job Depertment</FormLabel>
       <FormGroup>
@@ -62,6 +59,7 @@ const FilterByJobDepertment = ({ pharmacists, onChange }) => {
           control={
             <TextField
               InputLabelProps={{ color: 'info' }}
+              InputProps={{ style: { fontSize: 14 } }}
               select
               name='jobDepertment'
               label='Select Job Depertment'
@@ -78,7 +76,7 @@ const FilterByJobDepertment = ({ pharmacists, onChange }) => {
                   <MenuItem
                     key={option.id}
                     value={option.id}
-                    sx={{ fontSize: 13 }}
+                    sx={{ fontSize: 14 }}
                   >
                     {option.name}
                   </MenuItem>

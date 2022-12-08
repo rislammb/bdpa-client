@@ -48,6 +48,7 @@ function Navbar(props) {
     width: '100%',
     textAlign: 'center',
   };
+
   const drawer = (
     <Box onClick={handleDrawerToggle}>
       <Typography variant='h6' sx={{ my: 1.5, textAlign: 'center' }}>

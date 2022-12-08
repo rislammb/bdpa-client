@@ -59,6 +59,7 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
   const [locationInfo, setLocationInfo] = useState({
     ...INITIAL_LOCATION_INFO,
   });
+
   const locationInfoArray = Object.keys(locationInfo).reduce((acc, cur) => {
     acc.push(locationInfo[cur]);
     return acc;
@@ -96,6 +97,7 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
           ...INITIAL_LOCATION_INFO.upazila,
         },
       }));
+
       if (e.target.value === 'all') {
         onChange(pharmacists);
       } else {
@@ -111,6 +113,13 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
         } else if (locationInfo.locationType.value === '3') {
           valueForChange = pharmacists.filter(
             (pharmacist) => pharmacist.deputationDivision.id === e.target.value
+          );
+        } else {
+          valueForChange = pharmacists.filter(
+            (pharmacist) =>
+              pharmacist.postingDivision.id === e.target.value ||
+              pharmacist.voterDivision.id === e.target.value ||
+              pharmacist.deputationDivision.id === e.target.value
           );
         }
         onChange(valueForChange);
@@ -133,6 +142,7 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
           ],
         },
       }));
+
       if (e.target.value === 'all') {
         let valueForChange = [];
         if (locationInfo.locationType.value === '1') {
@@ -148,6 +158,13 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
         } else if (locationInfo.locationType.value === '3') {
           valueForChange = pharmacists.filter(
             (pharmacist) =>
+              pharmacist.deputationDivision.id === locationInfo.division.value
+          );
+        } else {
+          valueForChange = pharmacists.filter(
+            (pharmacist) =>
+              pharmacist.postingDivision.id === locationInfo.division.value ||
+              pharmacist.voterDivision.id === locationInfo.division.value ||
               pharmacist.deputationDivision.id === locationInfo.division.value
           );
         }
@@ -166,6 +183,13 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
           valueForChange = pharmacists.filter(
             (pharmacist) => pharmacist.deputationDistrict.id === e.target.value
           );
+        } else {
+          valueForChange = pharmacists.filter(
+            (pharmacist) =>
+              pharmacist.postingDistrict.id === e.target.value ||
+              pharmacist.voterDistrict.id === e.target.value ||
+              pharmacist.deputationDistrict.id === e.target.value
+          );
         }
         onChange(valueForChange);
       }
@@ -177,6 +201,7 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
           value: e.target.value,
         },
       }));
+
       if (e.target.value === 'all') {
         let valueForChange = [];
         if (locationInfo.locationType.value === '1') {
@@ -209,7 +234,7 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
         }
         onChange(valueForChange);
       }
-    } else onChange(pharmacists);
+    }
   };
 
   useEffect(() => {
@@ -221,7 +246,7 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
     <FormControl
       component='fieldset'
       variant='standard'
-      sx={{ flex: '1 200px' }}
+      sx={{ flex: '1 250px' }}
     >
       <FormLabel component='legend'>Filter by location</FormLabel>
       <FormGroup>
@@ -233,6 +258,7 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
                 control={
                   <TextField
                     InputLabelProps={{ color: 'info' }}
+                    InputProps={{ style: { fontSize: 14 } }}
                     select
                     name={field.name}
                     label={field.label}
@@ -249,7 +275,7 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
                         <MenuItem
                           key={field.name + option.id}
                           value={option.id}
-                          sx={{ fontSize: 13 }}
+                          sx={{ fontSize: 14 }}
                         >
                           {option.name}
                         </MenuItem>

@@ -1,7 +1,7 @@
 import { Box, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-const Filter = ({ pharmacists, onChange }) => {
+const SearchByText = ({ pharmacists, onChange }) => {
   const [searchTearm, setSearchTearm] = useState('');
 
   const handleChange = (e) => {
@@ -22,9 +22,16 @@ const Filter = ({ pharmacists, onChange }) => {
   }, [pharmacists]);
 
   return (
-    <Box sx={{ ml: -1.5, mr: 2, flex: '1 200px' }}>
+    <Box
+      sx={{
+        ml: -1.5,
+        mr: 2,
+        flex: '1 250px',
+      }}
+    >
       <TextField
         InputLabelProps={{ color: 'info' }}
+        InputProps={{ style: { fontSize: 14 } }}
         label='Search'
         value={searchTearm}
         onChange={handleChange}
@@ -38,4 +45,4 @@ const Filter = ({ pharmacists, onChange }) => {
   );
 };
 
-export default Filter;
+export default SearchByText;

@@ -10,7 +10,7 @@ import Navbar from './components/Navbar';
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
-function ThemeButton() {
+const ThemeButton = () => {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
   return (
@@ -35,7 +35,7 @@ function ThemeButton() {
       </IconButton>
     </Box>
   );
-}
+};
 
 function App() {
   const [mode, setMode] = useState('light');
@@ -75,7 +75,9 @@ function App() {
       <ThemeProvider theme={theme}>
         <Paper
           className='app'
-          sx={{ color: mode === 'dark' ? '#f1f1f1' : '#1a1a1a' }}
+          sx={{
+            color: mode === 'dark' ? '#f1f1f1' : '#1a1a1a',
+          }}
         >
           <Navbar>
             <ThemeButton />

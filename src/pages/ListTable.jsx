@@ -11,16 +11,14 @@ import TableRow from '@mui/material/TableRow';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Filter from '../components/Filter';
-import FilterByJobDepertment from '../components/FilterByJobDepertment';
-import FilterByLocation from '../components/FilterByLocation';
+import FilterGroup from '../components/FilterGroup';
 import { axiosInstance } from '../config';
 import { arraySortByDate } from '../helpers/utilities';
 
 const columns = [
   { id: 'regNumber', label: 'Registration', minWidth: 60, align: 'right' },
-  { id: 'name', label: 'Name', minWidth: 120 },
-  { id: 'bn_name', label: 'Name Bengali', minWidth: 120 },
+  { id: 'name', label: 'Name', minWidth: 130 },
+  { id: 'bn_name', label: 'Name Bengali', minWidth: 130 },
   { id: 'gender', label: 'Gender', minWidth: 30 },
   {
     id: 'jobDepertment',
@@ -39,12 +37,6 @@ const ListTable = () => {
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [dbPharmacists, setDbPharmacists] = useState([]);
-  const [
-    phramacistsAfterDepertmentFilter,
-    setPhramacistsAfterDepertmentFilter,
-  ] = useState([]);
-  const [pharmacistsAfterLocationFilter, setPharmacistsAfterLocationFilter] =
-    useState([]);
   const [pharmacists, setPharmacists] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -72,8 +64,6 @@ const ListTable = () => {
   }, []);
 
   useEffect(() => {
-    setPhramacistsAfterDepertmentFilter(dbPharmacists);
-    setPharmacistsAfterLocationFilter(dbPharmacists);
     setPharmacists(dbPharmacists);
   }, [dbPharmacists]);
 
@@ -87,34 +77,14 @@ const ListTable = () => {
         margin: 'auto',
       }}
     >
-      <div style={{ maxWidth: 750, margin: 'auto' }}>
-        <Box
-          sx={{
-            my: 2,
-            ml: 2,
-            mr: -2,
-            display: 'flex',
-            gap: 1,
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-          }}
-        >
-          <FilterByJobDepertment
-            pharmacists={dbPharmacists}
-            onChange={(value) => setPhramacistsAfterDepertmentFilter(value)}
-          />
-          <FilterByLocation
-            pharmacists={phramacistsAfterDepertmentFilter}
-            onChange={(value) => setPharmacistsAfterLocationFilter(value)}
-          />
-          <Filter
-            pharmacists={pharmacistsAfterLocationFilter}
-            onChange={(value) => setPharmacists(value)}
-          />
-        </Box>
-      </div>
+      <FilterGroup
+        dbPharmacists={dbPharmacists}
+        setAfterFilter={(value) => setPharmacists(value)}
+      />
 
-      <Paper sx={{ overflow: 'hidden' }}>
+      <Paper
+      // sx={{ overflow: 'hidden' }}
+      >
         <TableContainer>
           <Table stickyHeader size='small' aria-label='sticky table'>
             <TableHead>
