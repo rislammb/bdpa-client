@@ -63,10 +63,6 @@ const ListTable = () => {
       });
   }, []);
 
-  useEffect(() => {
-    setPharmacists(dbPharmacists);
-  }, [dbPharmacists]);
-
   return loading ? (
     <Typography sx={{ p: 3 }}>loading...</Typography>
   ) : (

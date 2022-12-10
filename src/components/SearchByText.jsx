@@ -26,12 +26,12 @@ const SearchByText = ({ pharmacists, onChange }) => {
       sx={{
         ml: -1.5,
         mr: 2,
-        flex: '1 250px',
+        flex: '1 275px',
       }}
     >
       <TextField
         InputLabelProps={{ color: 'info' }}
-        InputProps={{ style: { fontSize: 14 } }}
+        InputProps={{ style: { fontSize: 14, paddingLeft: '5px' } }}
         label='Search'
         value={searchTearm}
         onChange={handleChange}

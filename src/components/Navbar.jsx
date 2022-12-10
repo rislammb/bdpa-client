@@ -31,6 +31,32 @@ const navItems = [
   { path: '/login', text: 'Login' },
 ];
 
+const Transition = () => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`tran ${open ? 'open' : ''}`}>
+      {open ? (
+        <div>
+          <button onClick={() => setOpen(!open)}>text</button>
+          <p>test</p>
+          <p>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Pariatur
+            deleniti eum consequatur illum ipsa et hic voluptas quaerat
+            provident quisquam in repellendus mollitia a porro obcaecati
+            incidunt saepe placeat, reiciendis quos deserunt excepturi accusamus
+            doloremque? Minima distinctio quis quidem doloremque fugiat id
+            magnam quisquam est.
+          </p>
+        </div>
+      ) : (
+        <div>
+          <button onClick={() => setOpen(!open)}>test</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 function Navbar(props) {
   const theme = useTheme();
   const { window } = props;
@@ -155,6 +181,7 @@ function Navbar(props) {
           <Route path='/about' element={<About />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
+          <Route path='/tran' element={<Transition />} />
         </Routes>
       </Box>
     </Box>

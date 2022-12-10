@@ -1,11 +1,11 @@
 import { Clear, FilterAltOutlined } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FilterByJobDepertment from './FilterByJobDepertment';
 import FilterByLocation from './FilterByLocation';
 import SearchByText from './SearchByText';
 
-const FilterGroup = ({ dbPharmacists, setAfterFilter, window }) => {
+const FilterGroup = ({ dbPharmacists, setAfterFilter }) => {
   const [mobileOpen, setMobileOpen] = useState(true);
   const [
     phramacistsAfterDepertmentFilter,
@@ -18,22 +18,57 @@ const FilterGroup = ({ dbPharmacists, setAfterFilter, window }) => {
     setMobileOpen(!mobileOpen);
   };
 
-  const filter = mobileOpen ? (
-    <Box sx={{ flex: '1 250px', textAlign: 'right', mr: 2 }}>
-      <IconButton onClick={handleFilterToggle}>
-        <FilterAltOutlined />
-      </IconButton>
-    </Box>
-  ) : (
+  const permanentJSX = (
+    <>
+      <FilterByJobDepertment
+        pharmacists={dbPharmacists}
+        onChange={(value) => setPhramacistsAfterDepertmentFilter(value)}
+      />
+      <FilterByLocation
+        pharmacists={phramacistsAfterDepertmentFilter}
+        onChange={(value) => setPharmacistsAfterLocationFilter(value)}
+      />
+      <SearchByText
+        pharmacists={pharmacistsAfterLocationFilter}
+        onChange={(value) => setAfterFilter(value)}
+      />
+    </>
+  );
+
+  const temporaryJSX = mobileOpen ? (
     <>
       <Box
         sx={{
-          flex: '1 250px',
+          flex: '1 275px',
           textAlign: 'right',
           mr: 2,
         }}
       >
-        <IconButton onClick={handleFilterToggle}>
+        <IconButton
+          sx={{ background: 'rgba(127,127,127,0.13)' }}
+          onClick={handleFilterToggle}
+        >
+          <FilterAltOutlined />
+        </IconButton>
+        <SearchByText
+          pharmacists={pharmacistsAfterLocationFilter}
+          onChange={(value) => setAfterFilter(value)}
+        />
+      </Box>
+    </>
+  ) : (
+    <>
+      <Box
+        sx={{
+          flex: '1 275px',
+          textAlign: 'right',
+          mr: 2,
+        }}
+      >
+        <IconButton
+          sx={{ background: 'rgba(127,127,127,0.13)' }}
+          onClick={handleFilterToggle}
+        >
           <Clear />
         </IconButton>
       </Box>
@@ -45,29 +80,46 @@ const FilterGroup = ({ dbPharmacists, setAfterFilter, window }) => {
         pharmacists={phramacistsAfterDepertmentFilter}
         onChange={(value) => setPharmacistsAfterLocationFilter(value)}
       />
-    </>
-  );
-
-  // const container =
-  //   window !== undefined ? () => window().document.body : undefined;
-
-  return (
-    <Box
-      sx={{
-        my: 2,
-        ml: 2,
-        mr: -2,
-        display: 'flex',
-        gap: 1,
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-      }}
-    >
-      {filter}
       <SearchByText
         pharmacists={pharmacistsAfterLocationFilter}
         onChange={(value) => setAfterFilter(value)}
       />
+    </>
+  );
+
+  useEffect(() => {
+    setPhramacistsAfterDepertmentFilter(dbPharmacists);
+    setPharmacistsAfterLocationFilter(dbPharmacists);
+  }, [dbPharmacists]);
+
+  return (
+    <Box>
+      <Box
+        sx={{
+          display: { xs: 'flex', sm: 'none' },
+          my: 2,
+          ml: 2,
+          mr: -2,
+          gap: 1,
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+        }}
+      >
+        {temporaryJSX}
+      </Box>
+      <Box
+        sx={{
+          display: { xs: 'none', sm: 'flex' },
+          my: 2,
+          ml: 2,
+          mr: -2,
+          gap: 1,
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+        }}
+      >
+        {permanentJSX}
+      </Box>
     </Box>
   );
 };

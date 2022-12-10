@@ -50,7 +50,7 @@ const FilterByJobDepertment = ({ pharmacists, onChange }) => {
       component='fieldset'
       variant='standard'
       sx={{
-        flex: '1 250px',
+        flex: '1 280px',
       }}
     >
       <FormLabel component='legend'>Filter by Job Depertment</FormLabel>
@@ -59,7 +59,7 @@ const FilterByJobDepertment = ({ pharmacists, onChange }) => {
           control={
             <TextField
               InputLabelProps={{ color: 'info' }}
-              InputProps={{ style: { fontSize: 14 } }}
+              InputProps={{ style: { fontSize: 14, paddingLeft: '5px' } }}
               select
               name='jobDepertment'
               label='Select Job Depertment'
