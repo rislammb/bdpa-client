@@ -24,7 +24,7 @@ const SearchByText = ({ pharmacists, onChange }) => {
   return (
     <Box
       sx={{
-        ml: -1.5,
+        ml: -1.3,
         mr: 2,
         flex: '1 275px',
       }}

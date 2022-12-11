@@ -238,6 +238,12 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
           valueForChange = pharmacists.filter(
             (pharmacist) => pharmacist.deputationUpazila.id === e.target.value
           );
+        } else {
+          valueForChange = pharmacists.filter(
+            (pharmacist) =>
+              pharmacist.postingUpazila.id === e.target.value ||
+              pharmacist.deputationUpazila.id === e.target.value
+          );
         }
         onChange(valueForChange);
       }

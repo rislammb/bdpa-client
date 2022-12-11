@@ -10,20 +10,9 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  /* color: #d3c6ff; */
 }
 
 a {
   color: #007595;
   text-decoration: none;
-}
-
-.tran {
-  height: 30px;
-  overflow: hidden;
-  background-color: rgb(123, 206, 206);
-  transition: all 1s ease-in-out;
-}
-.tran.open {
-  height: 130px;
 }

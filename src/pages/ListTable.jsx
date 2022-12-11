@@ -16,7 +16,7 @@ import { axiosInstance } from '../config';
 import { arraySortByDate } from '../helpers/utilities';
 
 const columns = [
-  { id: 'regNumber', label: 'Registration', minWidth: 60, align: 'right' },
+  { id: 'regNumber', label: 'Registration', minWidth: 60 },
   { id: 'name', label: 'Name', minWidth: 130 },
   { id: 'bn_name', label: 'Name Bengali', minWidth: 130 },
   { id: 'gender', label: 'Gender', minWidth: 30 },
@@ -78,9 +78,7 @@ const ListTable = () => {
         setAfterFilter={(value) => setPharmacists(value)}
       />
 
-      <Paper
-      // sx={{ overflow: 'hidden' }}
-      >
+      <Paper>
         <TableContainer>
           <Table stickyHeader size='small' aria-label='sticky table'>
             <TableHead>
@@ -88,7 +86,6 @@ const ListTable = () => {
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
-                    align={column.align}
                     sx={{
                       minWidth: column.minWidth,
                       padding: '7px 5px',
