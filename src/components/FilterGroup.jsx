@@ -36,7 +36,7 @@ const FilterGroup = ({ dbPharmacists, setAfterFilter }) => {
           sx={{ background: 'rgba(127,127,127,0.13)' }}
           onClick={handleFilterToggle}
         >
-          {mobileOpen ? <FilterAltOutlined /> : <Clear />}
+          { mobileOpen ? <Clear /> : <FilterAltOutlined /> }
         </IconButton>
       </Box>
       <Box
