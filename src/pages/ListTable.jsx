@@ -13,7 +13,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import FilterGroup from '../components/FilterGroup';
 import { axiosInstance } from '../config';
-import { arraySortByDate } from '../helpers/utilities';
 
 const columns = [
   { id: 'regNumber', label: 'Registration', minWidth: 60 },
@@ -54,7 +53,7 @@ const ListTable = () => {
     axiosInstance
       .get('/list')
       .then((res) => {
-        setDbPharmacists(arraySortByDate(res.data));
+        setDbPharmacists(res.data);
       })
       .then(() => setLoading(false))
       .catch((e) => {
