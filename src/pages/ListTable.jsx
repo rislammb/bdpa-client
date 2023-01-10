@@ -62,10 +62,7 @@ const ListTable = () => {
       });
   }, []);
 
-  return loading ? (
-    <Typography sx={{ p: 3 }}>loading...</Typography>
-  ) : (
-    <Box
+  return <Box
       sx={{
         width: '100%',
         maxWidth: '1150px',
@@ -77,7 +74,10 @@ const ListTable = () => {
         setAfterFilter={(value) => setPharmacists(value)}
       />
 
-      <Paper>
+      { loading ? (
+        <Typography sx={{ p: 3 }}>loading...</Typography>
+      ) : (
+       <Paper>
         <TableContainer>
           <Table stickyHeader size='small' aria-label='sticky table'>
             <TableHead>
@@ -178,8 +178,7 @@ const ListTable = () => {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </Paper>
+      </Paper> )}
     </Box>
   );
-};
 export default ListTable;
