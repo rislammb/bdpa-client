@@ -181,4 +181,6 @@ const ListTable = () => {
       </Paper> )}
     </Box>
   );
+}
+
 export default ListTable;
