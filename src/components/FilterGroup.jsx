@@ -6,7 +6,7 @@ import FilterByLocation from './FilterByLocation';
 import SearchByText from './SearchByText';
 
 const FilterGroup = ({ dbPharmacists, setAfterFilter }) => {
-  const [mobileOpen, setMobileOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [
     phramacistsAfterDepertmentFilter,
     setPhramacistsAfterDepertmentFilter,
