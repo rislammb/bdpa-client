@@ -62,7 +62,7 @@ const ListTable = () => {
       });
   }, []);
 
-  return <Box
+  return (<Box
       sx={{
         width: '100%',
         maxWidth: '1150px',
