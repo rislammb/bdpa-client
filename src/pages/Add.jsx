@@ -29,7 +29,11 @@ const Add = () => {
     ...addDeputationFields,
   });
   const [error, setError] = useState({});
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    severity: 'info',
+    text: '',
+  });
 
   const formFieldsArray = Object.keys(formFields).reduce((acc, cur) => {
     acc.push(formFields[cur]);
@@ -113,7 +117,7 @@ const Add = () => {
     if (reason === 'clickaway') {
       return;
     }
-    setOpenSnackbar(false);
+    setSnackbar({ open: false, severity: snackbar.severity, text: '' });
   };
 
   useEffect(() => {
@@ -219,9 +223,13 @@ const Add = () => {
     );
 
     axiosInstance
-      .post('/list', newPharmacist)
+      .post('/pharmacist', newPharmacist)
       .then(() => {
-        setOpenSnackbar(true);
+        setSnackbar({
+          open: true,
+          severity: 'success',
+          text: 'Pharmacist add to databse successfullly.',
+        });
         setFormFields({ ...addFormFields });
         setPostingFields({ ...addPostingFields });
         setVoterArea({ ...voterAreaFields });
@@ -229,7 +237,11 @@ const Add = () => {
         setDeputationFields({ ...addDeputationFields });
       })
       .catch((e) => {
-        console.log('add pharmacist faild!');
+        setSnackbar({
+          open: true,
+          severity: 'error',
+          text: 'Pharmacist add to databse faild!.',
+        });
         if (typeof e.response.data === 'object') {
           setError(e.response.data);
         }
@@ -294,18 +306,6 @@ const Add = () => {
               />
             );
         })}
-        <PostingGroup
-          label='Main Posting'
-          postingInfo={postingFieldsArray}
-          onChange={handlePostingChange}
-          error={error}
-        />
-        <PostingGroup
-          label='Voter Area'
-          postingInfo={voterAreaArray}
-          onChange={handleVoterAreaChange}
-          error={error}
-        />
         <Box
           sx={{
             display: 'inline-flex',
@@ -321,7 +321,20 @@ const Add = () => {
             onChange={(e) => setOnDeputation(e.target.value)}
           />
         </Box>
-        {onDeputation && (
+        <PostingGroup
+          label='Voter Area'
+          postingInfo={voterAreaArray}
+          onChange={handleVoterAreaChange}
+          error={error}
+        />
+        <PostingGroup
+          label='Main Posting'
+          postingInfo={postingFieldsArray}
+          onChange={handlePostingChange}
+          error={error}
+        />
+
+        {onDeputation === '2' && (
           <PostingGroup
             label='Deputation Posting'
             postingInfo={deputationFieldsArray}
@@ -330,7 +343,12 @@ const Add = () => {
           />
         )}
       </div>
-      <SnackbarComp open={openSnackbar} handleClose={handleSnackbarClose} />
+      <SnackbarComp
+        open={snackbar.open}
+        severity={snackbar.severity}
+        text={snackbar.text}
+        handleClose={handleSnackbarClose}
+      />
       <Button
         disabled={!formFields.name.value || !formFields.regNumber.value}
         variant='contained'

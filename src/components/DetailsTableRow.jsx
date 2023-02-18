@@ -182,7 +182,7 @@ const DetailsTableRow = ({
       dataForTd = inputValue;
     }
     axiosInstance
-      .put(`/list/${pharmacist.regNumber}`, dataForSubmit)
+      .patch(`/pharmacist/${pharmacist.regNumber}`, dataForSubmit)
       .then(() => {
         if (row.name === 'onDeputation') {
           handleShowDeputation(dataForSubmit['onDeputation']);

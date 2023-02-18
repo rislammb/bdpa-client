@@ -10,14 +10,39 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { axiosInstance } from '../config';
+
+const initialState = { email: '', password: '', confirmPassword: '' };
 
 const Signup = () => {
   const theme = useTheme();
-  const [email, setEmail] = useState('');
-  const [notFound, setNotFound] = useState(false);
+  const [state, setState] = useState({ ...initialState });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setState((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = () => {
-    alert('This part is in progress. Try again later!');
+    axiosInstance
+      .post('/auth/register', {
+        ...state,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((e) => {
+        console.log(e.response.data);
+        // setSnackbar({
+        //   open: true,
+        //   severity: 'error',
+        //   text: 'Pharmacist add to databse faild!.',
+        // });
+        if (typeof e.response.data === 'object') {
+          // setError(e.response.data);
+        }
+      });
+
     // setNotFound(true);
   };
 
@@ -38,13 +63,33 @@ const Signup = () => {
           InputLabelProps={{ color: 'info' }}
           type='email'
           name='email'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder='abc@email.co'
-          label='Find you email in database'
+          value={state.email}
+          onChange={handleChange}
+          placeholder='abc@email.com'
+          label='Enter your email'
           variant='standard'
-          error={notFound}
-          helperText={notFound ? 'Email not found!' : ''}
+          // error={notFound}
+          // helperText={notFound ? 'Email not found!' : ''}
+        />
+        <TextField
+          InputLabelProps={{ color: 'info' }}
+          type='password'
+          name='password'
+          value={state.password}
+          onChange={handleChange}
+          placeholder='********'
+          label='Password'
+          variant='standard'
+        />
+        <TextField
+          InputLabelProps={{ color: 'info' }}
+          type='password'
+          name='confirmPassword'
+          value={state.confirmPassword}
+          onChange={handleChange}
+          placeholder='********'
+          label='Confirm Password'
+          variant='standard'
         />
 
         <CardActions sx={{ flexDirection: 'column', rowGap: 1 }}>

@@ -10,16 +10,36 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { axiosInstance } from '../config';
 
-import React from 'react';
+const initialState = { email: '', password: '' };
 
 const Login = () => {
   const theme = useTheme();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [state, setState] = useState({ ...initialState });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setState((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = () => {
-    alert('This part is in progress. Try again later!');
+    axiosInstance
+      .post('/auth/login', { ...state })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((e) => {
+        console.log(e.response.data);
+        // setSnackbar({
+        //   open: true,
+        //   severity: 'error',
+        //   text: 'Pharmacist add to databse faild!.',
+        // });
+        if (typeof e.response.data === 'object') {
+          // setError(e.response.data);
+        }
+      });
   };
 
   return (
@@ -38,8 +58,8 @@ const Login = () => {
           InputLabelProps={{ color: 'info' }}
           type='email'
           name='email'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={state.email}
+          onChange={handleChange}
           placeholder='abc@email.co'
           label='Email'
           variant='standard'
@@ -48,8 +68,8 @@ const Login = () => {
           InputLabelProps={{ color: 'info' }}
           type='password'
           name='password'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={state.password}
+          onChange={handleChange}
           placeholder='**********'
           label='Password'
           variant='standard'

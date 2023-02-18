@@ -1,5 +1,5 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Button, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import DetailsTableRow from '../components/DetailsTableRow';
+import Loading from '../components/ui/Loading';
 import { axiosInstance } from '../config';
 
 const createRow = (th, value, name, type, edit) => ({
@@ -160,22 +161,18 @@ const DetailsTable = () => {
         `Are you sure you want to delete '${pharmacist.name} : ${pharmacist.regNumber}'?`
       )
     ) {
-      if (window.prompt('What is your secret code?') === 'bdpa-raj') {
-        axiosInstance
-          .delete(`/list/${regNumber}`)
-          .then(() => navigate('/list'))
-          .catch((e) => {
-            console.log(e.message);
-          });
-      } else {
-        window.alert('You are not permitted to delete!');
-      }
+      axiosInstance
+        .delete(`/pharmacist/${regNumber}`)
+        .then(() => navigate('/list'))
+        .catch((e) => {
+          console.log(e.message);
+        });
     }
   };
 
   useEffect(() => {
     axiosInstance
-      .get(`/list/${regNumber}`)
+      .get(`/pharmacist/${regNumber}`)
       .then((res) => {
         setPharmacist(res.data);
       })
@@ -188,7 +185,9 @@ const DetailsTable = () => {
   }, [regNumber]);
 
   return loading ? (
-    <Typography sx={{ p: 3 }}>loading...</Typography>
+    <Box sx={{ p: 5 }}>
+      <Loading />
+    </Box>
   ) : (
     <TableContainer
       sx={{
