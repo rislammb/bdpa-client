@@ -1,6 +1,5 @@
 import { Box } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import { useTheme } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,6 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { useTheme } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -20,16 +20,16 @@ const columns = [
   { id: 'name', label: 'Name', minWidth: 130 },
   { id: 'bn_name', label: 'Name Bengali', minWidth: 130 },
   { id: 'gender', label: 'Gender', minWidth: 30 },
-  {
-    id: 'jobDepertment',
-    label: 'Job Depertment',
-    minWidth: 140,
-  },
-  { id: 'dateOfJoin', label: 'Date of Join', minWidth: 95 },
+  { id: 'dateOfBirth', label: 'Date of Birth', minWidth: 95 },
   {
     id: 'mainPosting',
     label: 'Main Posting',
     minWidth: 170,
+  },
+  {
+    id: 'jobDepertment',
+    label: 'Job Depertment',
+    minWidth: 140,
   },
 ];
 
@@ -39,7 +39,7 @@ const ListTable = () => {
   const [dbPharmacists, setDbPharmacists] = useState([]);
   const [pharmacists, setPharmacists] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -121,7 +121,7 @@ const ListTable = () => {
                                   padding: '7px 5px',
                                 }}
                               >
-                                {column.id === 'dateOfJoin' ? (
+                                {column.id === 'dateOfBirth' ? (
                                   dayjs(value).format('DD MMM YYYY')
                                 ) : column.id === 'mainPosting' ? (
                                   `${

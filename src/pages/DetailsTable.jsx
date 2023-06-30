@@ -55,7 +55,8 @@ const DetailsTable = () => {
           true
         ),
         createRow('Email', pharmacist.email || '', 'email', 'text', true),
-        createRow('Mobile', pharmacist.mobile || '', 'mobile', 'text', true),
+        createRow('Mobile', 'Hide now', 'mobile', 'text', false),
+        // createRow('Mobile', pharmacist.mobile || '', 'mobile', 'text', true),
         createRow('Gender', pharmacist.gender || '', 'gender', 'select', true),
         createRow(
           'Date of Birth',

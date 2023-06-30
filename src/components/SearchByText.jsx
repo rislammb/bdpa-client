@@ -11,7 +11,8 @@ const SearchByText = ({ pharmacists, onChange }) => {
       pharmacists.filter(
         (item) =>
           item.name.toLowerCase().includes(value.toLowerCase()) ||
-          item.regNumber.toLowerCase().includes(value.toLowerCase())
+          item.regNumber.toLowerCase().includes(value.toLowerCase()) ||
+          item.mobile.includes(value)
       )
     );
   };
@@ -35,7 +36,7 @@ const SearchByText = ({ pharmacists, onChange }) => {
         label='Search'
         value={searchTearm}
         onChange={handleChange}
-        placeholder='Name or Registration'
+        placeholder='Name, Registration or Mobile'
         variant='standard'
         sx={{
           width: '100%',

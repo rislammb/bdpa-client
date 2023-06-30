@@ -94,7 +94,7 @@ const Signup = () => {
 
         <CardActions sx={{ flexDirection: 'column', rowGap: 1 }}>
           <Button onClick={handleSubmit} variant='contained'>
-            Search
+            Signup
           </Button>
           <Typography variant='body2' component='span'>
             Already have an account? Please{' '}

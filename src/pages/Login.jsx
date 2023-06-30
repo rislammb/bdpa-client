@@ -28,6 +28,10 @@ const Login = () => {
       .post('/auth/login', { ...state })
       .then((res) => {
         console.log(res.data);
+        localStorage.setItem(
+          'BDPA_API_TOKEN',
+          JSON.stringify(`Bearer ${res.data.token}`)
+        );
       })
       .catch((e) => {
         console.log(e.response.data);
