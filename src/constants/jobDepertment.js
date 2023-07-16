@@ -14,6 +14,9 @@ export const jobDepertmentOptions = [
     name: 'Border Guard of Bangladesh',
   },
   { id: '5', name: 'Bangladesh Police' },
+  { id: '6', name: 'Bangladesh Bank' },
+  { id: '17', name: 'Pharmacy/Medicine Store' },
+  { id: '18', name: 'Non-Governmental Organization' },
 ];
 
 export const jobDepertmentField = {

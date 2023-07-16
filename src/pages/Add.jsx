@@ -315,7 +315,7 @@ const Add = () => {
         >
           <SelectComponent
             name='onDeputation'
-            label='On Deputation'
+            label='On Deputation/Attachment'
             value={onDeputation}
             options={[...onDeputationOptions]}
             onChange={(e) => setOnDeputation(e.target.value)}
@@ -328,7 +328,7 @@ const Add = () => {
           error={error}
         />
         <PostingGroup
-          label='Main Posting'
+          label='Main Posting/Address'
           postingInfo={postingFieldsArray}
           onChange={handlePostingChange}
           error={error}
@@ -336,7 +336,7 @@ const Add = () => {
 
         {onDeputation === '2' && (
           <PostingGroup
-            label='Deputation Posting'
+            label='Deputation/Attachment Address'
             postingInfo={deputationFieldsArray}
             onChange={handleDeputationChange}
             error={error}

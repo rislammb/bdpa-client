@@ -23,7 +23,7 @@ const columns = [
   { id: 'dateOfBirth', label: 'Date of Birth', minWidth: 95 },
   {
     id: 'mainPosting',
-    label: 'Main Posting',
+    label: 'Main Posting/Address',
     minWidth: 170,
   },
   {
@@ -62,6 +62,10 @@ const ListTable = () => {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    setPage(0);
+  }, [pharmacists]);
 
   return (
     <Box

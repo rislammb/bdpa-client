@@ -87,7 +87,7 @@ const DetailsTable = () => {
           true
         ),
         createRow(
-          'Main Posting',
+          'Main Posting/Address',
           `${pharmacist.postingPlace ? `${pharmacist.postingPlace}, ` : ''}${
             pharmacist.postingUpazila?.name
               ? `${pharmacist.postingUpazila?.name}, `
@@ -117,7 +117,7 @@ const DetailsTable = () => {
           true
         ),
         createRow(
-          'On Deputation',
+          'On Deputation/Attachment',
           pharmacist.onDeputation,
           'onDeputation',
           'select',
@@ -132,7 +132,7 @@ const DetailsTable = () => {
   useEffect(() => {
     if (showDeputationRow) {
       const row = createRow(
-        'Deputation Posting',
+        'Deputation/Attachment Posting',
         `${
           pharmacist.deputationPlace ? `${pharmacist.deputationPlace}, ` : ''
         }${
