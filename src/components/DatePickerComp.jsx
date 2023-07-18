@@ -10,9 +10,9 @@ const DatePickerComp = ({ name, label, value, onChange }) => {
       <DatePicker
         disableFuture
         label={label}
-        openTo='day'
+        openTo='year'
         inputFormat='DD/MM/YYYY'
-        views={['day', 'month', 'year']}
+        views={['year', 'month', 'day']}
         value={dayjs(value)}
         onChange={(newValue) => onChange(newValue, name)}
         renderInput={(params) => (
