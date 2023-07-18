@@ -13,6 +13,7 @@ import SelectComponent from '../components/SelectComponent';
 import SnackbarComp from '../components/Snackbar';
 import { addDeputationFields } from '../constants/addDeputationFields';
 import { addFormFields } from '../constants/addFormFields';
+import { addPermanentFields } from '../constants/addPermanentFields';
 import { addPostingFields } from '../constants/addPostingFields';
 import { districts } from '../constants/districts';
 import { onDeputationOptions } from '../constants/onDeputationFields';
@@ -23,11 +24,15 @@ import { pharmacistFromState } from '../helpers/utilities';
 const Add = () => {
   const [formFields, setFormFields] = useState({ ...addFormFields });
   const [postingFields, setPostingFields] = useState({ ...addPostingFields });
+  const [permanentFields, setPermanentFields] = useState({
+    ...addPermanentFields,
+  });
   const [voterArea, setVoterArea] = useState({ ...voterAreaFields });
   const [onDeputation, setOnDeputation] = useState('1');
   const [deputationFields, setDeputationFields] = useState({
     ...addDeputationFields,
   });
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState({});
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -43,6 +48,13 @@ const Add = () => {
     acc.push(postingFields[cur]);
     return acc;
   }, []);
+  const permanentFieldsArray = Object.keys(permanentFields).reduce(
+    (acc, cur) => {
+      acc.push(permanentFields[cur]);
+      return acc;
+    },
+    []
+  );
   const voterAreaArray = Object.keys(voterArea).reduce((acc, cur) => {
     acc.push(voterArea[cur]);
     return acc;
@@ -85,6 +97,16 @@ const Add = () => {
 
   const handlePostingChange = (e) => {
     setPostingFields((prevState) => ({
+      ...prevState,
+      [e.target.name]: {
+        ...prevState[e.target.name],
+        value: e.target.value,
+      },
+    }));
+  };
+
+  const handlePermanentChange = (e) => {
+    setPermanentFields((prevState) => ({
       ...prevState,
       [e.target.name]: {
         ...prevState[e.target.name],
@@ -156,6 +178,41 @@ const Add = () => {
   }, [postingFields.postingDistrict.value]);
 
   useEffect(() => {
+    setPermanentFields((prevState) => ({
+      ...prevState,
+      permanentDistrict: {
+        ...addPermanentFields.permanentDistrict,
+        options: [
+          ...addPermanentFields.permanentDistrict.options,
+          ...districts.filter(
+            (item) => item.division_id === prevState.permanentDivision.value
+          ),
+        ],
+        value: '0',
+      },
+      permanentUpazila: {
+        ...addPermanentFields.permanentUpazila,
+      },
+    }));
+  }, [permanentFields.permanentDivision.value]);
+
+  useEffect(() => {
+    setPermanentFields((prevState) => ({
+      ...prevState,
+      permanentUpazila: {
+        ...addPermanentFields.permanentUpazila,
+        options: [
+          ...addPermanentFields.permanentUpazila.options,
+          ...upazilas.filter(
+            (item) => item.district_id === prevState.permanentDistrict.value
+          ),
+        ],
+        value: '0',
+      },
+    }));
+  }, [permanentFields.permanentDistrict.value]);
+
+  useEffect(() => {
     setVoterArea((prevState) => ({
       ...prevState,
       voterDistrict: {
@@ -212,11 +269,13 @@ const Add = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setSubmitting(true);
     setError({});
 
     const newPharmacist = pharmacistFromState(
       formFields,
       postingFields,
+      permanentFields,
       voterArea,
       onDeputation,
       deputationFields
@@ -232,9 +291,11 @@ const Add = () => {
         });
         setFormFields({ ...addFormFields });
         setPostingFields({ ...addPostingFields });
+        setPermanentFields({ ...addPermanentFields });
         setVoterArea({ ...voterAreaFields });
         setOnDeputation('1');
         setDeputationFields({ ...addDeputationFields });
+        setSubmitting(false);
       })
       .catch((e) => {
         setSnackbar({
@@ -245,6 +306,7 @@ const Add = () => {
         if (typeof e.response.data === 'object') {
           setError(e.response.data);
         }
+        setSubmitting(false);
       });
   };
 
@@ -333,6 +395,12 @@ const Add = () => {
           onChange={handlePostingChange}
           error={error}
         />
+        <PostingGroup
+          label='Permanent Address'
+          postingInfo={permanentFieldsArray}
+          onChange={handlePermanentChange}
+          error={error}
+        />
 
         {onDeputation === '2' && (
           <PostingGroup
@@ -350,7 +418,9 @@ const Add = () => {
         handleClose={handleSnackbarClose}
       />
       <Button
-        disabled={!formFields.name.value || !formFields.regNumber.value}
+        disabled={
+          !formFields.name.value || !formFields.regNumber.value || submitting
+        }
         variant='contained'
         type='submit'
         sx={{ mb: 2 }}

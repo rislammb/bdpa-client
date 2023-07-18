@@ -278,6 +278,43 @@ export const postingValueFromState = (postingFields) => {
   }, {});
 };
 
+export const permanentValueFromState = (permanentFields) => {
+  return Object.keys(permanentFields).reduce((acc, cur) => {
+    if (cur === 'permanentDivision') {
+      const division = divisions.find(
+        (item) => item.id === permanentFields[cur].value
+      );
+      acc[cur] = division
+        ? division
+        : {
+            id: '',
+            name: '',
+            bn_name: '',
+          };
+    } else if (cur === 'permanentDistrict') {
+      const district = districts.find(
+        (item) => item.id === permanentFields[cur].value
+      );
+      acc[cur] = district
+        ? district
+        : { id: '', division_id: '', name: '', bn_name: '' };
+    } else if (cur === 'permanentUpazila') {
+      const upazila = upazilas.find(
+        (item) => item.id === permanentFields[cur].value
+      );
+      acc[cur] = upazila
+        ? upazila
+        : {
+            id: '',
+            district_id: '',
+            name: '',
+            bn_name: '',
+          };
+    } else acc[cur] = permanentFields[cur].value;
+    return acc;
+  }, {});
+};
+
 export const voterValueFromState = (voterAreaFields) => {
   return Object.keys(voterAreaFields).reduce((acc, cur) => {
     if (cur === 'voterDivision') {
@@ -343,6 +380,7 @@ export const deputationValueFromState = (deputationFields) => {
 export const pharmacistFromState = (
   formFields,
   postingFields,
+  permanentFields,
   voterArea,
   onDeputation,
   deputationFields
@@ -363,6 +401,7 @@ export const pharmacistFromState = (
   }, {});
 
   const postingValues = postingValueFromState(postingFields);
+  const permanentValues = permanentValueFromState(permanentFields);
 
   const voterAreaValues = Object.keys(voterArea).reduce((acc, cur) => {
     if (cur === 'voterDivision') {
@@ -420,6 +459,7 @@ export const pharmacistFromState = (
   return {
     ...formValues,
     ...postingValues,
+    ...permanentValues,
     ...voterAreaValues,
     onDeputation: onDeputationOptions.find((opt) => opt.id === onDeputation)
       ?.name,

@@ -13,7 +13,7 @@ export const addFormFields = {
     type: 'text',
     name: 'name',
     label: 'Pharmacist Name',
-    placeholder: 'Abdullah',
+    placeholder: 'ABDULLAH',
     value: '',
   },
   bn_name: {
@@ -21,6 +21,20 @@ export const addFormFields = {
     name: 'bn_name',
     label: 'Name in Bengali',
     placeholder: 'আবদুল্লাহ',
+    value: '',
+  },
+  fathersName: {
+    type: 'text',
+    name: 'fathersName',
+    label: "Father's Name",
+    placeholder: 'ABDUR RAHMAN',
+    value: '',
+  },
+  mothersName: {
+    type: 'text',
+    name: 'mothersName',
+    label: "Mother's Name",
+    placeholder: 'AYESHA',
     value: '',
   },
   email: {
@@ -44,11 +58,25 @@ export const addFormFields = {
     value: new Date(),
   },
   gender: { ...genderField },
+  nationalId: {
+    type: 'text',
+    name: 'nationalId',
+    label: 'National ID Number',
+    placeholder: '1372362372',
+    value: '',
+  },
   passingYear: {
     type: 'text',
     name: 'passingYear',
     label: 'Diploma Passing Year',
     placeholder: '2012',
+    value: '',
+  },
+  memberId: {
+    type: 'text',
+    name: 'memberId',
+    label: 'BDPA Member ID',
+    placeholder: 'BDP00321',
     value: '',
   },
   dateOfJoin: {
