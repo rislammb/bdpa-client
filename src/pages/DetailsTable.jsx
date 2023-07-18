@@ -144,7 +144,7 @@ const DetailsTable = () => {
           }`,
           'permanentAddress',
           'select',
-          true
+          false
         ),
         createRow(
           'Voter Area',
