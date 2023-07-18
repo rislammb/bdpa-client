@@ -57,6 +57,20 @@ const DetailsTable = () => {
         createRow('Email', pharmacist.email || '', 'email', 'text', true),
         createRow('Mobile', 'Hide now', 'mobile', 'text', false),
         // createRow('Mobile', pharmacist.mobile || '', 'mobile', 'text', true),
+        createRow(
+          "Father's Name",
+          pharmacist.fathersName || '',
+          'fathersName',
+          'text',
+          true
+        ),
+        createRow(
+          "Mother's Name",
+          pharmacist.mothersName || '',
+          'mothersName',
+          'text',
+          true
+        ),
         createRow('Gender', pharmacist.gender || '', 'gender', 'select', true),
         createRow(
           'Date of Birth',
@@ -66,9 +80,23 @@ const DetailsTable = () => {
           true
         ),
         createRow(
+          'National ID Number',
+          pharmacist.nationalId || '',
+          'nationalId',
+          'text',
+          true
+        ),
+        createRow(
           'Passing Year',
           pharmacist.passingYear || '',
           'passingYear',
+          'text',
+          true
+        ),
+        createRow(
+          'BDPA Member ID',
+          pharmacist.memberId || '',
+          'memberId',
           'text',
           true
         ),
@@ -98,6 +126,23 @@ const DetailsTable = () => {
               : ''
           }`,
           'mainPosting',
+          'select',
+          true
+        ),
+        createRow(
+          'Permanent Address',
+          `${
+            pharmacist.permanentPlace ? `${pharmacist.permanentPlace}, ` : ''
+          }${
+            pharmacist.permanentUpazila?.name
+              ? `${pharmacist.permanentUpazila?.name}, `
+              : ''
+          }${
+            pharmacist.permanentDistrict?.name
+              ? pharmacist.permanentDistrict?.name
+              : ''
+          }`,
+          'permanentAddress',
           'select',
           true
         ),
