@@ -95,7 +95,7 @@ const ListTable = () => {
                       key={column.id}
                       sx={{
                         minWidth: column.minWidth,
-                        padding: '7px 5px',
+                        padding: { xs: '8px 8px', sm: '8px 16px' },
                       }}
                     >
                       {column.label}
@@ -122,7 +122,7 @@ const ListTable = () => {
                                 align={column.align}
                                 sx={{
                                   minWidth: column.minWidth,
-                                  padding: '7px 5px',
+                                  padding: { xs: '8px 6px', sm: '8px 12px' },
                                 }}
                               >
                                 {column.id === 'dateOfBirth' ? (
@@ -152,6 +152,7 @@ const ListTable = () => {
                                           : theme.palette.primary.main,
                                     }}
                                     to={`/list/${pharmacist['regNumber']}`}
+                                    target='_blank'
                                   >
                                     {value}
                                   </Link>

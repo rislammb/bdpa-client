@@ -1,4 +1,5 @@
 import { addDeputationFields } from '../constants/addDeputationFields';
+import { addPermanentFields } from '../constants/addPermanentFields';
 import { addPostingFields } from '../constants/addPostingFields';
 import { districts } from '../constants/districts';
 import { divisions } from '../constants/divisions';
@@ -40,6 +41,44 @@ export const postingFieldsFromPharmacist = (pharmacist) => {
             ...upazilas.filter(
               (upazila) =>
                 upazila.district_id === pharmacist['postingDistrict'].id
+            ),
+          ];
+          acc[cur].value = pharmacist[cur].id;
+        }
+      } else {
+        acc[cur].value = pharmacist[cur] || '';
+      }
+      return acc;
+    }, {}),
+  };
+};
+
+export const permanentFieldsFromPharmacist = (pharmacist) => {
+  return {
+    ...Object.keys({ ...addPermanentFields }).reduce((acc, cur) => {
+      acc[cur] = { ...addPermanentFields[cur] };
+      if (cur === 'permanentDivision') {
+        if (pharmacist[cur].id) {
+          acc[cur].value = pharmacist[cur].id;
+        }
+      } else if (cur === 'permanentDistrict') {
+        if (pharmacist[cur].id) {
+          acc[cur].options = [
+            ...addPermanentFields[cur].options,
+            ...districts.filter(
+              (district) =>
+                district.division_id === pharmacist['permanentDivision'].id
+            ),
+          ];
+          acc[cur].value = pharmacist[cur].id;
+        }
+      } else if (cur === 'permanentUpazila') {
+        if (pharmacist[cur].id) {
+          acc[cur].options = [
+            ...addPermanentFields[cur].options,
+            ...upazilas.filter(
+              (upazila) =>
+                upazila.district_id === pharmacist['permanentDistrict'].id
             ),
           ];
           acc[cur].value = pharmacist[cur].id;
@@ -148,6 +187,55 @@ export const changeHandlerForPostingGroup = (prevState, name, value) => {
         ...prevState['postingUpazila'],
         options: [
           ...addPostingFields['postingUpazila'].options,
+          ...upazilas.filter((upazila) => upazila.district_id === value),
+        ],
+        value: '0',
+      },
+    };
+  } else {
+    return {
+      ...prevState,
+      [name]: {
+        ...prevState[name],
+        value: value,
+      },
+    };
+  }
+};
+
+export const changeHandlerForPermanentGroup = (prevState, name, value) => {
+  if (name === 'permanentDivision') {
+    return {
+      ...prevState,
+      [name]: {
+        ...prevState[name],
+        value: value,
+      },
+      permanentDistrict: {
+        ...prevState['permanentDistrict'],
+        options: [
+          ...addPermanentFields['permanentDistrict'].options,
+          ...districts.filter((district) => district.division_id === value),
+        ],
+        value: '0',
+      },
+      permanentUpazila: {
+        ...prevState['permanentUpazila'],
+        options: [...addPermanentFields['permanentUpazila'].options],
+        value: '0',
+      },
+    };
+  } else if (name === 'permanentDistrict') {
+    return {
+      ...prevState,
+      [name]: {
+        ...prevState[name],
+        value: value,
+      },
+      permanentUpazila: {
+        ...prevState['permanentUpazila'],
+        options: [
+          ...addPermanentFields['permanentUpazila'].options,
           ...upazilas.filter((upazila) => upazila.district_id === value),
         ],
         value: '0',

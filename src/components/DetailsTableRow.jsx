@@ -15,10 +15,13 @@ import {
 import { onDeputationOptions } from '../constants/onDeputationFields';
 import {
   changeHandlerForDeputationGroup,
+  changeHandlerForPermanentGroup,
   changeHandlerForPostingGroup,
   changeHandlerForVoterGroup,
   deputationFieldsFromPharmacist,
   deputationValueFromState,
+  permanentFieldsFromPharmacist,
+  permanentValueFromState,
   postingFieldsFromPharmacist,
   postingValueFromState,
   voterFieldsFromPharmacist,
@@ -39,6 +42,7 @@ const DetailsTableRow = ({
   const [gender, setGender] = useState(null);
   const [jobDepertment, setJobDepertment] = useState(null);
   const [postingFields, setPostingFields] = useState(null);
+  const [permanentFields, setPermanentFields] = useState(null);
   const [voterFields, setVoterFields] = useState(
     voterFieldsFromPharmacist(pharmacist)
   );
@@ -57,12 +61,20 @@ const DetailsTableRow = ({
       return acc;
     }, []);
 
+  const permanentFieldsArray =
+    permanentFields &&
+    Object.keys(permanentFields).reduce((acc, cur) => {
+      acc.push(permanentFields[cur]);
+      return acc;
+    }, []);
+
   const voterAreaArray =
     voterFields &&
     Object.keys(voterFields).reduce((acc, cur) => {
       acc.push(voterFields[cur]);
       return acc;
     }, []);
+
   const deputationFieldsArray =
     deputationFields &&
     Object.keys(deputationFields).reduce((acc, cur) => {
@@ -92,6 +104,15 @@ const DetailsTableRow = ({
   const handlePostingChange = (e) => {
     setPostingFields((prevState) => {
       return changeHandlerForPostingGroup(
+        prevState,
+        e.target.name,
+        e.target.value
+      );
+    });
+  };
+  const handlePermanentChange = (e) => {
+    setPermanentFields((prevState) => {
+      return changeHandlerForPermanentGroup(
         prevState,
         e.target.name,
         e.target.value
@@ -145,6 +166,19 @@ const DetailsTableRow = ({
           ? dataForSubmit.postingDistrict?.name
           : ''
       }`;
+    } else if (row.name === 'permanentAddress') {
+      dataForSubmit = permanentValueFromState(permanentFields);
+      dataForTd = `${
+        dataForSubmit.permanentPlace ? `${dataForSubmit.permanentPlace}, ` : ''
+      }${
+        dataForSubmit.permanentUpazila?.name
+          ? `${dataForSubmit.permanentUpazila?.name}, `
+          : ''
+      }${
+        dataForSubmit.permanentDistrict?.name
+          ? dataForSubmit.permanentDistrict?.name
+          : ''
+      }`;
     } else if (row.name === 'onDeputation') {
       const data = onDeputationOptions.find(
         (opt) => opt.id === onDeputation
@@ -181,6 +215,7 @@ const DetailsTableRow = ({
       dataForSubmit = { [row.name]: inputValue };
       dataForTd = inputValue;
     }
+
     axiosInstance
       .patch(`/pharmacist/${pharmacist.regNumber}`, dataForSubmit)
       .then(() => {
@@ -221,6 +256,8 @@ const DetailsTableRow = ({
       }
     } else if (row.name === 'mainPosting') {
       setPostingFields(postingFieldsFromPharmacist(pharmacist));
+    } else if (row.name === 'permanentAddress') {
+      setPermanentFields(permanentFieldsFromPharmacist(pharmacist));
     } else if (row.name === 'deputationPosting') {
       setDeputationFields(deputationFieldsFromPharmacist(pharmacist));
     }
@@ -232,15 +269,15 @@ const DetailsTableRow = ({
       sx={{
         display: 'grid',
         gridTemplateColumns: {
-          xs: '1fr 2fr 85px',
-          sm: '1fr 2fr 93px',
+          xs: row.edit ? '1fr 2fr 85px' : '1fr 2fr',
+          sm: row.edit ? '1fr 2fr 93px' : '1fr 2fr',
         },
         '&:last-child td, &:last-child th': { border: 0 },
       }}
     >
       <TableCell
         sx={{
-          padding: { xs: '5px 8px', sm: '6px 16px' },
+          padding: { xs: '8px 8px', sm: '8px 16px' },
           alignContent: 'center',
         }}
         component='th'
@@ -248,7 +285,13 @@ const DetailsTableRow = ({
       >
         {row.th}
       </TableCell>
-      <TableCell sx={{ padding: { xs: '5px 8px', sm: '6px 16px' } }}>
+      <TableCell
+        sx={{
+          padding: { xs: '8px 8px', sm: '8px 16px' },
+          fontWeight:
+            row.name === 'regNumber' || row.name === 'name' ? 'bold' : '',
+        }}
+      >
         {isEditOpen ? (
           row.type === 'text' ? (
             <TextField
@@ -296,6 +339,13 @@ const DetailsTableRow = ({
               error={error}
               style={{ width: '100%' }}
             />
+          ) : row.name === 'permanentAddress' ? (
+            <PostingGroup
+              postingInfo={permanentFieldsArray}
+              onChange={handlePermanentChange}
+              error={error}
+              style={{ width: '100%' }}
+            />
           ) : row.name === 'voterArea' ? (
             <PostingGroup
               postingInfo={voterAreaArray}
@@ -333,43 +383,45 @@ const DetailsTableRow = ({
           tableData
         )}
       </TableCell>
-      <TableCell
-        sx={{ padding: { xs: '1px 13px 1px 3px', sm: '3px 15px 3px 5px' } }}
-      >
-        {row.edit &&
-          (isEditOpen ? (
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <IconButton
-                edge='end'
-                aria-label='edit'
-                onClick={handleIsEditOpen}
-                disabled={!row.edit}
-              >
-                <Close />
-              </IconButton>
-              <IconButton
-                edge='end'
-                aria-label='edit'
-                onClick={handleSubmit}
-                disabled={!row.edit}
-              >
-                <Done />
-              </IconButton>
-            </div>
-          ) : (
-            <div style={{ textAlign: 'center' }}>
-              <IconButton
-                sx={{ textAlign: 'center' }}
-                edge='end'
-                aria-label='edit'
-                onClick={() => handleIsEditOpen(row.name)}
-                disabled={!row.edit}
-              >
-                <EditOutlined />
-              </IconButton>
-            </div>
-          ))}
-      </TableCell>
+      {row.edit && (
+        <TableCell
+          sx={{ padding: { xs: '1px 13px 1px 3px', sm: '3px 15px 3px 5px' } }}
+        >
+          {row.edit &&
+            (isEditOpen ? (
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <IconButton
+                  edge='end'
+                  aria-label='edit'
+                  onClick={handleIsEditOpen}
+                  disabled={!row.edit}
+                >
+                  <Close />
+                </IconButton>
+                <IconButton
+                  edge='end'
+                  aria-label='edit'
+                  onClick={handleSubmit}
+                  disabled={!row.edit}
+                >
+                  <Done />
+                </IconButton>
+              </div>
+            ) : (
+              <div style={{ textAlign: 'center' }}>
+                <IconButton
+                  sx={{ textAlign: 'center' }}
+                  edge='end'
+                  aria-label='edit'
+                  onClick={() => handleIsEditOpen(row.name)}
+                  disabled={!row.edit}
+                >
+                  <EditOutlined />
+                </IconButton>
+              </div>
+            ))}
+        </TableCell>
+      )}
     </TableRow>
   );
 };

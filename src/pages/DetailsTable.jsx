@@ -29,6 +29,8 @@ const DetailsTable = () => {
   const [showDeputationRow, setShowDeputationRow] = useState(null);
   const [tableRows, setTableRows] = useState([]);
 
+  const isPermittedForEdit = false;
+
   useEffect(() => {
     if (pharmacist) {
       setShowDeputationRow(pharmacist.onDeputation === 'Yes' ? true : false);
@@ -45,74 +47,86 @@ const DetailsTable = () => {
           pharmacist.name || '',
           'name',
           'text',
-          true
+          isPermittedForEdit
         ),
         createRow(
           'Name (Bengali)',
           pharmacist.bn_name || '',
           'bn_name',
           'text',
-          true
+          isPermittedForEdit
         ),
-        createRow('Email', pharmacist.email || '', 'email', 'text', true),
-        createRow('Mobile', 'Hide now', 'mobile', 'text', false),
+        createRow(
+          'Email',
+          pharmacist.email || '',
+          'email',
+          'text',
+          isPermittedForEdit
+        ),
+        createRow('Mobile', 'Hide now', 'mobile', 'text', isPermittedForEdit),
         // createRow('Mobile', pharmacist.mobile || '', 'mobile', 'text', true),
         createRow(
           "Father's Name",
           pharmacist.fathersName || '',
           'fathersName',
           'text',
-          true
+          isPermittedForEdit
         ),
         createRow(
           "Mother's Name",
           pharmacist.mothersName || '',
           'mothersName',
           'text',
-          true
+          isPermittedForEdit
         ),
-        createRow('Gender', pharmacist.gender || '', 'gender', 'select', true),
+        createRow(
+          'Gender',
+          pharmacist.gender || '',
+          'gender',
+          'select',
+          isPermittedForEdit
+        ),
         createRow(
           'Date of Birth',
           dayjs(pharmacist.dateOfBirth).format('DD MMM YYYY') || '',
           'dateOfBirth',
           'date',
-          true
+          isPermittedForEdit
         ),
         createRow(
           'National ID Number',
           pharmacist.nationalId || '',
           'nationalId',
           'text',
-          true
+          isPermittedForEdit
         ),
         createRow(
           'Passing Year',
           pharmacist.passingYear || '',
           'passingYear',
           'text',
-          true
+          isPermittedForEdit
         ),
         createRow(
           'BDPA Member ID',
           pharmacist.memberId || '',
           'memberId',
           'text',
-          true
+          isPermittedForEdit
         ),
         createRow(
           'Date of Join',
           dayjs(pharmacist.dateOfJoin).format('DD MMM YYYY') || '',
           'dateOfJoin',
           'date',
-          true
+          isPermittedForEdit
         ),
         createRow(
           'Job Depertment',
           pharmacist.jobDepertment || '',
           'jobDepertment',
           'select',
-          true
+          isPermittedForEdit
         ),
         createRow(
           'Main Posting/Address',
@@ -127,7 +141,7 @@ const DetailsTable = () => {
           }`,
           'mainPosting',
           'select',
-          true
+          isPermittedForEdit
         ),
         createRow(
           'Permanent Address',
@@ -144,7 +158,7 @@ const DetailsTable = () => {
           }`,
           'permanentAddress',
           'select',
-          false
+          isPermittedForEdit
         ),
         createRow(
           'Voter Area',
@@ -159,14 +173,14 @@ const DetailsTable = () => {
           }`,
           'voterArea',
           'select',
-          true
+          isPermittedForEdit
         ),
         createRow(
           'On Deputation/Attachment',
           pharmacist.onDeputation,
           'onDeputation',
           'select',
-          true
+          isPermittedForEdit
         ),
       ];
 

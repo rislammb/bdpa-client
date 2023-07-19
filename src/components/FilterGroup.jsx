@@ -1,21 +1,25 @@
 import { Clear, FilterAltOutlined } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import FilterByJobDepertment from './FilterByJobDepertment';
 import FilterByLocation from './FilterByLocation';
 import SearchByText from './SearchByText';
 
 const FilterGroup = ({ dbPharmacists, setAfterFilter }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [pharmacistsAfterLocationFilter, setPharmacistsAfterLocationFilter] =
+    useState(dbPharmacists);
   const [
     phramacistsAfterDepertmentFilter,
     setPhramacistsAfterDepertmentFilter,
-  ] = useState(dbPharmacists);
-  const [pharmacistsAfterLocationFilter, setPharmacistsAfterLocationFilter] =
-    useState([]);
+  ] = useState([]);
 
   const handleFilterToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleForDepertmentChange = (value) => {
+    setPhramacistsAfterDepertmentFilter(value);
   };
 
   const temporaryJSX = (
@@ -36,12 +40,13 @@ const FilterGroup = ({ dbPharmacists, setAfterFilter }) => {
           sx={{ background: 'rgba(127,127,127,0.13)' }}
           onClick={handleFilterToggle}
         >
-          { mobileOpen ? <Clear /> : <FilterAltOutlined /> }
+          {mobileOpen ? <Clear /> : <FilterAltOutlined />}
         </IconButton>
       </Box>
       <Box
         sx={{
           display: 'flex',
+          alignItems: 'center',
           flexWrap: 'wrap',
           gap: 1,
           height: mobileOpen ? '290px' : 0,
@@ -49,17 +54,17 @@ const FilterGroup = ({ dbPharmacists, setAfterFilter }) => {
           overflow: mobileOpen ? 'inherit' : 'hidden',
         }}
       >
-        <FilterByJobDepertment
-          pharmacists={dbPharmacists}
-          onChange={(value) => setPhramacistsAfterDepertmentFilter(value)}
-        />
         <FilterByLocation
-          pharmacists={phramacistsAfterDepertmentFilter}
+          pharmacists={dbPharmacists}
           onChange={(value) => setPharmacistsAfterLocationFilter(value)}
+        />
+        <FilterByJobDepertment
+          pharmacists={pharmacistsAfterLocationFilter}
+          handleForDepertmentChange={handleForDepertmentChange}
         />
       </Box>
       <SearchByText
-        pharmacists={pharmacistsAfterLocationFilter}
+        pharmacists={phramacistsAfterDepertmentFilter}
         onChange={(value) => setAfterFilter(value)}
       />
     </Box>
@@ -74,28 +79,26 @@ const FilterGroup = ({ dbPharmacists, setAfterFilter }) => {
         mr: -2,
         gap: 1,
         justifyContent: 'space-between',
+        alignItems: 'center',
         flexWrap: 'wrap',
       }}
     >
-      <FilterByJobDepertment
-        pharmacists={dbPharmacists}
-        onChange={(value) => setPhramacistsAfterDepertmentFilter(value)}
-      />
       <FilterByLocation
-        pharmacists={phramacistsAfterDepertmentFilter}
-        onChange={(value) => setPharmacistsAfterLocationFilter(value)}
+        pharmacists={dbPharmacists}
+        onChange={(value) => {
+          setPharmacistsAfterLocationFilter(value);
+        }}
+      />
+      <FilterByJobDepertment
+        pharmacists={pharmacistsAfterLocationFilter}
+        handleForDepertmentChange={handleForDepertmentChange}
       />
       <SearchByText
-        pharmacists={pharmacistsAfterLocationFilter}
+        pharmacists={phramacistsAfterDepertmentFilter}
         onChange={(value) => setAfterFilter(value)}
       />
     </Box>
   );
-
-  useEffect(() => {
-    setPhramacistsAfterDepertmentFilter(dbPharmacists);
-    setPharmacistsAfterLocationFilter(dbPharmacists);
-  }, [dbPharmacists]);
 
   return (
     <Box>

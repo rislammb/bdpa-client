@@ -6,7 +6,7 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { jobDepertmentOptions } from '../constants/jobDepertment';
 
 const INITIAL_DEPERTMENT_INFO = {
@@ -20,7 +20,7 @@ const INITIAL_DEPERTMENT_INFO = {
   ],
 };
 
-const FilterByJobDepertment = ({ pharmacists, onChange }) => {
+const FilterByJobDepertment = ({ pharmacists, handleForDepertmentChange }) => {
   const [jobDepertmentInfo, setJobDepertmentInfo] = useState({
     ...INITIAL_DEPERTMENT_INFO,
   });
@@ -32,18 +32,25 @@ const FilterByJobDepertment = ({ pharmacists, onChange }) => {
     }));
 
     if (e.target.value === 'all') {
-      onChange(pharmacists);
+      handleForDepertmentChange(pharmacists);
     } else {
       const nameFromId = jobDepertmentOptions.find(
         (option) => option.id === e.target.value
       )?.name;
-      onChange(
+      handleForDepertmentChange(
         pharmacists.filter(
           (pharmacist) => pharmacist.jobDepertment === nameFromId
         )
       );
     }
   };
+
+  useEffect(() => {
+    handleForDepertmentChange(pharmacists);
+    setJobDepertmentInfo({
+      ...INITIAL_DEPERTMENT_INFO,
+    });
+  }, [pharmacists]);
 
   return (
     <FormControl

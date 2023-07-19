@@ -33,6 +33,10 @@ const INITIAL_LOCATION_INFO = {
         id: '3',
         name: 'Deputation Posting',
       },
+      {
+        id: '4',
+        name: 'Permanent Address',
+      },
     ],
   },
   division: {
@@ -114,6 +118,10 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
           valueForChange = pharmacists.filter(
             (pharmacist) => pharmacist.deputationDivision.id === e.target.value
           );
+        } else if (locationInfo.locationType.value === '4') {
+          valueForChange = pharmacists.filter(
+            (pharmacist) => pharmacist.permanentDivision.id === e.target.value
+          );
         } else {
           valueForChange = pharmacists.filter(
             (pharmacist) =>
@@ -160,6 +168,11 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
             (pharmacist) =>
               pharmacist.deputationDivision.id === locationInfo.division.value
           );
+        } else if (locationInfo.locationType.value === '4') {
+          valueForChange = pharmacists.filter(
+            (pharmacist) =>
+              pharmacist.permanentDivision.id === locationInfo.division.value
+          );
         } else {
           valueForChange = pharmacists.filter(
             (pharmacist) =>
@@ -182,6 +195,10 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
         } else if (locationInfo.locationType.value === '3') {
           valueForChange = pharmacists.filter(
             (pharmacist) => pharmacist.deputationDistrict.id === e.target.value
+          );
+        } else if (locationInfo.locationType.value === '4') {
+          valueForChange = pharmacists.filter(
+            (pharmacist) => pharmacist.permanentDistrict.id === e.target.value
           );
         } else {
           valueForChange = pharmacists.filter(
@@ -219,6 +236,11 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
             (pharmacist) =>
               pharmacist.deputationDistrict.id === locationInfo.district.value
           );
+        } else if (locationInfo.locationType.value === '4') {
+          valueForChange = pharmacists.filter(
+            (pharmacist) =>
+              pharmacist.permanentDistrict.id === locationInfo.district.value
+          );
         } else {
           valueForChange = pharmacists.filter(
             (pharmacist) =>
@@ -237,6 +259,10 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
         } else if (locationInfo.locationType.value === '3') {
           valueForChange = pharmacists.filter(
             (pharmacist) => pharmacist.deputationUpazila.id === e.target.value
+          );
+        } else if (locationInfo.locationType.value === '4') {
+          valueForChange = pharmacists.filter(
+            (pharmacist) => pharmacist.permanentUpazila.id === e.target.value
           );
         } else {
           valueForChange = pharmacists.filter(
