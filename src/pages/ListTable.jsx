@@ -19,8 +19,8 @@ const columns = [
   { id: 'regNumber', label: 'Registration', minWidth: 60 },
   { id: 'name', label: 'Name', minWidth: 130 },
   { id: 'bn_name', label: 'Name Bengali', minWidth: 130 },
-  { id: 'gender', label: 'Gender', minWidth: 30 },
-  { id: 'dateOfBirth', label: 'Date of Birth', minWidth: 95 },
+  { id: 'memberId', label: 'Member ID', minWidth: 30 },
+  { id: 'dateOfBirth', label: 'Date of Birth', minWidth: 105 },
   {
     id: 'mainPosting',
     label: 'Main Posting/Address',
