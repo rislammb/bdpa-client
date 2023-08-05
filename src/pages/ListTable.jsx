@@ -187,8 +187,12 @@ const ListTable = () => {
           >
             <Typography>
               Showing {(page - 1) * rowsPerPage + 1} to {page * rowsPerPage} of{' '}
-              {pharmacists.length} entries (filtered from {dbPharmacists.length}{' '}
-              total entries)
+              {pharmacists.length} entries{' '}
+              {pharmacists.length < dbPharmacists.length && (
+                <Typography component={'span'}>
+                  (filtered from {dbPharmacists.length} total entries)
+                </Typography>
+              )}
             </Typography>
             <Pagination
               count={Math.ceil(pharmacists.length / rowsPerPage)}
