@@ -27,14 +27,14 @@ export const addFormFields = {
     type: 'text',
     name: 'fathersName',
     label: "Father's Name",
-    placeholder: 'ABDUR RAHMAN',
+    placeholder: 'ABDUR RAHMAN - আব্দুর রহমান',
     value: '',
   },
   mothersName: {
     type: 'text',
     name: 'mothersName',
     label: "Mother's Name",
-    placeholder: 'AYESHA',
+    placeholder: 'AYESHA - আয়েশা',
     value: '',
   },
   email: {

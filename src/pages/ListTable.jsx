@@ -1,11 +1,11 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import Pagination from '@mui/material/Pagination';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { useTheme } from '@mui/material/styles';
 import dayjs from 'dayjs';
@@ -38,16 +38,11 @@ const ListTable = () => {
   const [loading, setLoading] = useState(true);
   const [dbPharmacists, setDbPharmacists] = useState([]);
   const [pharmacists, setPharmacists] = useState([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 25;
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+  const handleChange = (_event, value) => {
+    setPage(value);
   };
 
   useEffect(() => {
@@ -64,7 +59,7 @@ const ListTable = () => {
   }, []);
 
   useEffect(() => {
-    setPage(0);
+    setPage(1);
   }, [pharmacists]);
 
   return (
@@ -106,7 +101,7 @@ const ListTable = () => {
               <TableBody>
                 {pharmacists.length > 0 ? (
                   pharmacists
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .slice((page - 1) * rowsPerPage, page * rowsPerPage)
                     .map((pharmacist) => {
                       return (
                         <TableRow
@@ -182,15 +177,27 @@ const ListTable = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            component='div'
-            count={pharmacists.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+          <Box
+            sx={{
+              display: 'flex',
+              p: 2,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Typography>
+              Showing {(page - 1) * rowsPerPage + 1} to {page * rowsPerPage} of{' '}
+              {pharmacists.length} entries (filtered from {dbPharmacists.length}{' '}
+              total entries)
+            </Typography>
+            <Pagination
+              count={Math.ceil(pharmacists.length / rowsPerPage)}
+              color='primary'
+              page={page}
+              defaultPage={1}
+              onChange={handleChange}
+            />
+          </Box>
         </Paper>
       )}
     </Box>

@@ -26,7 +26,7 @@ export const addPostingFields = {
     type: 'text',
     name: 'postingPlace',
     label: 'Posting Place',
-    placeholder: 'Auchpara Health and Family Welfare Center',
+    placeholder: 'Auchpara Union Health and Family Welfare Center',
     value: '',
   },
 };
