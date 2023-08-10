@@ -223,7 +223,7 @@ const DetailsTable = () => {
     ) {
       axiosInstance
         .delete(`/pharmacist/${regNumber}`)
-        .then(() => navigate('/list'))
+        .then(() => navigate('/list/page/1'))
         .catch((e) => {
           console.log(e.message);
         });

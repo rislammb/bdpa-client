@@ -25,7 +25,7 @@ import Signup from '../pages/Signup';
 
 const drawerWidth = 240;
 const navItems = [
-  { path: '/list', text: 'List' },
+  { path: '/list/page/1', text: 'List' },
   { path: '/list/add', text: 'Add' },
   { path: '/about', text: 'About' },
   { path: '/login', text: 'Login' },
@@ -149,9 +149,9 @@ const Navbar = (props) => {
         <Toolbar />
         <Routes>
           <Route index element={<Home />} />
-          <Route path='/list' element={<ListTable />} />
           <Route path='/list/add' element={<Add />} />
           <Route path='/list/:regNumber' element={<DetailsTable />} />
+          <Route path='/list/page/:pageNumber' element={<ListTable />} />
           <Route path='/about' element={<About />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />

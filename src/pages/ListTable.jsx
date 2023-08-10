@@ -10,17 +10,18 @@ import TableRow from '@mui/material/TableRow';
 import { useTheme } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+
 import FilterGroup from '../components/FilterGroup';
 import Loading from '../components/ui/Loading';
 import { axiosInstance } from '../config';
 
 const columns = [
-  { id: 'regNumber', label: 'Registration', minWidth: 60 },
+  { id: 'regNumber', label: 'Registration', minWidth: 105 },
   { id: 'name', label: 'Name', minWidth: 130 },
   { id: 'bn_name', label: 'Name Bengali', minWidth: 130 },
-  { id: 'memberId', label: 'Member ID', minWidth: 30 },
-  { id: 'dateOfBirth', label: 'Date of Birth', minWidth: 105 },
+  { id: 'memberId', label: 'Member ID', minWidth: 90 },
+  { id: 'dateOfBirth', label: 'Date of Birth', minWidth: 100 },
   {
     id: 'mainPosting',
     label: 'Main Posting/Address',
@@ -34,15 +35,19 @@ const columns = [
 ];
 
 const ListTable = () => {
+  let { pageNumber } = useParams();
+  const navigate = useNavigate();
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [dbPharmacists, setDbPharmacists] = useState([]);
   const [pharmacists, setPharmacists] = useState([]);
-  const [page, setPage] = useState(1);
-  const rowsPerPage = 25;
+  const [page, setPage] = useState(Number(pageNumber) ?? 1);
+
+  const rowsPerPage = 50;
 
   const handleChange = (_event, value) => {
     setPage(value);
+    navigate(`/list/page/${value}`);
   };
 
   useEffect(() => {
@@ -59,14 +64,18 @@ const ListTable = () => {
   }, []);
 
   useEffect(() => {
-    setPage(1);
+    setPage(Number(pageNumber) ?? 1);
+  }, [pageNumber]);
+
+  useEffect(() => {
+    navigate(`/list/page/1`);
   }, [pharmacists]);
 
   return (
     <Box
       sx={{
         width: '100%',
-        maxWidth: '1150px',
+        maxWidth: '1300px',
         margin: 'auto',
       }}
     >
@@ -90,7 +99,7 @@ const ListTable = () => {
                       key={column.id}
                       sx={{
                         minWidth: column.minWidth,
-                        padding: { xs: '8px 8px', sm: '8px 16px' },
+                        padding: { xs: '8px 6px', sm: '8px 12px' },
                       }}
                     >
                       {column.label}
@@ -166,7 +175,7 @@ const ListTable = () => {
                       colSpan={7}
                       sx={{
                         textAlign: 'center',
-                        p: 1.5,
+                        p: 2.5,
                         color: theme.palette.warning.main,
                       }}
                     >
@@ -182,12 +191,16 @@ const ListTable = () => {
               display: 'flex',
               p: 2,
               justifyContent: 'space-between',
+              gap: 1,
               alignItems: 'center',
             }}
           >
             <Typography>
-              Showing {(page - 1) * rowsPerPage + 1} to {page * rowsPerPage} of{' '}
-              {pharmacists.length} entries{' '}
+              Showing {(page - 1) * rowsPerPage + 1} to{' '}
+              {page * rowsPerPage < pharmacists.length
+                ? page * rowsPerPage
+                : pharmacists.length}{' '}
+              of {pharmacists.length} entries{' '}
               {pharmacists.length < dbPharmacists.length && (
                 <Typography component={'span'}>
                   (filtered from {dbPharmacists.length} total entries)
@@ -198,7 +211,6 @@ const ListTable = () => {
               count={Math.ceil(pharmacists.length / rowsPerPage)}
               color='primary'
               page={page}
-              defaultPage={1}
               onChange={handleChange}
             />
           </Box>
