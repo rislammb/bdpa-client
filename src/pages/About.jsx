@@ -10,8 +10,8 @@ const About = () => {
       <img
         src={
           theme.palette.mode === 'dark'
-            ? '../bdpa_logo.png'
-            : '../bdpa_logo-color.svg'
+            ? `${process.env.PUBLIC_URL}/bdpa_logo.png`
+            : `${process.env.PUBLIC_URL}/bdpa_logo-color.svg`
         }
         alt='logo'
         width='150px'

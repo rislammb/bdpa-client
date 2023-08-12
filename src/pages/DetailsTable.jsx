@@ -34,6 +34,7 @@ const DetailsTable = () => {
   useEffect(() => {
     if (pharmacist) {
       setShowDeputationRow(pharmacist.onDeputation === 'Yes' ? true : false);
+
       const rows = [
         createRow(
           'Registration Number',
@@ -63,8 +64,13 @@ const DetailsTable = () => {
           'text',
           isPermittedForEdit
         ),
-        createRow('Mobile', 'Hide now', 'mobile', 'text', isPermittedForEdit),
-        // createRow('Mobile', pharmacist.mobile || '', 'mobile', 'text', true),
+        createRow(
+          'Mobile',
+          pharmacist.gender === 'Male' ? pharmacist.mobile : 'Hide now',
+          'mobile',
+          'text',
+          isPermittedForEdit
+        ),
         createRow(
           "Father's Name",
           pharmacist.fathersName || '',
@@ -262,6 +268,14 @@ const DetailsTable = () => {
           {pharmacist ? (
             tableRows.length > 0 ? (
               <>
+                <Box>
+                  <img
+                    src={pharmacist.imageUrl}
+                    alt={pharmacist.name}
+                    width={'130px'}
+                    style={{ border: '1px solid #999' }}
+                  />
+                </Box>
                 {tableRows.map((row) => (
                   <DetailsTableRow
                     key={row.th}

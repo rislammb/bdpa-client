@@ -196,7 +196,8 @@ const ListTable = () => {
             }}
           >
             <Typography>
-              Showing {(page - 1) * rowsPerPage + 1} to{' '}
+              Showing{' '}
+              {pharmacists.length > 0 ? (page - 1) * rowsPerPage + 1 : 0} to{' '}
               {page * rowsPerPage < pharmacists.length
                 ? page * rowsPerPage
                 : pharmacists.length}{' '}

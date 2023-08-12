@@ -93,7 +93,7 @@ const Navbar = (props) => {
           >
             <Link to='/'>
               <img
-                src='../bdpa_logo.png'
+                src={`${process.env.PUBLIC_URL}/bdpa_logo.png`}
                 alt='logo'
                 width='50px'
                 height='50px'
