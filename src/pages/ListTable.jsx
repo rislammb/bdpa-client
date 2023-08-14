@@ -17,6 +17,7 @@ import Loading from '../components/ui/Loading';
 import { axiosInstance } from '../config';
 
 const columns = [
+  { id: 'imageUrl', label: '', minWidth: 45 },
   { id: 'regNumber', label: 'Registration', minWidth: 105 },
   { id: 'name', label: 'Name', minWidth: 130 },
   { id: 'bn_name', label: 'Name Bengali', minWidth: 130 },
@@ -120,16 +121,27 @@ const ListTable = () => {
                         >
                           {columns.map((column) => {
                             const value = pharmacist[column.id];
+
                             return (
                               <TableCell
                                 key={column.id}
                                 align={column.align}
                                 sx={{
                                   minWidth: column.minWidth,
-                                  padding: { xs: '8px 6px', sm: '8px 12px' },
+                                  padding:
+                                    column.id === 'imageUrl'
+                                      ? { xs: '2px 6px', sm: '2px 12px' }
+                                      : { xs: '8px 6px', sm: '8px 12px' },
                                 }}
                               >
-                                {column.id === 'dateOfBirth' ? (
+                                {column.id === 'imageUrl' ? (
+                                  <img
+                                    src={value}
+                                    alt='member'
+                                    width={column.minWidth}
+                                    style={{ border: '1px solid #ccc' }}
+                                  />
+                                ) : column.id === 'dateOfBirth' ? (
                                   dayjs(value).format('DD MMM YYYY')
                                 ) : column.id === 'mainPosting' ? (
                                   `${

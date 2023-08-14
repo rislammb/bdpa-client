@@ -272,8 +272,8 @@ const DetailsTable = () => {
                   <img
                     src={pharmacist.imageUrl}
                     alt={pharmacist.name}
-                    width={'130px'}
-                    style={{ border: '1px solid #999' }}
+                    height={'130'}
+                    style={{ border: '1px solid #ccc' }}
                   />
                 </Box>
                 {tableRows.map((row) => (
