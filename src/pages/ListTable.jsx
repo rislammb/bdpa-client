@@ -17,7 +17,6 @@ import Loading from '../components/ui/Loading';
 import { axiosInstance } from '../config';
 
 const columns = [
-  { id: 'imageUrl', label: '', minWidth: 45 },
   { id: 'regNumber', label: 'Registration', minWidth: 105 },
   { id: 'name', label: 'Name', minWidth: 130 },
   { id: 'bn_name', label: 'Name Bengali', minWidth: 130 },
@@ -65,12 +64,14 @@ const ListTable = () => {
   }, []);
 
   useEffect(() => {
-    setPage(Number(pageNumber) ?? 1);
-  }, [pageNumber]);
+    if (pharmacists.length !== dbPharmacists.length) {
+      navigate(`/list/page/1`);
+    }
+  }, [pharmacists]);
 
   useEffect(() => {
-    navigate(`/list/page/1`);
-  }, [pharmacists]);
+    setPage(Number(pageNumber) ?? 1);
+  }, [pageNumber]);
 
   return (
     <Box
@@ -134,14 +135,7 @@ const ListTable = () => {
                                       : { xs: '8px 6px', sm: '8px 12px' },
                                 }}
                               >
-                                {column.id === 'imageUrl' ? (
-                                  <img
-                                    src={value}
-                                    alt='member'
-                                    width={column.minWidth}
-                                    style={{ border: '1px solid #ccc' }}
-                                  />
-                                ) : column.id === 'dateOfBirth' ? (
+                                {column.id === 'dateOfBirth' ? (
                                   dayjs(value).format('DD MMM YYYY')
                                 ) : column.id === 'mainPosting' ? (
                                   `${
