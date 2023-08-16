@@ -79,6 +79,13 @@ export const addFormFields = {
     placeholder: 'BDP00321',
     value: '',
   },
+  imageUrl: {
+    type: 'text',
+    name: 'imageUrl',
+    label: 'Image URL (link)',
+    placeholder: 'https://bdpa.org/image/member7.jpg',
+    value: '',
+  },
   dateOfJoin: {
     type: 'date',
     name: 'dateOfJoin',

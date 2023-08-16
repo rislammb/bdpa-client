@@ -303,9 +303,18 @@ const Add = () => {
           severity: 'error',
           text: 'Pharmacist add to databse faild!.',
         });
+
+        console.log(e);
         if (typeof e.response.data === 'object') {
-          setError(e.response.data);
+          if (e.response.data.message === 'Pharmacist already exist!') {
+            setError({
+              regNumber: 'Pharmacist already exist!',
+            });
+          } else {
+            setError(e.response.data);
+          }
         }
+
         setSubmitting(false);
       });
   };

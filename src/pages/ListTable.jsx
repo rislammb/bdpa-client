@@ -21,7 +21,7 @@ const columns = [
   { id: 'name', label: 'Name', minWidth: 130 },
   { id: 'bn_name', label: 'Name Bengali', minWidth: 130 },
   { id: 'memberId', label: 'Member ID', minWidth: 90 },
-  { id: 'dateOfBirth', label: 'Date of Birth', minWidth: 100 },
+  { id: 'dateOfBirth', label: 'Date of Birth', minWidth: 110 },
   {
     id: 'mainPosting',
     label: 'Main Posting/Address',
@@ -129,10 +129,7 @@ const ListTable = () => {
                                 align={column.align}
                                 sx={{
                                   minWidth: column.minWidth,
-                                  padding:
-                                    column.id === 'imageUrl'
-                                      ? { xs: '2px 6px', sm: '2px 12px' }
-                                      : { xs: '8px 6px', sm: '8px 12px' },
+                                  padding: { xs: '8px 6px', sm: '8px 12px' },
                                 }}
                               >
                                 {column.id === 'dateOfBirth' ? (
@@ -197,7 +194,8 @@ const ListTable = () => {
               display: 'flex',
               p: 2,
               justifyContent: 'space-between',
-              gap: 1,
+              flexDirection: { xs: 'column', md: 'row' },
+              gap: 1.5,
               alignItems: 'center',
             }}
           >

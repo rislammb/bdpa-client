@@ -190,6 +190,29 @@ const DetailsTable = () => {
         ),
       ];
 
+      pharmacist.onDeputation === 'Yes' &&
+        rows.push(
+          createRow(
+            'Deputation Posting/Address',
+            `${
+              pharmacist.deputationPlace
+                ? `${pharmacist.deputationPlace}, `
+                : ''
+            }${
+              pharmacist.deputationUpazila?.name
+                ? `${pharmacist.deputationUpazila?.name}, `
+                : ''
+            }${
+              pharmacist.deputationDistrict?.name
+                ? pharmacist.deputationDistrict?.name
+                : ''
+            }`,
+            'deputationPosting',
+            'select',
+            isPermittedForEdit
+          )
+        );
+
       setTableRows(rows);
     } else setTableRows([]);
   }, [pharmacist]);
@@ -268,14 +291,17 @@ const DetailsTable = () => {
           {pharmacist ? (
             tableRows.length > 0 ? (
               <>
-                <Box>
-                  <img
-                    src={pharmacist.imageUrl}
-                    alt={pharmacist.name}
-                    height={'130'}
-                    style={{ border: '1px solid #ccc' }}
-                  />
-                </Box>
+                <TableRow sx={{ border: 0 }}>
+                  <TableCell colSpan={3} sx={{ textAlign: 'center' }}>
+                    <img
+                      src={pharmacist.imageUrl}
+                      alt={pharmacist.name}
+                      height={'130'}
+                      style={{ border: '1px solid #ccc' }}
+                    />
+                  </TableCell>
+                </TableRow>
+
                 {tableRows.map((row) => (
                   <DetailsTableRow
                     key={row.th}

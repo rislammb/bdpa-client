@@ -127,7 +127,8 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
             (pharmacist) =>
               pharmacist.postingDivision.id === e.target.value ||
               pharmacist.voterDivision.id === e.target.value ||
-              pharmacist.deputationDivision.id === e.target.value
+              pharmacist.deputationDivision.id === e.target.value ||
+              pharmacist.permanentDivision.id === e.target.value
           );
         }
         onChange(valueForChange);
@@ -178,9 +179,12 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
             (pharmacist) =>
               pharmacist.postingDivision.id === locationInfo.division.value ||
               pharmacist.voterDivision.id === locationInfo.division.value ||
-              pharmacist.deputationDivision.id === locationInfo.division.value
+              pharmacist.deputationDivision.id ===
+                locationInfo.division.value ||
+              pharmacist.permanentDivision.id === locationInfo.division.value
           );
         }
+
         onChange(valueForChange);
       } else {
         let valueForChange = [];
@@ -205,9 +209,11 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
             (pharmacist) =>
               pharmacist.postingDistrict.id === e.target.value ||
               pharmacist.voterDistrict.id === e.target.value ||
-              pharmacist.deputationDistrict.id === e.target.value
+              pharmacist.deputationDistrict.id === e.target.value ||
+              pharmacist.permanentDistrict.id === e.target.value
           );
         }
+
         onChange(valueForChange);
       }
     } else if (e.target.name === 'upazila') {
@@ -246,7 +252,9 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
             (pharmacist) =>
               pharmacist.postingDistrict.id === locationInfo.district.value ||
               pharmacist.voterDistrict.id === locationInfo.district.value ||
-              pharmacist.deputationDistrict.id === locationInfo.district.value
+              pharmacist.deputationDistrict.id ===
+                locationInfo.district.value ||
+              pharmacist.permanentDistrict.id === locationInfo.district.value
           );
         }
         onChange(valueForChange);
@@ -268,9 +276,11 @@ const FilterByLocation = ({ pharmacists, onChange }) => {
           valueForChange = pharmacists.filter(
             (pharmacist) =>
               pharmacist.postingUpazila.id === e.target.value ||
-              pharmacist.deputationUpazila.id === e.target.value
+              pharmacist.deputationUpazila.id === e.target.value ||
+              pharmacist.permanentUpazila.id === e.target.value
           );
         }
+
         onChange(valueForChange);
       }
     }
