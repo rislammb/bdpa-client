@@ -4,7 +4,7 @@ import { Paper } from '@mui/material';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
 
@@ -38,7 +38,9 @@ const ThemeButton = () => {
 };
 
 function App() {
-  const [mode, setMode] = useState('light');
+  const [mode, setMode] = useState(
+    localStorage.getItem('BDPA_COLOR_MODE') ?? 'light'
+  );
   const colorMode = useMemo(
     () => ({
       toggleColorMode: () => {
@@ -69,6 +71,10 @@ function App() {
       }),
     [mode]
   );
+
+  useEffect(() => {
+    localStorage.setItem('BDPA_COLOR_MODE', mode);
+  }, [mode]);
 
   return (
     <ColorModeContext.Provider value={colorMode}>

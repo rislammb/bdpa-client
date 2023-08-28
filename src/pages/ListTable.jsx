@@ -25,12 +25,12 @@ const columns = [
   {
     id: 'mainPosting',
     label: 'Main Posting/Address',
-    minWidth: 170,
+    minWidth: 230,
   },
   {
-    id: 'jobDepertment',
-    label: 'Job Depertment',
-    minWidth: 140,
+    id: 'voterDistrict',
+    label: 'Voter District',
+    minWidth: 95,
   },
 ];
 
@@ -129,7 +129,7 @@ const ListTable = () => {
                                 align={column.align}
                                 sx={{
                                   minWidth: column.minWidth,
-                                  padding: { xs: '8px 6px', sm: '8px 12px' },
+                                  padding: { xs: '8px 6px', sm: '12px' },
                                 }}
                               >
                                 {column.id === 'dateOfBirth' ? (
@@ -163,6 +163,8 @@ const ListTable = () => {
                                   >
                                     {value}
                                   </Link>
+                                ) : column.id === 'voterDistrict' ? (
+                                  value.name
                                 ) : (
                                   value
                                 )}
@@ -217,6 +219,11 @@ const ListTable = () => {
               color='primary'
               page={page}
               onChange={handleChange}
+              sx={{
+                '.MuiPagination-ul': {
+                  justifyContent: 'center',
+                },
+              }}
             />
           </Box>
         </Paper>

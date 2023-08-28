@@ -11,6 +11,7 @@ const SearchByText = ({ pharmacists, onChange }) => {
       pharmacists.filter(
         (item) =>
           item.name.toLowerCase().includes(value.toLowerCase()) ||
+          item.bn_name.toLowerCase().includes(value.toLowerCase()) ||
           item.regNumber.toLowerCase().includes(value.toLowerCase()) ||
           item.memberId.toLowerCase().includes(value.toLowerCase())
       )
