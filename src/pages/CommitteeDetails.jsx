@@ -11,7 +11,6 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { committee as data } from '../data';
 
 const CommitteeDetails = () => {
   const { committeePath } = useParams();
@@ -21,8 +20,7 @@ const CommitteeDetails = () => {
   const [committee, setCommittee] = useState(null);
 
   useEffect(() => {
-    const details = data.find((com) => committeePath === com.path);
-    setCommittee(details);
+    
     setLoading(false);
   }, [committeePath]);
 
