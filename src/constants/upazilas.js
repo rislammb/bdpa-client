@@ -1794,6 +1794,12 @@ export const upazilas = [
     bn_name: 'মাধবপুর',
   },
   {
+    id: '492',
+    district_id: '38',
+    name: 'Shayestaganj',
+    bn_name: 'শায়েস্তাগঞ্জ',
+  },
+  {
     id: '300',
     district_id: '39',
     name: 'Sunamganj Sadar',

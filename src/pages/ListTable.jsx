@@ -10,7 +10,8 @@ import TableRow from '@mui/material/TableRow';
 import { useTheme } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import Link from '../components/ui/Link';
 
 import FilterGroup from '../components/FilterGroup';
 import Loading from '../components/ui/Loading';
@@ -151,18 +152,10 @@ const ListTable = () => {
                                 ) : column.id === 'regNumber' ||
                                   column.id === 'name' ? (
                                   <Link
-                                    style={{
-                                      fontWeight: '500',
-                                      color:
-                                        theme.palette.mode === 'dark'
-                                          ? theme.palette.primary.light
-                                          : theme.palette.primary.main,
-                                    }}
-                                    to={`/list/${pharmacist['regNumber']}`}
+                                    to={`/members/${pharmacist['regNumber']}`}
                                     target='_blank'
-                                  >
-                                    {value}
-                                  </Link>
+                                    text={value}
+                                  />
                                 ) : column.id === 'voterDistrict' ? (
                                   value.name
                                 ) : (

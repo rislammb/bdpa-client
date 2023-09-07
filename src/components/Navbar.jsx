@@ -13,10 +13,13 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link, NavLink, Route, Routes } from 'react-router-dom';
+import { NavLink, Route, Routes } from 'react-router-dom';
 
 import About from '../pages/About';
 import Add from '../pages/Add';
+import AddCommittee from '../pages/AddCommittee';
+import CommitteeDetails from '../pages/CommitteeDetails';
+import CommitteeList from '../pages/CommitteeList';
 import DetailsTable from '../pages/DetailsTable';
 import Home from '../pages/Home';
 import ListTable from '../pages/ListTable';
@@ -25,8 +28,9 @@ import Signup from '../pages/Signup';
 
 const drawerWidth = 240;
 const navItems = [
-  { path: '/list/page/1', text: 'List' },
-  { path: '/list/add', text: 'Add' },
+  { path: '/members/page/1', text: 'Members' },
+  { path: '/committee', text: 'Committee' },
+  { path: '/members/add', text: 'Add Member' },
   { path: '/about', text: 'About' },
   { path: '/login', text: 'Login' },
 ];
@@ -66,7 +70,12 @@ const Navbar = (props) => {
         {navItems.map((item) => (
           <ListItem disablePadding key={item.text}>
             <ListItemButton>
-              <NavLink style={linkStyle} to={item.path}>
+              <NavLink
+                style={({ isActive }) =>
+                  isActive ? { ...linkStyle, fontWeight: 'bold' } : linkStyle
+                }
+                to={item.path}
+              >
                 {item.text}
               </NavLink>
             </ListItemButton>
@@ -91,14 +100,14 @@ const Navbar = (props) => {
               alignItems: 'center',
             }}
           >
-            <Link to='/'>
+            <NavLink to='/'>
               <img
                 src={`${process.env.PUBLIC_URL}/bdpa_logo.png`}
                 alt='logo'
                 width='50px'
                 height='50px'
               />
-            </Link>
+            </NavLink>
           </Box>
           <div>{props.children}</div>
           <IconButton
@@ -116,9 +125,17 @@ const Navbar = (props) => {
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
               <Button key={item.text} sx={{ color: '#f1f1f1' }}>
-                <Link style={{ color: '#f1f1f1' }} to={item.path}>
+                <NavLink
+                  style={({ isActive }) => {
+                    return {
+                      color: '#f1f1f1',
+                      fontWeight: isActive ? 'bold' : '',
+                    };
+                  }}
+                  to={item.path}
+                >
                   {item.text}
-                </Link>
+                </NavLink>
               </Button>
             ))}
           </Box>
@@ -149,9 +166,15 @@ const Navbar = (props) => {
         <Toolbar />
         <Routes>
           <Route index element={<Home />} />
-          <Route path='/list/add' element={<Add />} />
-          <Route path='/list/:regNumber' element={<DetailsTable />} />
-          <Route path='/list/page/:pageNumber' element={<ListTable />} />
+          <Route path='/members/add' element={<Add />} />
+          <Route path='/members/:regNumber' element={<DetailsTable />} />
+          <Route path='/members/page/:pageNumber' element={<ListTable />} />
+          <Route path='/committee' element={<CommitteeList />} />
+          <Route
+            path='/committee/:committeePath'
+            element={<CommitteeDetails />}
+          />
+          <Route path='/committee/add' element={<AddCommittee />} />
           <Route path='/about' element={<About />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
