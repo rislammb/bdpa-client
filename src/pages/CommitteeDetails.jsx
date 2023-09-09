@@ -11,6 +11,7 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { axiosInstance } from '../config';
 
 const CommitteeDetails = () => {
   const { committeePath } = useParams();
@@ -20,8 +21,17 @@ const CommitteeDetails = () => {
   const [committee, setCommittee] = useState(null);
 
   useEffect(() => {
-    
-    setLoading(false);
+    axiosInstance
+      .get(`/committee/${committeePath}`)
+      .then((res) => {
+        setCommittee(res.data);
+      })
+      .then(() => setLoading(false))
+      .catch((e) => {
+        console.log(e.message);
+        setLoading(false);
+        setCommittee(null);
+      });
   }, [committeePath]);
 
   if (loading) return <Typography>Loading...</Typography>;
@@ -51,9 +61,9 @@ const CommitteeDetails = () => {
             <TableRow>
               <TableCell>Serial</TableCell>
               <TableCell>Name</TableCell>
-              <TableCell>Name (Bengali)</TableCell>
+              {/* <TableCell>Name (Bengali)</TableCell> */}
               <TableCell>Committee Post</TableCell>
-              <TableCell>Committee Post (Benglai)</TableCell>
+              {/* <TableCell>Committee Post (Benglai)</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -65,9 +75,9 @@ const CommitteeDetails = () => {
                 >
                   <TableCell>{mem.serialNumber}</TableCell>
                   <TableCell>{mem.name}</TableCell>
-                  <TableCell>{mem.name_bn}</TableCell>
+                  {/* <TableCell>{mem.name_bn}</TableCell> */}
                   <TableCell>{mem.postName}</TableCell>
-                  <TableCell>{mem.postName_bn}</TableCell>
+                  {/* <TableCell>{mem.postName_bn}</TableCell> */}
                 </TableRow>
               ))}
           </TableBody>

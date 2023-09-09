@@ -16,6 +16,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Add } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import Link from '../components/ui/Link';
+import { axiosInstance } from '../config';
 
 const columns = [
   { id: 'committeeTitle', label: 'Committee Title', minWidth: 170 },
@@ -25,11 +26,22 @@ const columns = [
 
 const CommitteeList = () => {
   const theme = useTheme();
+  const [setLoading, setSetLoading] = useState(true);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [committees, setCommittees] = useState([]);
 
   useEffect(() => {
-    // setCommittees(committee);
+    axiosInstance
+      .get('/committee')
+      .then((res) => {
+        setCommittees(res.data);
+      })
+      .then(() => setLoading(false))
+      .catch((e) => {
+        console.log(e.message);
+        setLoading(false);
+      });
   }, []);
 
   return (
