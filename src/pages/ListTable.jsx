@@ -50,7 +50,7 @@ const ListTable = () => {
 
   const handleChange = (_event, value) => {
     setPage(value);
-    navigate(`/list/page/${value}`);
+    navigate(`/members/page/${value}`);
   };
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const ListTable = () => {
 
   useEffect(() => {
     if (pharmacists.length !== dbPharmacists.length) {
-      navigate(`/list/page/1`);
+      navigate(`/members/page/1`);
     }
   }, [pharmacists]);
 
