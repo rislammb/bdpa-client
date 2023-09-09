@@ -18,6 +18,7 @@ import Loading from '../components/ui/Loading';
 import { axiosInstance } from '../config';
 
 const columns = [
+  { id: 'imageUrl', label: '', minWidth: 45 },
   { id: 'regNumber', label: 'Registration', minWidth: 105 },
   { id: 'name', label: 'Name', minWidth: 130 },
   { id: 'bn_name', label: 'Name Bengali', minWidth: 130 },
@@ -33,6 +34,7 @@ const columns = [
     label: 'Voter District',
     minWidth: 95,
   },
+  { id: 'jobDepertment', label: '', minWidth: 45 },
 ];
 
 const ListTable = () => {
@@ -133,7 +135,9 @@ const ListTable = () => {
                                   padding: { xs: '8px 6px', sm: '12px' },
                                 }}
                               >
-                                {column.id === 'dateOfBirth' ? (
+                                {column.id === 'imageUrl' ? (
+                                  <img src={value} alt='mem' width={'45'} />
+                                ) : column.id === 'dateOfBirth' ? (
                                   dayjs(value).format('DD MMM YYYY')
                                 ) : column.id === 'mainPosting' ? (
                                   `${
