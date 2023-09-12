@@ -1,21 +1,31 @@
 import {
+  Box,
   Card,
   CardContent,
   Table,
   TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
   Typography,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import TableContainer from '@mui/material/TableContainer';
+
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import CommitteeDetailsRow from '../components/CommitteeDetailsRow';
+import TableHeader from '../components/TableHeader';
+import ColorTitle from '../components/ui/ColorTitle';
 import { axiosInstance } from '../config';
+
+const columns = [
+  { id: 'serialNumber', label: 'ক্রমিক', minWidth: 35 },
+  { id: 'name', label: 'নাম', minWidth: 190 },
+  { id: 'postName', label: 'কমিটি পদবী', minWidth: 210 },
+  { id: 'mobile', label: 'মোবাইল', minWidth: 90 },
+  { id: 'posting', label: 'কর্মস্থল/ঠিকানা', minWidth: 130 },
+];
 
 const CommitteeDetails = () => {
   const { committeePath } = useParams();
-  const theme = useTheme();
 
   const [loading, setLoading] = useState(true);
   const [committee, setCommittee] = useState(null);
@@ -40,48 +50,34 @@ const CommitteeDetails = () => {
   return (
     <Card sx={{ maxWidth: '900px', margin: 'auto' }}>
       <CardContent sx={{ textAlign: 'left' }}>
-        <Typography
-          color={
-            theme.palette.mode === 'dark'
-              ? theme.palette.primary.light
-              : theme.palette.primary.main
-          }
-          variant='h5'
-          gutterBottom
-        >
-          Committee Title: {committee.committeeTitle}
-        </Typography>
-        <Typography>Work has Started: {committee.workHasStarted}</Typography>
-        <Typography gutterBottom>
-          Will Expire: {committee.willExpire}
-        </Typography>
+        <Box sx={{ my: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <Typography variant='h5'>
+            কমিটিঃ <ColorTitle variant='span' text={committee.committeeTitle} />
+          </Typography>
+          <Typography>
+            কার্যক্রম শুরুঃ{' '}
+            {dayjs(committee.workHasStarted).format('DD MMM YYYY')}
+          </Typography>
+          <Typography>
+            মেয়াদ শেষঃ {dayjs(committee.willExpire).format('DD MMM YYYY')}
+          </Typography>
+        </Box>
 
-        <Table size='small' stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell>Serial</TableCell>
-              <TableCell>Name</TableCell>
-              {/* <TableCell>Name (Bengali)</TableCell> */}
-              <TableCell>Committee Post</TableCell>
-              {/* <TableCell>Committee Post (Benglai)</TableCell> */}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {committee.members?.length > 0 &&
-              committee.members.map((mem) => (
-                <TableRow
-                  key={mem.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell>{mem.serialNumber}</TableCell>
-                  <TableCell>{mem.name}</TableCell>
-                  {/* <TableCell>{mem.name_bn}</TableCell> */}
-                  <TableCell>{mem.postName}</TableCell>
-                  {/* <TableCell>{mem.postName_bn}</TableCell> */}
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
+        <TableContainer>
+          <Table size='small' stickyHeader>
+            <TableHeader columns={columns} />
+            <TableBody>
+              {committee.members?.length > 0 &&
+                committee.members.map((member) => (
+                  <CommitteeDetailsRow
+                    key={member._id}
+                    member={member}
+                    columns={columns}
+                  />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </CardContent>
     </Card>
   );

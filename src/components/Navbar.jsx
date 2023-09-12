@@ -13,23 +13,23 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { NavLink, Route, Routes } from 'react-router-dom';
+import { Link, NavLink, Route, Routes } from 'react-router-dom';
 
 import About from '../pages/About';
 import Add from '../pages/Add';
 import AddCommittee from '../pages/AddCommittee';
 import CommitteeDetails from '../pages/CommitteeDetails';
-import CommitteeList from '../pages/CommitteeList';
-import DetailsTable from '../pages/DetailsTable';
+import CommitteeTable from '../pages/CommitteeTable';
 import Home from '../pages/Home';
-import ListTable from '../pages/ListTable';
 import Login from '../pages/Login';
+import PharmacistDetails from '../pages/PharmacistDetails';
+import PharmacistTable from '../pages/PharmacistTable';
 import Signup from '../pages/Signup';
 
 const drawerWidth = 240;
 const navItems = [
   { path: '/members/page/1', text: 'Members' },
-  { path: '/committee', text: 'Committee' },
+  { path: '/committees', text: 'Committees' },
   { path: '/members/add', text: 'Add Member' },
   { path: '/about', text: 'About' },
   { path: '/login', text: 'Login' },
@@ -100,14 +100,14 @@ const Navbar = (props) => {
               alignItems: 'center',
             }}
           >
-            <NavLink to='/'>
+            <Link to='/'>
               <img
                 src={`${process.env.PUBLIC_URL}/bdpa_logo.png`}
                 alt='logo'
                 width='50px'
                 height='50px'
               />
-            </NavLink>
+            </Link>
           </Box>
           <div>{props.children}</div>
           <IconButton
@@ -165,19 +165,22 @@ const Navbar = (props) => {
       <Box component='main' sx={{ p: 1, textAlign: 'center', width: '100%' }}>
         <Toolbar />
         <Routes>
-          <Route index element={<Home />} />
           <Route path='/members/add' element={<Add />} />
-          <Route path='/members/:regNumber' element={<DetailsTable />} />
-          <Route path='/members/page/:pageNumber' element={<ListTable />} />
-          <Route path='/committee' element={<CommitteeList />} />
           <Route
-            path='/committee/:committeePath'
+            path='/members/page/:pageNumber'
+            element={<PharmacistTable />}
+          />
+          <Route path='/members/:regNumber' element={<PharmacistDetails />} />
+          <Route path='/committees' element={<CommitteeTable />} />
+          <Route
+            path='/committees/:committeePath'
             element={<CommitteeDetails />}
           />
-          <Route path='/committee/add' element={<AddCommittee />} />
+          <Route path='/committees/add' element={<AddCommittee />} />
           <Route path='/about' element={<About />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
+          <Route index element={<Home />} />
         </Routes>
       </Box>
     </Box>

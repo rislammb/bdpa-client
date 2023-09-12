@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import DetailsTableRow from '../components/DetailsTableRow';
+import PharmacistDetailsRow from '../components/PharmacistDetailsRow';
 import Loading from '../components/ui/Loading';
 import { axiosInstance } from '../config';
 
@@ -21,7 +21,7 @@ const createRow = (th, value, name, type, edit) => ({
   edit,
 });
 
-const DetailsTable = () => {
+const PharmacistDetails = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   let { regNumber } = useParams();
@@ -303,7 +303,7 @@ const DetailsTable = () => {
                 </TableRow>
 
                 {tableRows.map((row) => (
-                  <DetailsTableRow
+                  <PharmacistDetailsRow
                     key={row.th}
                     row={row}
                     pharmacist={pharmacist}
@@ -359,4 +359,4 @@ const DetailsTable = () => {
     </TableContainer>
   );
 };
-export default DetailsTable;
+export default PharmacistDetails;

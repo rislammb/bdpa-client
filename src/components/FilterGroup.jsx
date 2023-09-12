@@ -52,6 +52,7 @@ const FilterGroup = ({ dbPharmacists, setAfterFilter }) => {
           height: mobileOpen ? '290px' : 0,
           transition: 'all 0.35s ease-in-out',
           overflow: mobileOpen ? 'inherit' : 'hidden',
+          mb: 1.5,
         }}
       >
         <FilterByLocation

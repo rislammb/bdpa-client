@@ -30,7 +30,7 @@ import {
 import PostingGroup from './PostingGroup';
 import SelectComponent from './SelectComponent';
 
-const DetailsTableRow = ({
+const PharmacistDetailsRow = ({
   row,
   pharmacist,
   showDeputationRow,
@@ -426,4 +426,4 @@ const DetailsTableRow = ({
   );
 };
 
-export default DetailsTableRow;
+export default PharmacistDetailsRow;
