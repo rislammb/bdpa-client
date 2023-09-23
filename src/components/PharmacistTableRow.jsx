@@ -3,7 +3,7 @@ import TableRow from '@mui/material/TableRow';
 import dayjs from 'dayjs';
 import Link from './ui/Link';
 
-const PharmacistTableRow = ({ pharmacist, columns }) => (
+const PharmacistTableRow = ({ pharmacist, columns, isTargetBlank }) => (
   <TableRow hover tabIndex={-1}>
     {columns.map((column) => {
       const value = pharmacist[column.id];
@@ -36,7 +36,7 @@ const PharmacistTableRow = ({ pharmacist, columns }) => (
           ) : column.id === 'regNumber' || column.id === 'name' ? (
             <Link
               to={`/members/${pharmacist['regNumber']}`}
-              target='_blank'
+              target={isTargetBlank ? '_blank' : ''}
               text={value}
             />
           ) : column.id === 'voterDistrict' ? (

@@ -1,5 +1,6 @@
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Box, Button } from '@mui/material';
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import Button  from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -283,6 +284,7 @@ const PharmacistDetails = () => {
         overflow: 'auto',
         maxWidth: 650,
         margin: '10px auto',
+        pb: 1.5,
       }}
       component={Paper}
     >
@@ -313,7 +315,7 @@ const PharmacistDetails = () => {
                     }
                   />
                 ))}
-                <TableRow sx={{ border: 0 }}>
+                {/* <TableRow sx={{ border: 0 }}>
                   <TableCell
                     colSpan={3}
                     sx={{ padding: 1.5, textAlign: 'center' }}
@@ -327,7 +329,7 @@ const PharmacistDetails = () => {
                       Delete
                     </Button>
                   </TableCell>
-                </TableRow>
+                </TableRow> */}
               </>
             ) : (
               [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((num) => (

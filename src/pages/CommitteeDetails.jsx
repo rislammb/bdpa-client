@@ -21,7 +21,7 @@ const columns = [
   { id: 'name', label: 'নাম', minWidth: 190 },
   { id: 'postName', label: 'কমিটি পদবী', minWidth: 210 },
   { id: 'mobile', label: 'মোবাইল', minWidth: 90 },
-  { id: 'posting', label: 'কর্মস্থল/ঠিকানা', minWidth: 130 },
+  { id: 'posting', label: 'কর্মস্থল/ঠিকানা', minWidth: 330 },
 ];
 
 const CommitteeDetails = () => {
@@ -48,7 +48,7 @@ const CommitteeDetails = () => {
   if (!committee) return <Typography>Committee not found!</Typography>;
 
   return (
-    <Card sx={{ maxWidth: '900px', margin: 'auto' }}>
+    <Card sx={{ maxWidth: '1100px', margin: 'auto' }}>
       <CardContent sx={{ textAlign: 'left' }}>
         <Box sx={{ my: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
           <Typography variant='h5'>
@@ -59,7 +59,7 @@ const CommitteeDetails = () => {
             {dayjs(committee.workHasStarted).format('DD MMM YYYY')}
           </Typography>
           <Typography>
-            মেয়াদ শেষঃ {dayjs(committee.willExpire).format('DD MMM YYYY')}
+            মেয়াদঃ {dayjs(committee.willExpire).format('DD MMM YYYY')}
           </Typography>
         </Box>
 

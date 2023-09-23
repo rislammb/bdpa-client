@@ -20,7 +20,7 @@ import { axiosInstance } from '../config';
 const columns = [
   { id: 'committeeTitle', label: 'কমিটি', minWidth: 170 },
   { id: 'workHasStarted', label: 'কার্যক্রম শুরু', minWidth: 120 },
-  { id: 'willExpire', label: 'মেয়াদ শেষ', minWidth: 90 },
+  { id: 'willExpire', label: 'মেয়াদ', minWidth: 90 },
 ];
 
 const CommitteeTable = () => {

@@ -12,6 +12,7 @@ const CommitteeTableRow = ({ committee, columns }) => {
         return (
           <TableCell
             key={column.id}
+            align={column.align}
             sx={{
               minWidth: column.minWidth,
               padding: { xs: '8px 6px', sm: '12px' },
@@ -19,7 +20,7 @@ const CommitteeTableRow = ({ committee, columns }) => {
           >
             {column.id === 'committeeTitle' ? (
               <Link
-                to={`/committees/${committee.path}`}
+                to={`/committees/${committee.committeePath}`}
                 text={committee.committeeTitle}
                 sx={{ fontSize: '1rem' }}
               />

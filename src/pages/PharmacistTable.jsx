@@ -64,7 +64,7 @@ const PharmacistTable = () => {
     if (pharmacists.length !== dbPharmacists.length) {
       navigate(`/members/page/1`);
     }
-  }, [pharmacists]);
+  }, [pharmacists.length, dbPharmacists.length, navigate]);
 
   useEffect(() => {
     setPage(Number(pageNumber) ?? 1);
@@ -101,6 +101,11 @@ const PharmacistTable = () => {
                         key={pharmacist._id}
                         pharmacist={pharmacist}
                         columns={columns}
+                        isTargetBlank={
+                          dbPharmacists.length > pharmacists.length
+                            ? true
+                            : false
+                        }
                       />
                     ))
                 ) : (
