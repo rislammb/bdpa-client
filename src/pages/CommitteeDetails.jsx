@@ -18,7 +18,7 @@ import { axiosInstance } from '../config';
 
 const columns = [
   { id: 'serialNumber', label: 'ক্রমিক', minWidth: 35 },
-  { id: 'name', label: 'নাম', minWidth: 190 },
+  { id: 'bn_name', label: 'নাম (বাংলায়)', minWidth: 190 },
   { id: 'postName', label: 'কমিটি পদবী', minWidth: 210 },
   { id: 'mobile', label: 'মোবাইল', minWidth: 90 },
   { id: 'posting', label: 'কর্মস্থল/ঠিকানা', minWidth: 330 },
@@ -50,7 +50,7 @@ const CommitteeDetails = () => {
   return (
     <Card sx={{ maxWidth: '1100px', margin: 'auto' }}>
       <CardContent sx={{ textAlign: 'left' }}>
-        <Box sx={{ my: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <Box sx={{ my: 1.5, display: 'flex', alignItems: 'center', flexDirection: 'column', gap: 1 }}>
           <Typography variant='h5'>
             কমিটিঃ <ColorTitle variant='span' text={committee.committeeTitle} />
           </Typography>

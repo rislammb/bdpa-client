@@ -10,13 +10,14 @@ const CommitteeDetailsRow = ({ member, columns }) => {
 
         return (
           <TableCell
+            key={column.id}
             align={column.align}
             sx={{
               minWidth: column.minWidth,
               padding: { xs: '8px 6px', sm: '12px' },
             }}
           >
-            {column.id === 'name' ? (
+            {column.id === 'bn_name' ? (
               <Link to={`/members/${member.regNumber}`} text={value} />
             ) : (
               value
