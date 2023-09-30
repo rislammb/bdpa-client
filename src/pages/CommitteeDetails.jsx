@@ -50,10 +50,17 @@ const CommitteeDetails = () => {
   return (
     <Card sx={{ maxWidth: '1100px', margin: 'auto' }}>
       <CardContent sx={{ textAlign: 'left' }}>
-        <Box sx={{ my: 1.5, display: 'flex', alignItems: 'center', flexDirection: 'column', gap: 1 }}>
-          <Typography variant='h5'>
-            কমিটিঃ <ColorTitle variant='span' text={committee.committeeTitle} />
-          </Typography>
+        <Box
+          sx={{
+            my: 1.5,
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            gap: 1,
+          }}
+        >
+          <ColorTitle variant='h5' text={committee.committeeTitle} />
+
           <Typography>
             কার্যক্রম শুরুঃ{' '}
             {dayjs(committee.workHasStarted).format('DD MMM YYYY')}
