@@ -11,7 +11,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { useTheme } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Link, NavLink, Route, Routes } from 'react-router-dom';
 
@@ -44,17 +43,21 @@ const Navbar = (props) => {
     setMobileOpen(!mobileOpen);
   };
 
-  const linkStyle = {
-    color:
-      theme.palette.mode === 'dark'
-        ? theme.palette.primary.light
-        : theme.palette.primary.main,
+  const linkStyle = (isActive = false) => ({
+    color: isActive ? theme.palette.primary.light : '#f1f1f1',
     width: '100%',
     textAlign: 'center',
-  };
+  });
 
   const drawer = (
-    <Box onClick={handleDrawerToggle}>
+    <Box
+      sx={{
+        backgroundColor:
+          theme.palette.mode === 'light' ? theme.palette.primary.main : '',
+        flex: 1,
+      }}
+      onClick={handleDrawerToggle}
+    >
       <Typography variant='h6' sx={{ my: 1.5, textAlign: 'center' }}>
         BDPA
       </Typography>
@@ -62,7 +65,7 @@ const Navbar = (props) => {
       <List>
         <ListItem disablePadding>
           <ListItemButton>
-            <NavLink style={linkStyle} to='/'>
+            <NavLink style={linkStyle()} to='/'>
               Home
             </NavLink>
           </ListItemButton>
@@ -71,9 +74,7 @@ const Navbar = (props) => {
           <ListItem disablePadding key={item.text}>
             <ListItemButton>
               <NavLink
-                style={({ isActive }) =>
-                  isActive ? { ...linkStyle, fontWeight: 'bold' } : linkStyle
-                }
+                style={({ isActive }) => linkStyle(isActive)}
                 to={item.path}
               >
                 {item.text}
@@ -126,12 +127,7 @@ const Navbar = (props) => {
             {navItems.map((item) => (
               <Button key={item.text} sx={{ color: '#f1f1f1' }}>
                 <NavLink
-                  style={({ isActive }) => {
-                    return {
-                      color: '#f1f1f1',
-                      fontWeight: isActive ? 'bold' : '',
-                    };
-                  }}
+                  style={({ isActive }) => linkStyle(isActive)}
                   to={item.path}
                 >
                   {item.text}
@@ -173,7 +169,7 @@ const Navbar = (props) => {
           <Route path='/members/:regNumber' element={<PharmacistDetails />} />
           <Route path='/committees' element={<CommitteeTable />} />
           <Route
-            path='/committees/:committeePath'
+            path='/committees/:committeeId'
             element={<CommitteeDetails />}
           />
           <Route path='/committees/add' element={<AddCommittee />} />
@@ -185,14 +181,6 @@ const Navbar = (props) => {
       </Box>
     </Box>
   );
-};
-
-Navbar.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
 };
 
 export default Navbar;
