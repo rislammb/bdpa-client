@@ -25,14 +25,14 @@ const columns = [
 ];
 
 const CommitteeDetails = () => {
-  const { committeePath } = useParams();
+  const { committeeId } = useParams();
 
   const [loading, setLoading] = useState(true);
   const [committee, setCommittee] = useState(null);
 
   useEffect(() => {
     axiosInstance
-      .get(`/committee/${committeePath}`)
+      .get(`/committee/id/${committeeId}`)
       .then((res) => {
         setCommittee(res.data);
       })
@@ -42,7 +42,7 @@ const CommitteeDetails = () => {
         setLoading(false);
         setCommittee(null);
       });
-  }, [committeePath]);
+  }, [committeeId]);
 
   if (loading) return <Typography>Loading...</Typography>;
   if (!committee) return <Typography>Committee not found!</Typography>;
