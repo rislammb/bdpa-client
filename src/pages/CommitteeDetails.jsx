@@ -42,7 +42,7 @@ const CommitteeDetails = () => {
         setLoading(false);
         setCommittee(null);
       });
-  }, [committeeId]);
+  }, [committeePath]);
 
   if (loading) return <Typography>Loading...</Typography>;
   if (!committee) return <Typography>Committee not found!</Typography>;
