@@ -20,7 +20,7 @@ const CommitteeTableRow = ({ committee, columns }) => {
           >
             {column.id === 'committeeTitle' ? (
               <Link
-                to={`/committees/${committee._id}`}
+                to={`/committees/${committee.committeePath}`}
                 text={committee.committeeTitle}
                 sx={{ fontSize: '1rem' }}
               />
