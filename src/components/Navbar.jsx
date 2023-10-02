@@ -169,7 +169,7 @@ const Navbar = (props) => {
           <Route path='/members/:regNumber' element={<PharmacistDetails />} />
           <Route path='/committees' element={<CommitteeTable />} />
           <Route
-            path='/committees/:committeeId'
+            path='/committees/:committeePath'
             element={<CommitteeDetails />}
           />
           <Route path='/committees/add' element={<AddCommittee />} />
