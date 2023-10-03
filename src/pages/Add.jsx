@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { useEffect, useState } from 'react';
 
-import { axiosInstance } from '../config';
+import { axiosInstance } from '../api/config';
 
 import DatePickerComp from '../components/DatePickerComp';
 import PostingGroup from '../components/PostingGroup';

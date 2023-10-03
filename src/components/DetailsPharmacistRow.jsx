@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import DatePickerComp from './DatePickerComp';
 
 import dayjs from 'dayjs';
-import { axiosInstance } from '../config';
+import { axiosInstance } from '../api/config';
 import { genderField, genderOptions } from '../constants/gender';
 import {
   jobDepertmentField,
@@ -30,7 +30,7 @@ import {
 import PostingGroup from './PostingGroup';
 import SelectComponent from './SelectComponent';
 
-const PharmacistDetailsRow = ({
+const DetailsPharmacistRow = ({
   row,
   pharmacist,
   showDeputationRow,
@@ -426,4 +426,4 @@ const PharmacistDetailsRow = ({
   );
 };
 
-export default PharmacistDetailsRow;
+export default DetailsPharmacistRow;

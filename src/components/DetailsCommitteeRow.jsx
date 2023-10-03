@@ -1,13 +1,12 @@
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
-import dayjs from 'dayjs';
 import Link from './ui/Link';
 
-const CommitteeTableRow = ({ committee, columns }) => {
+const DetailsCommitteeRow = ({ member, columns }) => {
   return (
-    <TableRow>
+    <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
       {columns.map((column) => {
-        const value = committee[column.id];
+        const value = member[column.id];
 
         return (
           <TableCell
@@ -18,14 +17,10 @@ const CommitteeTableRow = ({ committee, columns }) => {
               padding: { xs: '8px 6px', sm: '12px' },
             }}
           >
-            {column.id === 'committeeTitle' ? (
-              <Link
-                to={`/committees/${committee.committeePath}`}
-                text={committee.committeeTitle}
-                sx={{ fontSize: '1rem' }}
-              />
+            {column.id === 'bn_name' ? (
+              <Link to={`/members/${member.regNumber}`} text={value} />
             ) : (
-              dayjs(value).format('DD MMM YYYY')
+              value
             )}
           </TableCell>
         );
@@ -34,4 +29,4 @@ const CommitteeTableRow = ({ committee, columns }) => {
   );
 };
 
-export default CommitteeTableRow;
+export default DetailsCommitteeRow;

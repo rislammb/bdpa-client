@@ -12,8 +12,8 @@ const initial = {
     label: 'কমিটির নাম',
     placeholder: 'রাজশাহী জেলা কমিটি',
   },
-  workHasStarted: { value: new Date(), type: 'date', label: 'কার্যক্রম শুরু' },
-  willExpire: { value: new Date(), type: 'date', label: 'মেয়াদ' },
+  workHasStarted: { value: null, type: 'date', label: 'কার্যক্রম শুরু' },
+  willExpire: { value: null, type: 'date', label: 'মেয়াদ' },
   indexNumber: {
     value: '',
     label: 'ক্রমিক ইনডেক্স',
@@ -21,9 +21,26 @@ const initial = {
   },
 };
 
+const validate = (obj) => {
+  const err = {};
+
+  Object.keys((key) => {
+    if (key === 'comitteeTitle') {
+      console.log('title =>', boj[key]);
+    }
+  });
+
+  return {
+    valid: Object.keys(err).length < 1,
+    data: Object.keys(err).length < 1 ? obj : err,
+  };
+};
+
 const AddCommittee = () => {
-  const { state, onFocus, onChange, onBlur, onSubmit } =
-    useAddCommittee(initial);
+  const { state, onFocus, onChange, onBlur, onSubmit } = useAddCommittee(
+    initial,
+    validate
+  );
 
   const formFieldsArray = Object.keys(state).reduce((acc, cur) => {
     acc.push(state[cur]);

@@ -10,7 +10,7 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { axiosInstance } from '../config';
+import { axiosInstance } from '../api/config';
 
 const initialState = { email: '', password: '' };
 

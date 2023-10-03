@@ -6,51 +6,37 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { jobDepertmentOptions } from '../constants/jobDepertment';
+import { useStoreActions, useStoreState } from 'easy-peasy';
 
-const INITIAL_DEPERTMENT_INFO = {
-  value: 'all',
-  options: [
-    {
-      id: 'all',
-      name: 'All',
-    },
-    ...jobDepertmentOptions,
-  ],
-};
-
-const FilterByJobDepertment = ({ pharmacists, handleForDepertmentChange }) => {
-  const [jobDepertmentInfo, setJobDepertmentInfo] = useState({
-    ...INITIAL_DEPERTMENT_INFO,
-  });
-
+const FilterByJobDepertment = () => {
+  const { jobDepertmentInfo } = useStoreState((state) => state.pharmacist);
+  const { setJobDepertmentInfo } = useStoreActions(
+    (actions) => actions.pharmacist
+  );
   const handleJobDepertmentChange = (e) => {
-    setJobDepertmentInfo((prevState) => ({
-      ...prevState,
-      value: e.target.value,
-    }));
+    jobDepertmentInfo.value = e.target.value;
+    setJobDepertmentInfo(jobDepertmentInfo);
 
-    if (e.target.value === 'all') {
-      handleForDepertmentChange(pharmacists);
-    } else {
-      const nameFromId = jobDepertmentOptions.find(
-        (option) => option.id === e.target.value
-      )?.name;
-      handleForDepertmentChange(
-        pharmacists.filter(
-          (pharmacist) => pharmacist.jobDepertment === nameFromId
-        )
-      );
-    }
+    // if (e.target.value === 'all') {
+    //   handleForDepertmentChange(pharmacists);
+    // } else {
+    //   const nameFromId = jobDepertmentOptions.find(
+    //     (option) => option.id === e.target.value
+    //   )?.name;
+    //   handleForDepertmentChange(
+    //     pharmacists.filter(
+    //       (pharmacist) => pharmacist.jobDepertment === nameFromId
+    //     )
+    //   );
+    // }
   };
 
-  useEffect(() => {
-    handleForDepertmentChange(pharmacists);
-    setJobDepertmentInfo({
-      ...INITIAL_DEPERTMENT_INFO,
-    });
-  }, [pharmacists]);
+  // useEffect(() => {
+  //   handleForDepertmentChange(pharmacists);
+  //   setJobDepertmentInfo({
+  //     ...INITIAL_DEPERTMENT_INFO,
+  //   });
+  // }, [pharmacists]);
 
   return (
     <FormControl

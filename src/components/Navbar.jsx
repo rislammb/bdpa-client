@@ -17,12 +17,12 @@ import { Link, NavLink, Route, Routes } from 'react-router-dom';
 import About from '../pages/About';
 import Add from '../pages/Add';
 import AddCommittee from '../pages/AddCommittee';
-import CommitteeDetails from '../pages/CommitteeDetails';
-import CommitteeTable from '../pages/CommitteeTable';
+import CommitteeList from '../pages/CommitteeList';
+import DetailsCommittee from '../pages/DetailsCommittee';
+import DetailsPharmacist from '../pages/DetailsPharmacist';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
-import PharmacistDetails from '../pages/PharmacistDetails';
-import PharmacistTable from '../pages/PharmacistTable';
+import PharmacistList from '../pages/PharmacistList';
 import Signup from '../pages/Signup';
 
 const drawerWidth = 240;
@@ -103,7 +103,7 @@ const Navbar = (props) => {
           >
             <Link to='/'>
               <img
-                src={`${process.env.PUBLIC_URL}/bdpa_logo.png`}
+                src={`/bdpa_logo.png`}
                 alt='logo'
                 width='50px'
                 height='50px'
@@ -164,13 +164,13 @@ const Navbar = (props) => {
           <Route path='/members/add' element={<Add />} />
           <Route
             path='/members/page/:pageNumber'
-            element={<PharmacistTable />}
+            element={<PharmacistList />}
           />
-          <Route path='/members/:regNumber' element={<PharmacistDetails />} />
-          <Route path='/committees' element={<CommitteeTable />} />
+          <Route path='/members/:regNumber' element={<DetailsPharmacist />} />
+          <Route path='/committees' element={<CommitteeList />} />
           <Route
             path='/committees/:committeePath'
-            element={<CommitteeDetails />}
+            element={<DetailsCommittee />}
           />
           <Route path='/committees/add' element={<AddCommittee />} />
           <Route path='/about' element={<About />} />

@@ -554,3 +554,8 @@ export const pharmacistFromState = (
     ...deputationValues,
   };
 };
+
+export const getAreaInfo = (data, area) =>
+  `${data[area + 'Place'] ? `${data[area + 'Place']}, ` : ''}${
+    data[area + 'Upazila']?.name ? `${data[area + 'Upazila']?.name}, ` : ''
+  }${data[area + 'District']?.name ? data[area + 'District']?.name : ''}`;

@@ -5,21 +5,11 @@ import FilterByJobDepertment from './FilterByJobDepertment';
 import FilterByLocation from './FilterByLocation';
 import SearchByText from './SearchByText';
 
-const FilterGroup = ({ dbPharmacists, setAfterFilter }) => {
+const FilterGroup = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [pharmacistsAfterLocationFilter, setPharmacistsAfterLocationFilter] =
-    useState(dbPharmacists);
-  const [
-    phramacistsAfterDepertmentFilter,
-    setPhramacistsAfterDepertmentFilter,
-  ] = useState([]);
 
   const handleFilterToggle = () => {
     setMobileOpen(!mobileOpen);
-  };
-
-  const handleForDepertmentChange = (value) => {
-    setPhramacistsAfterDepertmentFilter(value);
   };
 
   const temporaryJSX = (
@@ -55,19 +45,10 @@ const FilterGroup = ({ dbPharmacists, setAfterFilter }) => {
           mb: 1.5,
         }}
       >
-        <FilterByLocation
-          pharmacists={dbPharmacists}
-          onChange={(value) => setPharmacistsAfterLocationFilter(value)}
-        />
-        <FilterByJobDepertment
-          pharmacists={pharmacistsAfterLocationFilter}
-          handleForDepertmentChange={handleForDepertmentChange}
-        />
+        <FilterByLocation />
+        <FilterByJobDepertment />
       </Box>
-      <SearchByText
-        pharmacists={phramacistsAfterDepertmentFilter}
-        onChange={(value) => setAfterFilter(value)}
-      />
+      <SearchByText />
     </Box>
   );
 
@@ -84,20 +65,9 @@ const FilterGroup = ({ dbPharmacists, setAfterFilter }) => {
         flexWrap: 'wrap',
       }}
     >
-      <FilterByLocation
-        pharmacists={dbPharmacists}
-        onChange={(value) => {
-          setPharmacistsAfterLocationFilter(value);
-        }}
-      />
-      <FilterByJobDepertment
-        pharmacists={pharmacistsAfterLocationFilter}
-        handleForDepertmentChange={handleForDepertmentChange}
-      />
-      <SearchByText
-        pharmacists={phramacistsAfterDepertmentFilter}
-        onChange={(value) => setAfterFilter(value)}
-      />
+      <FilterByLocation />
+      <FilterByJobDepertment />
+      <SearchByText />
     </Box>
   );
 

@@ -2,10 +2,16 @@ import { useState } from 'react';
 
 const objDeepClone = (obj) => JSON.parse(JSON.stringify(obj));
 
-const useAddCommittee = (initial) => {
+const useAddCommittee = (initial, validate) => {
   const [state, setState] = useState(mapInitialToState(initial));
 
-  const onFocus = () => {};
+  const onFocus = (e) => {
+    const clonedState = objDeepClone(state);
+    clonedState[e.target.name].touched = true;
+
+    setState(clonedState);
+  };
+
   const onChange = (e, name) => {
     const clonedState = objDeepClone(state);
 
@@ -20,7 +26,19 @@ const useAddCommittee = (initial) => {
     setState(clonedState);
   };
 
-  const onBlur = () => {};
+  const onBlur = () => {
+    const { valid, data } = validate(mapStateToValue(state));
+
+    if (!valid) {
+      const clonedState = objDeepClone(state);
+
+      Object.keys.forEach((key) => {
+        clonedState[key].error = data[key];
+      });
+
+      setState(clonedState);
+    }
+  };
 
   const onSubmit = (e, cb) => {
     e.preventDefault();
@@ -45,7 +63,7 @@ const mapInitialToState = (initial) =>
       value: initial[cur].value,
       placeholder: initial[cur].placeholder,
       type: initial[cur].type ?? 'text',
-      onTouched: false,
+      touched: false,
       error: '',
     };
 

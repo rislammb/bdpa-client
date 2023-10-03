@@ -1,3 +1,4 @@
+import { Add } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -9,41 +10,18 @@ import {
   Typography,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-
-import { Add } from '@mui/icons-material';
-import { useEffect, useState } from 'react';
-import CommitteeTableRow from '../components/CommitteeTableRow';
 import EmptyTableRow from '../components/EmptyTableRow';
 import TableHeader from '../components/TableHeader';
-import { axiosInstance } from '../config';
+import useCommitteeList from '../hooks/useCommitteeList';
 
-const columns = [
-  { id: 'committeeTitle', label: 'কমিটি', minWidth: 170 },
-  { id: 'workHasStarted', label: 'কার্যক্রম শুরু', minWidth: 120 },
-  { id: 'willExpire', label: 'মেয়াদ', minWidth: 90 },
-];
+import CommitteeListRow from '../components/CommitteeListRow';
 
-const CommitteeTable = () => {
-  const [loading, setLoading] = useState(true);
-
-  const [searchTerm, setSearchTerm] = useState('');
-  const [committees, setCommittees] = useState([]);
-
-  useEffect(() => {
-    axiosInstance
-      .get('/committee')
-      .then((res) => {
-        setCommittees(res.data);
-      })
-      .then(() => setLoading(false))
-      .catch((e) => {
-        console.log(e.message);
-        setLoading(false);
-      });
-  }, []);
+const CommitteeList = () => {
+  const { loading, filteredList, searchTerm, setSearchTerm, columns } =
+    useCommitteeList();
 
   if (loading) return <Typography>Loading...</Typography>;
-  if (!committees) return <Typography>Committee not found!</Typography>;
+  if (!filteredList) return <Typography>Committee not found!</Typography>;
 
   return (
     <Box
@@ -87,9 +65,9 @@ const CommitteeTable = () => {
           <Table stickyHeader size='' aria-label='sticky table'>
             <TableHeader columns={columns} />
             <TableBody>
-              {committees?.length > 0 ? (
-                committees.map((committee) => (
-                  <CommitteeTableRow
+              {filteredList?.length > 0 ? (
+                filteredList.map((committee) => (
+                  <CommitteeListRow
                     key={committee._id}
                     committee={committee}
                     columns={columns}
@@ -106,4 +84,4 @@ const CommitteeTable = () => {
   );
 };
 
-export default CommitteeTable;
+export default CommitteeList;
