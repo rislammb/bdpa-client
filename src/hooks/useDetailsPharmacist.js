@@ -13,16 +13,16 @@ const createRow = (th, value, name, type, edit) => ({
 });
 
 const useDetailsPharmacist = () => {
-  const navigate = useNavigate();
   let { regNumber } = useParams();
+  const navigate = useNavigate();
   const [showDeputationRow, setShowDeputationRow] = useState(null);
   const [tableRows, setTableRows] = useState([]);
 
   const { loading, details: pharmacist } = useStoreState(
     (state) => state.pharmacist
   );
-  const getDetailsPharmacistData = useStoreActions(
-    (actions) => actions.pharmacist.getDetailsPharmacistData
+  const { getDetailsPharmacistData, deletePharmacistData } = useStoreActions(
+    (actions) => actions.pharmacist
   );
 
   const isPermittedForEdit = false;
@@ -198,14 +198,8 @@ const useDetailsPharmacist = () => {
         `Are you sure you want to delete '${pharmacist.name} : ${pharmacist.regNumber}'?`
       )
     ) {
-      // axiosInstance
-      //   .delete(`/pharmacist/${regNumber}`)
-      //   .then(() => navigate('/list/page/1'))
-      //   .catch((e) => {
-      //     console.log(e.message);
-      //   });
-
-      alert('please try again later!');
+      deletePharmacistData(regNumber);
+      navigate(-1);
     }
   };
 

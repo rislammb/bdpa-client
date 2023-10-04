@@ -29,8 +29,8 @@ const usePharmacistList = () => {
   const { loading, list, filteredList } = useStoreState(
     (state) => state.pharmacist
   );
-  const getPharmacistsData = useStoreActions(
-    (actions) => actions.pharmacist.getPharmacistsData
+  const { getPharmacistsData } = useStoreActions(
+    (actions) => actions.pharmacist
   );
 
   const rowsPerPage = 50;

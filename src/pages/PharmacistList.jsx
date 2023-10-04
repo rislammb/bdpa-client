@@ -33,7 +33,7 @@ const PharmacistList = () => {
     >
       <FilterGroup />
 
-      {loading ? (
+      {loading || list.length < 1 ? (
         <Box sx={{ p: 3 }}>
           <Loading />
         </Box>

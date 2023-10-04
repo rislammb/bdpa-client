@@ -8,43 +8,15 @@ import {
   Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { axiosInstance } from '../api/config';
-
-const initialState = { email: '', password: '' };
+import { Link, useNavigate } from 'react-router-dom';
+import useLogin from '../hooks/useLogin';
 
 const Login = () => {
   const theme = useTheme();
-  const [state, setState] = useState({ ...initialState });
+  const navigate = useNavigate();
+  const { state, user, handleChange, handleSubmit } = useLogin();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setState((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = () => {
-    axiosInstance
-      .post('/auth/login', { ...state })
-      .then((res) => {
-        console.log(res.data);
-        localStorage.setItem(
-          'BDPA_API_TOKEN',
-          JSON.stringify(`Bearer ${res.data.token}`)
-        );
-      })
-      .catch((e) => {
-        console.log(e.response.data);
-        // setSnackbar({
-        //   open: true,
-        //   severity: 'error',
-        //   text: 'Pharmacist add to databse faild!.',
-        // });
-        if (typeof e.response.data === 'object') {
-          // setError(e.response.data);
-        }
-      });
-  };
+  if (user?.regNumber) return navigate(`/members/${user.regNumber}`);
 
   return (
     <Card sx={{ maxWidth: 330, margin: '20px auto' }}>
@@ -57,7 +29,11 @@ const Login = () => {
         }}
         title='Login Page'
       />
-      <CardContent sx={{ display: 'flex', flexDirection: 'column', rowGap: 3 }}>
+      <CardContent
+        component={'form'}
+        onSubmit={handleSubmit}
+        sx={{ display: 'flex', flexDirection: 'column', rowGap: 3 }}
+      >
         <TextField
           InputLabelProps={{ color: 'info' }}
           type='email'
@@ -79,11 +55,11 @@ const Login = () => {
           variant='standard'
         />
         <CardActions sx={{ flexDirection: 'column', rowGap: 1 }}>
-          <Button onClick={handleSubmit} variant='contained'>
+          <Button type='submit' variant='contained'>
             Login
           </Button>
           <Typography variant='body2' component='span'>
-            Don't have an account? Please{' '}
+            Don&apost have an account? Please{' '}
             <Link
               to='/signup'
               style={{

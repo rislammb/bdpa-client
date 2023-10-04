@@ -15,8 +15,8 @@ import { useState } from 'react';
 import { Link, NavLink, Route, Routes } from 'react-router-dom';
 
 import About from '../pages/About';
-import Add from '../pages/Add';
 import AddCommittee from '../pages/AddCommittee';
+import AddPharmacist from '../pages/AddPharmacist';
 import CommitteeList from '../pages/CommitteeList';
 import DetailsCommittee from '../pages/DetailsCommittee';
 import DetailsPharmacist from '../pages/DetailsPharmacist';
@@ -161,7 +161,7 @@ const Navbar = (props) => {
       <Box component='main' sx={{ p: 1, textAlign: 'center', width: '100%' }}>
         <Toolbar />
         <Routes>
-          <Route path='/members/add' element={<Add />} />
+          <Route path='/members/add' element={<AddPharmacist />} />
           <Route
             path='/members/page/:pageNumber'
             element={<PharmacistList />}

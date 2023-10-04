@@ -55,7 +55,7 @@ export const addFormFields = {
     type: 'date',
     name: 'dateOfBirth',
     label: 'Date of Birth',
-    value: new Date(),
+    value: null,
   },
   gender: { ...genderField },
   nationalId: {
@@ -90,7 +90,7 @@ export const addFormFields = {
     type: 'date',
     name: 'dateOfJoin',
     label: 'Date of Join',
-    value: new Date(),
+    value: null,
   },
   jobDepertment: { ...jobDepertmentField },
 };

@@ -1,21 +1,11 @@
 import { axiosInstance } from './config';
 
-export const getPharmacists = async () => {
-  try {
-    const { data } = await axiosInstance.get('/pharmacist');
+export const getPharmacists = () => axiosInstance.get('/pharmacist');
 
-    return data;
-  } catch (e) {
-    console.log('error => ', e);
-  }
-};
+export const getDetailsPharmacist = (regNumber) =>
+  axiosInstance.get(`/pharmacist/${regNumber}`);
 
-export const getDetailsPharmacist = async (regNumber) => {
-  try {
-    const { data } = await axiosInstance.get(`/pharmacist/${regNumber}`);
+export const addPharmacist = (data) => axiosInstance.post('/pharmacist', data);
 
-    return data;
-  } catch (e) {
-    console.log('error => ', e);
-  }
-};
+export const deletePharmacist = (regNumber) =>
+  axiosInstance.delete(`/pharmacist/${regNumber}`);

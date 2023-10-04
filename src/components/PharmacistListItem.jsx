@@ -1,6 +1,7 @@
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import dayjs from 'dayjs';
+import { getAreaInfo } from '../helpers/utilities';
 import Link from './ui/Link';
 
 const PharmacistListItem = ({ pharmacist, columns, isTargetBlank }) => (
@@ -20,19 +21,7 @@ const PharmacistListItem = ({ pharmacist, columns, isTargetBlank }) => (
           {column.id === 'dateOfBirth' ? (
             dayjs(value).format('DD MMM YYYY')
           ) : column.id === 'mainPosting' ? (
-            `${
-              pharmacist['postingPlace']
-                ? `${pharmacist['postingPlace']}, `
-                : ''
-            }${
-              pharmacist['postingUpazila'].name
-                ? `${pharmacist['postingUpazila'].name}, `
-                : ''
-            }${
-              pharmacist['postingDistrict'].name
-                ? pharmacist['postingDistrict'].name
-                : ''
-            }`
+            getAreaInfo(pharmacist, 'posting')
           ) : column.id === 'regNumber' || column.id === 'name' ? (
             <Link
               to={`/members/${pharmacist['regNumber']}`}

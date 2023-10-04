@@ -3,10 +3,11 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { Paper } from '@mui/material';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { ThemeProvider, useTheme } from '@mui/material/styles';
+import { createContext, useContext } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
+import useApp from './hooks/useApp';
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -37,44 +38,8 @@ const ThemeButton = () => {
   );
 };
 
-function App() {
-  const [mode, setMode] = useState(
-    localStorage.getItem('BDPA_COLOR_MODE') ?? 'light'
-  );
-  const colorMode = useMemo(
-    () => ({
-      toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
-      },
-    }),
-    []
-  );
-
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode,
-          primary: {
-            main: '#007595',
-            light: '#86e5ff',
-            dark: '#055a71',
-          },
-          background: {
-            paper: mode === 'dark' ? '#282c34' : '#f1f1f1',
-            default: mode === 'dark' ? '#282c34' : '#f1f1f1',
-          },
-        },
-        typography: {
-          fontFamily: 'Titillium Web, sans-serif',
-        },
-      }),
-    [mode]
-  );
-
-  useEffect(() => {
-    localStorage.setItem('BDPA_COLOR_MODE', mode);
-  }, [mode]);
+const App = () => {
+  const { mode, colorMode, theme } = useApp();
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -92,6 +57,6 @@ function App() {
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
-}
+};
 
 export default App;

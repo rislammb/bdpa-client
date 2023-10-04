@@ -62,7 +62,9 @@ const DetailsPharmacist = () => {
                     }
                   />
                 ))}
-                <TableRow sx={{ border: 0 }}>
+                <TableRow
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
                   <TableCell
                     colSpan={3}
                     sx={{ padding: 1.5, textAlign: 'center' }}
@@ -90,7 +92,9 @@ const DetailsPharmacist = () => {
               ))
             )
           ) : (
-            <TableRow>
+            <TableRow
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
               <TableCell
                 sx={{
                   p: 5,

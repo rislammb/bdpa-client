@@ -2,9 +2,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
-
-import { axiosInstance } from '../api/config';
+import { useNavigate } from 'react-router-dom';
 
 import DatePickerComp from '../components/DatePickerComp';
 import PostingGroup from '../components/PostingGroup';
@@ -21,7 +21,12 @@ import { upazilas } from '../constants/upazilas';
 import { voterAreaFields } from '../constants/voterAreaFields';
 import { pharmacistFromState } from '../helpers/utilities';
 
-const Add = () => {
+const AddPharmacist = () => {
+  const { submitting, error } = useStoreState((state) => state.pharmacist);
+  const { addPharmacistData } = useStoreActions(
+    (actions) => actions.pharmacist
+  );
+  const navigate = useNavigate();
   const [formFields, setFormFields] = useState({ ...addFormFields });
   const [postingFields, setPostingFields] = useState({ ...addPostingFields });
   const [permanentFields, setPermanentFields] = useState({
@@ -32,8 +37,6 @@ const Add = () => {
   const [deputationFields, setDeputationFields] = useState({
     ...addDeputationFields,
   });
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState({});
   const [snackbar, setSnackbar] = useState({
     open: false,
     severity: 'info',
@@ -267,10 +270,8 @@ const Add = () => {
     }));
   }, [deputationFields.deputationDistrict.value]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
-    setError({});
 
     const newPharmacist = pharmacistFromState(
       formFields,
@@ -281,42 +282,8 @@ const Add = () => {
       deputationFields
     );
 
-    axiosInstance
-      .post('/pharmacist', newPharmacist)
-      .then(() => {
-        setSnackbar({
-          open: true,
-          severity: 'success',
-          text: 'Pharmacist add to databse successfullly.',
-        });
-        setFormFields({ ...addFormFields });
-        setPostingFields({ ...addPostingFields });
-        setPermanentFields({ ...addPermanentFields });
-        setVoterArea({ ...voterAreaFields });
-        setOnDeputation('1');
-        setDeputationFields({ ...addDeputationFields });
-        setSubmitting(false);
-      })
-      .catch((e) => {
-        setSnackbar({
-          open: true,
-          severity: 'error',
-          text: 'Pharmacist add to databse faild!.',
-        });
-
-        console.log(e);
-        if (typeof e.response.data === 'object') {
-          if (e.response.data.message === 'Pharmacist already exist!') {
-            setError({
-              regNumber: 'Pharmacist already exist!',
-            });
-          } else {
-            setError(e.response.data);
-          }
-        }
-
-        setSubmitting(false);
-      });
+    const res = await addPharmacistData(newPharmacist);
+    if (res?.regNumber) navigate(`/members/${res.regNumber}`);
   };
 
   return (
@@ -359,6 +326,8 @@ const Add = () => {
                 label={field.label}
                 value={field.value}
                 onChange={handleChange}
+                disableFuture
+                referenceDate={new Date('2002-04-23')}
               />
             );
           } else
@@ -370,8 +339,8 @@ const Add = () => {
                 label={field.label}
                 value={field.value}
                 onChange={handleChange}
-                error={error[field.name] ? true : false}
-                helperText={error[field.name] ? error[field.name] : ''}
+                error={error && error[field.name] ? true : false}
+                helperText={error && error[field.name] ? error[field.name] : ''}
                 placeholder={field.placeholder}
                 variant='standard'
               />
@@ -439,4 +408,4 @@ const Add = () => {
     </Box>
   );
 };
-export default Add;
+export default AddPharmacist;

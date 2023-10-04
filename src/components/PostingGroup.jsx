@@ -65,8 +65,10 @@ const PostingGroup = ({ postingInfo, onChange, label, error, style }) => {
                       name={field.name}
                       label={field.label}
                       value={field.value}
-                      error={error[field.name] ? true : false}
-                      helperText={error[field.name] ? error[field.name] : ''}
+                      error={error && error[field.name] ? true : false}
+                      helperText={
+                        error && error[field.name] ? error[field.name] : ''
+                      }
                       placeholder={field.placeholder}
                       onChange={onChange}
                       variant='standard'

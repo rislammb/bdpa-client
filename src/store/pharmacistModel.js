@@ -1,5 +1,10 @@
 import { action, computed, thunk } from 'easy-peasy';
-import { getDetailsPharmacist, getPharmacists } from '../api/pharmacist';
+import {
+  addPharmacist,
+  deletePharmacist,
+  getDetailsPharmacist,
+  getPharmacists,
+} from '../api/pharmacist';
 import {
   INITIAL_DEPERTMENT_INFO,
   INITIAL_LOCATION_INFO,
@@ -8,23 +13,37 @@ import { getFilteredPharmacists } from '../helpers/pharmacist';
 
 const pharmacistModel = {
   loading: false,
+  submitting: false,
+  error: null,
   list: [],
   locationInfo: { ...INITIAL_LOCATION_INFO },
   jobDepertmentInfo: { ...INITIAL_DEPERTMENT_INFO },
   searchTerm: '',
   details: null,
-  setLoading: action((state) => {
-    state.loading = true;
+  setLoading: action((state, payload) => {
+    state.loading = payload;
+  }),
+  setSubmitting: action((state, payload) => {
+    state.submitting = payload;
+  }),
+  setError: action((state, payload) => {
+    state.error = payload;
   }),
   setPharmacists: action((state, payload) => {
     state.list = payload;
     state.loading = false;
   }),
-  getPharmacistsData: thunk(async ({ setLoading, setPharmacists }) => {
-    setPharmacists([]);
-    setLoading(true);
-    const data = await getPharmacists();
-    setPharmacists(data);
+  getPharmacistsData: thunk(async (actions) => {
+    actions.setLoading(true);
+    actions.setPharmacists([]);
+    actions.setError(null);
+
+    try {
+      const { data } = await getPharmacists();
+      actions.setPharmacists(data);
+    } catch (e) {
+      actions.setError(e.response.data);
+    }
   }),
   setLocationInfo: action((state, payload) => {
     state.searchTerm = '';
@@ -51,15 +70,43 @@ const pharmacistModel = {
     state.details = payload;
     state.loading = false;
   }),
-  getDetailsPharmacistData: thunk(
-    async ({ setLoading, setDetailsPharmacist }, payload) => {
-      setDetailsPharmacist(null);
-      setLoading(true);
-      const data = await getDetailsPharmacist(payload);
+  getDetailsPharmacistData: thunk(async (actions, payload) => {
+    actions.setLoading(true);
+    actions.setDetailsPharmacist(null);
+    actions.setError(null);
 
-      setDetailsPharmacist(data);
+    try {
+      const { data } = await getDetailsPharmacist(payload);
+      actions.setDetailsPharmacist(data);
+    } catch (e) {
+      actions.setError(e.response.data);
     }
-  ),
+  }),
+  addPharmacistData: thunk(async (actions, payload) => {
+    actions.setError(null);
+    actions.setSubmitting(true);
+
+    try {
+      const { data } = await addPharmacist(payload);
+      actions.setSubmitting(false);
+
+      return data;
+    } catch (e) {
+      actions.setError(e.response.data);
+      actions.setSubmitting(false);
+    }
+  }),
+  deletePharmacistData: thunk(async (actions, payload) => {
+    actions.setSubmitting(true);
+    try {
+      await deletePharmacist(payload);
+      actions.setDetailsPharmacist(null);
+      actions.setSubmitting(false);
+    } catch (e) {
+      actions.setError(e.response.data);
+      actions.setSubmitting(false);
+    }
+  }),
 };
 
 export default pharmacistModel;
