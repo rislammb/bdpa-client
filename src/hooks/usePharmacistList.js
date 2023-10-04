@@ -41,7 +41,9 @@ const usePharmacistList = () => {
   };
 
   useEffect(() => {
+    if (list.length < 1 ) {
     getPharmacistsData();
+    }
   }, []);
 
   useEffect(() => {
