@@ -204,7 +204,7 @@ const useDetailsPharmacist = () => {
   };
 
   useEffect(() => {
-    getDetailsPharmacistData(regNumber);
+    if (regNumber) getDetailsPharmacistData(regNumber);
   }, [regNumber]);
 
   return {
