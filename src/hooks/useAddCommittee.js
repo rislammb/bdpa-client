@@ -1,49 +1,74 @@
+import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useForm from './useForm';
 
-const objDeepClone = (obj) => JSON.parse(JSON.stringify(obj));
+const initial = {
+  committeeTitle: {
+    value: '',
+    label: 'কমিটির নাম',
+    placeholder: 'রাজশাহী জেলা কমিটি',
+  },
+  workHasStarted: { value: null, type: 'date', label: 'কার্যক্রম শুরু' },
+  willExpire: { value: null, type: 'date', label: 'মেয়াদ' },
+  indexNumber: {
+    value: '',
+    label: 'ক্রমিক ইনডেক্স',
+    placeholder: '07',
+  },
+};
 
-const useAddCommittee = (initial, validate) => {
-  const [state, setState] = useState(mapInitialToState(initial));
+const validate = (obj) => {
+  const err = {};
 
-  const onFocus = (e) => {
-    const clonedState = objDeepClone(state);
-    clonedState[e.target.name].touched = true;
-
-    setState(clonedState);
-  };
-
-  const onChange = (e, name) => {
-    const clonedState = objDeepClone(state);
-
-    if (name === 'workHasStarted' || name === 'willExpire') {
-      clonedState[name].value = e;
-    } else if (e.target.name === 'indexNumber') {
-      clonedState[e.target.name].value = e.target.value.replace(/[^0-9]/g, '');
-    } else {
-      clonedState[e.target.name].value = e.target.value;
+  Object.keys(obj).forEach((key) => {
+    if (key === 'committeeTitle') {
+      if (obj[key].length < 5) {
+        err[key] = 'Committee Title must be at least 5 characters long!';
+      }
     }
+  });
 
-    setState(clonedState);
+  return {
+    valid: Object.keys(err).length < 1,
+    data: Object.keys(err).length < 1 ? obj : err,
+  };
+};
+
+const useAddCommittee = () => {
+  const navigate = useNavigate();
+  const { state, onFocus, onChange, onBlur, onSubmit } = useForm(
+    initial,
+    validate
+  );
+  const { submitting, error } = useStoreState((state) => state.committee);
+  const { addCommitteeData } = useStoreActions((action) => action.committee);
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    severity: 'info',
+    text: '',
+  });
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({ open: false, severity: snackbar.severity, text: '' });
   };
 
-  const onBlur = () => {
-    const { valid, data } = validate(mapStateToValue(state));
+  const handleSubmit = async (value) => {
+    const res = await addCommitteeData(value);
 
-    if (!valid) {
-      const clonedState = objDeepClone(state);
-
-      Object.keys.forEach((key) => {
-        clonedState[key].error = data[key];
+    if (res) {
+      navigate(`/committees/${res.committeePath}`);
+    } else if (error) {
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        text: 'Committee add to databse faild!.',
       });
-
-      setState(clonedState);
     }
-  };
-
-  const onSubmit = (e, cb) => {
-    e.preventDefault();
-
-    cb(mapStateToValue(state));
   };
 
   return {
@@ -52,29 +77,12 @@ const useAddCommittee = (initial, validate) => {
     onChange,
     onBlur,
     onSubmit,
+    submitting,
+    error,
+    handleSubmit,
+    snackbar,
+    handleSnackbarClose,
   };
 };
-
-const mapInitialToState = (initial) =>
-  Object.keys(initial).reduce((acc, cur) => {
-    acc[cur] = {
-      name: cur,
-      label: initial[cur].label ?? '',
-      value: initial[cur].value,
-      placeholder: initial[cur].placeholder,
-      type: initial[cur].type ?? 'text',
-      touched: false,
-      error: '',
-    };
-
-    return acc;
-  }, {});
-
-const mapStateToValue = (state) =>
-  Object.keys(state).reduce((acc, cur) => {
-    acc[cur] = state[cur].value;
-
-    return acc;
-  }, {});
 
 export default useAddCommittee;

@@ -11,6 +11,10 @@ const DatePickerComp = ({
   disableFuture,
   referenceDate,
   maxDate,
+  openTo = 'day',
+  views = ['day', 'month', 'year'],
+  error,
+  helperText,
 }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -18,8 +22,8 @@ const DatePickerComp = ({
         label={label}
         value={value}
         onChange={(newValue) => onChange(newValue, name)}
-        openTo='year'
-        views={['year', 'month', 'day']}
+        openTo={openTo}
+        views={views}
         disableFuture={disableFuture}
         referenceDate={referenceDate && dayjs(referenceDate)}
         maxDate={maxDate && dayjs(maxDate)}
@@ -27,6 +31,8 @@ const DatePickerComp = ({
           textField: {
             variant: 'standard',
             InputLabelProps: { color: 'info' },
+            error,
+            helperText,
           },
         }}
       />

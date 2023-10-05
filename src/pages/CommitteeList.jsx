@@ -7,7 +7,6 @@ import {
   TableBody,
   TableContainer,
   TextField,
-  Typography,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import EmptyTableRow from '../components/EmptyTableRow';
@@ -15,13 +14,18 @@ import TableHeader from '../components/TableHeader';
 import useCommitteeList from '../hooks/useCommitteeList';
 
 import CommitteeListRow from '../components/CommitteeListRow';
+import Loading from '../components/ui/Loading';
 
 const CommitteeList = () => {
   const { loading, filteredList, searchTerm, setSearchTerm, columns } =
     useCommitteeList();
 
-  if (loading) return <Typography>Loading...</Typography>;
-  if (!filteredList) return <Typography>Committee not found!</Typography>;
+  if (loading)
+    return (
+      <Box sx={{ p: 3 }}>
+        <Loading />
+      </Box>
+    );
 
   return (
     <Box

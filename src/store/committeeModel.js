@@ -1,23 +1,43 @@
 import { action, computed, thunk } from 'easy-peasy';
-import { getCommittees, getDetailsCommittee } from '../api/committee';
+import {
+  addCommittee,
+  deleteCommittee,
+  getCommittees,
+  getDetailsCommittee,
+} from '../api/committee';
 
 const committeeModel = {
   loading: false,
+  submitting: false,
+  error: null,
   list: [],
   searchTerm: '',
   details: null,
-  setLoading: action((state) => {
-    state.loading = true;
+  setLoading: action((state, payload) => {
+    state.loading = payload;
+  }),
+  setSubmitting: action((state, payload) => {
+    state.submitting = payload;
+  }),
+  setError: action((state, payload) => {
+    state.error = payload;
   }),
   setCommittees: action((state, payload) => {
     state.list = payload;
-    state.loading = false;
   }),
-  getCommitteesData: thunk(async ({ setLoading, setCommittees }) => {
-    setCommittees([]);
-    setLoading(true);
-    const data = await getCommittees();
-    setCommittees(data);
+  getCommitteesData: thunk(async (actions) => {
+    actions.setCommittees([]);
+    actions.setError(null);
+    actions.setLoading(true);
+
+    try {
+      const { data } = await getCommittees();
+      actions.setCommittees(data);
+      actions.setLoading(false);
+    } catch (e) {
+      actions.setError(e.response?.data);
+      actions.setLoading(false);
+    }
   }),
   setSearchTerm: action((state, payload) => {
     state.searchTerm = payload.toLowerCase();
@@ -29,17 +49,48 @@ const committeeModel = {
   ),
   setDetailsCommittee: action((state, payload) => {
     state.details = payload;
-    state.loading = false;
   }),
-  getDetailsCommitteeData: thunk(
-    async ({ setLoading, setDetailsCommittee }, payload) => {
-      setDetailsCommittee(null);
-      setLoading(true);
-      const data = await getDetailsCommittee(payload);
+  getDetailsCommitteeData: thunk(async (actions, payload) => {
+    actions.setDetailsCommittee(null);
+    actions.setLoading(true);
+    actions.setError(null);
 
-      setDetailsCommittee(data);
+    try {
+      const { data } = await getDetailsCommittee(payload);
+
+      actions.setDetailsCommittee(data);
+      actions.setLoading(false);
+    } catch (e) {
+      actions.setError(e.response?.data);
+      actions.setLoading(false);
     }
-  ),
+  }),
+  addCommitteeData: thunk(async (actions, payload) => {
+    actions.setError(null);
+    actions.setSubmitting(true);
+
+    try {
+      const { data } = await addCommittee(payload);
+
+      actions.setSubmitting(false);
+      return data;
+    } catch (e) {
+      actions.setError(e.response?.data);
+      actions.setSubmitting(false);
+    }
+  }),
+  deleteCommitteeData: thunk(async (actions, payload) => {
+    actions.setSubmitting(true);
+
+    try {
+      await deleteCommittee(payload);
+      actions.setDetailsCommittee(null);
+      actions.setSubmitting(false);
+    } catch (e) {
+      actions.setError(e.response?.data);
+      actions.setSubmitting(false);
+    }
+  }),
 };
 
 export default committeeModel;

@@ -204,8 +204,10 @@ const useDetailsPharmacist = () => {
   };
 
   useEffect(() => {
-    if (regNumber) getDetailsPharmacistData(regNumber);
-  }, [regNumber]);
+    if (regNumber && regNumber !== pharmacist?.regNumber) {
+      getDetailsPharmacistData(regNumber);
+    }
+  }, [regNumber, pharmacist?.regNumber]);
 
   return {
     loading,

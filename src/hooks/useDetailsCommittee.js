@@ -1,6 +1,6 @@
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const columns = [
   { id: 'serialNumber', label: 'ক্রমিক', minWidth: 35 },
@@ -12,16 +12,31 @@ const columns = [
 
 const useDetailsCommittee = () => {
   const { committeePath } = useParams();
-  const { loading, details } = useStoreState((state) => state.committee);
-  const { getDetailsCommitteeData } = useStoreActions(
+  const navigate = useNavigate();
+  const { loading, details: committee } = useStoreState(
+    (state) => state.committee
+  );
+  const { getDetailsCommitteeData, deleteCommitteeData } = useStoreActions(
     (actions) => actions.committee
   );
 
-  useEffect(() => {
-    if (committeePath) getDetailsCommitteeData(committeePath);
-  }, [committeePath]);
+  const handleDelete = () => {
+    if (
+      window.confirm(
+        `Are you sure you want to delete '${committee.committeeTitle}'?`
+      )
+    ) {
+      deleteCommitteeData(committeePath);
+      navigate(-1);
+    }
+  };
 
-  return { loading, details, columns };
+  useEffect(() => {
+    if (committeePath && committeePath !== committee?.committeePath)
+      getDetailsCommitteeData(committeePath);
+  }, [committeePath, committee?.committeePath]);
+
+  return { loading, committee, columns, handleDelete };
 };
 
 export default useDetailsCommittee;

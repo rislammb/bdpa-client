@@ -1,46 +1,66 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
+import { useState } from 'react';
+import AddMember from '../components/AddMember';
 import DatePickerComp from '../components/DatePickerComp';
 import SnackbarComp from '../components/Snackbar';
 import useAddCommittee from '../hooks/useAddCommittee';
 
-const initial = {
-  committeeTitle: {
-    value: '',
-    label: 'কমিটির নাম',
-    placeholder: 'রাজশাহী জেলা কমিটি',
+const initialMembers = [
+  {
+    serialNumber: 'সিরিয়াল নাম্বার',
+    postName: 'পদের নাম',
+    pharmacistId: 'ফার্মাসিস্টের নাম',
   },
-  workHasStarted: { value: null, type: 'date', label: 'কার্যক্রম শুরু' },
-  willExpire: { value: null, type: 'date', label: 'মেয়াদ' },
-  indexNumber: {
-    value: '',
-    label: 'ক্রমিক ইনডেক্স',
-    placeholder: '07',
+  {
+    serialNumber: 'সিরিয়াল নাম্বার',
+    postName: 'পদের নাম',
+    pharmacistId: 'ফার্মাসিস্টের নাম',
   },
-};
-
-const validate = (obj) => {
-  const err = {};
-
-  Object.keys((key) => {
-    if (key === 'comitteeTitle') {
-      console.log('title =>', boj[key]);
-    }
-  });
-
-  return {
-    valid: Object.keys(err).length < 1,
-    data: Object.keys(err).length < 1 ? obj : err,
-  };
-};
+  {
+    serialNumber: 'সিরিয়াল নাম্বার',
+    postName: 'পদের নাম',
+    pharmacistId: 'ফার্মাসিস্টের নাম',
+  },
+  {
+    serialNumber: 'সিরিয়াল নাম্বার',
+    postName: 'পদের নাম',
+    pharmacistId: 'ফার্মাসিস্টের নাম',
+  },
+  {
+    serialNumber: 'সিরিয়াল নাম্বার',
+    postName: 'পদের নাম',
+    pharmacistId: 'ফার্মাসিস্টের নাম',
+  },
+  {
+    serialNumber: 'সিরিয়াল নাম্বার',
+    postName: 'পদের নাম',
+    pharmacistId: 'ফার্মাসিস্টের নাম',
+  },
+];
 
 const AddCommittee = () => {
-  const { state, onFocus, onChange, onBlur, onSubmit } = useAddCommittee(
-    initial,
-    validate
-  );
+  const {
+    state,
+    onFocus,
+    onChange,
+    onBlur,
+    onSubmit,
+    submitting,
+    error,
+    handleSubmit,
+    snackbar,
+    handleSnackbarClose,
+  } = useAddCommittee();
+
+  const [members, setMembers] = useState(initialMembers);
+
+  const handleChange = (e) => {
+    console.log(e.target);
+  };
 
   const formFieldsArray = Object.keys(state).reduce((acc, cur) => {
     acc.push(state[cur]);
@@ -48,16 +68,11 @@ const AddCommittee = () => {
     return acc;
   }, []);
 
-  const handleSubmit = (value) => {
-    alert('Your submitted data: ' + JSON.stringify(value));
-  };
-
   return (
     <Box
       component='form'
       sx={{
         p: 2,
-        // '& .MuiTextField-root': { m: 1, width: '50ch' },
       }}
       noValidate
       autoComplete='off'
@@ -83,6 +98,8 @@ const AddCommittee = () => {
                 onFocus={onFocus}
                 onChange={onChange}
                 onBlur={onBlur}
+                error={error && error[field.name] ? true : false}
+                helperText={(error && error[field.name]) ?? ''}
               />
             );
           } else
@@ -96,27 +113,36 @@ const AddCommittee = () => {
                 onFocus={onFocus}
                 onChange={onChange}
                 onBlur={onBlur}
-                error={field.error ? true : false}
-                helperText={field.error ? field.error : ''}
+                error={error && error[field.name] ? true : false}
+                helperText={(error && error[field.name]) ?? ''}
                 placeholder={field.placeholder}
                 variant='standard'
               />
             );
         })}
+
+        <Typography variant='h6' sx={{ mt: 2 }} align='left'>
+          কমিটির সদস্যঃ
+        </Typography>
+        {members.map((member) => (
+          <AddMember
+            key={member.serialNumber}
+            member={member}
+            onChange={handleChange}
+          />
+        ))}
       </Box>
       <SnackbarComp
-      // open={snackbar.open}
-      // severity={snackbar.severity}
-      // text={snackbar.text}
-      // handleClose={handleSnackbarClose}
+        open={snackbar.open}
+        severity={snackbar.severity}
+        text={snackbar.text}
+        handleClose={handleSnackbarClose}
       />
       <Button
-        // disabled={
-        //   !formFields.name.value || !formFields.regNumber.value || submitting
-        // }
         variant='contained'
         type='submit'
         sx={{ my: 2 }}
+        disabled={state.committeTitle?.value.length > 5 || submitting}
       >
         Add Committee
       </Button>

@@ -31,7 +31,6 @@ const pharmacistModel = {
   }),
   setPharmacists: action((state, payload) => {
     state.list = payload;
-    state.loading = false;
   }),
   getPharmacistsData: thunk(async (actions) => {
     actions.setLoading(true);
@@ -41,8 +40,10 @@ const pharmacistModel = {
     try {
       const { data } = await getPharmacists();
       actions.setPharmacists(data);
+      actions.setLoading(false);
     } catch (e) {
       actions.setError(e.response.data);
+      actions.setLoading(false);
     }
   }),
   setLocationInfo: action((state, payload) => {
@@ -68,7 +69,6 @@ const pharmacistModel = {
   }),
   setDetailsPharmacist: action((state, payload) => {
     state.details = payload;
-    state.loading = false;
   }),
   getDetailsPharmacistData: thunk(async (actions, payload) => {
     actions.setLoading(true);
@@ -78,8 +78,10 @@ const pharmacistModel = {
     try {
       const { data } = await getDetailsPharmacist(payload);
       actions.setDetailsPharmacist(data);
+      actions.setLoading(false);
     } catch (e) {
       actions.setError(e.response.data);
+      actions.setLoading(false);
     }
   }),
   addPharmacistData: thunk(async (actions, payload) => {
@@ -98,6 +100,8 @@ const pharmacistModel = {
   }),
   deletePharmacistData: thunk(async (actions, payload) => {
     actions.setSubmitting(true);
+    actions.setError(null);
+
     try {
       await deletePharmacist(payload);
       actions.setDetailsPharmacist(null);

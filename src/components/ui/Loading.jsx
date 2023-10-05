@@ -1,5 +1,10 @@
 import { Box } from '@mui/material';
 
+/**
+ * Loading component
+ * @param { string } type - spinner or bouncer
+ * @returns JSX
+ */
 const Loading = ({ type }) => {
   const spinner = (
     <Box className='spinner'>

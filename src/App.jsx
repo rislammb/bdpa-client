@@ -7,6 +7,7 @@ import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { createContext, useContext } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
+import Loading from './components/ui/Loading';
 import useApp from './hooks/useApp';
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
@@ -50,11 +51,14 @@ const App = () => {
             color: mode === 'dark' ? '#f1f1f1' : '#1a1a1a',
           }}
         >
-          { isRehydrated ?
-          (<Navbar>
-            <ThemeButton />
-          </Navbar>) : (
-            <h2>Loading...</h2>
+          {isRehydrated ? (
+            <Navbar>
+              <ThemeButton />
+            </Navbar>
+          ) : (
+            <Box sx={{ p: 3 }}>
+              <Loading />
+            </Box>
           )}
         </Paper>
       </ThemeProvider>

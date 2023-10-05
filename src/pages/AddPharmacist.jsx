@@ -283,7 +283,15 @@ const AddPharmacist = () => {
     );
 
     const res = await addPharmacistData(newPharmacist);
-    if (res?.regNumber) navigate(`/members/${res.regNumber}`);
+    if (res) {
+      navigate(`/members/${res.regNumber}`);
+    } else {
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        text: 'Committee add to databse faild!.',
+      });
+    }
   };
 
   return (

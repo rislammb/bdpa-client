@@ -1,5 +1,7 @@
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Box,
+  Button,
   Card,
   CardContent,
   Table,
@@ -12,13 +14,19 @@ import dayjs from 'dayjs';
 import DetailsCommitteeRow from '../components/DetailsCommitteeRow';
 import TableHeader from '../components/TableHeader';
 import ColorTitle from '../components/ui/ColorTitle';
+import Loading from '../components/ui/Loading';
 import useDetailsCommittee from '../hooks/useDetailsCommittee';
 
 const DetailsCommittee = () => {
-  const { loading, details, columns } = useDetailsCommittee();
+  const { loading, committee, columns, handleDelete } = useDetailsCommittee();
 
-  if (loading) return <Typography>Loading...</Typography>;
-  if (!details) return <Typography>Committee not found!</Typography>;
+  if (loading)
+    return (
+      <Box sx={{ p: 3 }}>
+        <Loading />
+      </Box>
+    );
+  if (!committee) return <Typography>Committee not found!</Typography>;
 
   return (
     <Card sx={{ maxWidth: '1100px', margin: 'auto' }}>
@@ -32,14 +40,14 @@ const DetailsCommittee = () => {
             gap: 1,
           }}
         >
-          <ColorTitle variant='h5' text={details.committeeTitle} />
+          <ColorTitle variant='h5' text={committee.committeeTitle} />
 
           <Typography>
             কার্যক্রম শুরুঃ{' '}
-            {dayjs(details.workHasStarted).format('DD MMM YYYY')}
+            {dayjs(committee.workHasStarted).format('DD MMM YYYY')}
           </Typography>
           <Typography>
-            মেয়াদঃ {dayjs(details.willExpire).format('DD MMM YYYY')}
+            মেয়াদঃ {dayjs(committee.willExpire).format('DD MMM YYYY')}
           </Typography>
         </Box>
 
@@ -47,8 +55,8 @@ const DetailsCommittee = () => {
           <Table size='small' stickyHeader>
             <TableHeader columns={columns} />
             <TableBody>
-              {details.members?.length > 0 &&
-                details.members.map((member) => (
+              {committee.members?.length > 0 &&
+                committee.members.map((member) => (
                   <DetailsCommitteeRow
                     key={member._id}
                     member={member}
@@ -58,6 +66,16 @@ const DetailsCommittee = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <Box sx={{ textAlign: 'center', mt: 3 }}>
+          <Button
+            onClick={handleDelete}
+            variant='contained'
+            startIcon={<DeleteIcon />}
+            color='error'
+          >
+            Delete
+          </Button>
+        </Box>
       </CardContent>
     </Card>
   );

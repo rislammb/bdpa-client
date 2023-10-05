@@ -1,21 +1,11 @@
 import { axiosInstance } from './config';
 
-export const getCommittees = async () => {
-  try {
-    const { data } = await axiosInstance.get('/committee');
+export const getCommittees = () => axiosInstance.get('/committee');
 
-    return data;
-  } catch (e) {
-    console.log('error => ', e);
-  }
-};
+export const getDetailsCommittee = (committeePath) =>
+  axiosInstance.get(`/committee/${committeePath}`);
 
-export const getDetailsCommittee = async (committeePath) => {
-  try {
-    const { data } = await axiosInstance.get(`/committee/${committeePath}`);
+export const addCommittee = (data) => axiosInstance.post('/committee', data);
 
-    return data;
-  } catch (e) {
-    console.log('error => ', e);
-  }
-};
+export const deleteCommittee = (committeePath) =>
+  axiosInstance.delete(`/committee/${committeePath}`);
