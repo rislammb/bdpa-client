@@ -6,7 +6,7 @@ import pharmacistModel from './pharmacistModel';
 const store = createStore({
   pharmacist: persist(pharmacistModel, { allow: ['list', 'details'] }),
   committee: persist(committeeModel, { allow: ['list', 'details'] }),
-  auth: persist(authModel, { allow: ['token'] }),
+  auth: persist(authModel, { allow: ['token'], storage: 'localstorage' }),
 });
 
 export default store;
