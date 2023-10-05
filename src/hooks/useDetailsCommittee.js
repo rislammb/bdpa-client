@@ -18,7 +18,7 @@ const useDetailsCommittee = () => {
   );
 
   useEffect(() => {
-    getDetailsCommitteeData(committeePath);
+    if (committeePath) getDetailsCommitteeData(committeePath);
   }, [committeePath]);
 
   return { loading, details, columns };
