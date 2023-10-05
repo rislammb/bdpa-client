@@ -39,7 +39,7 @@ const ThemeButton = () => {
 };
 
 const App = () => {
-  const { mode, colorMode, theme } = useApp();
+  const { isRehydrated, mode, colorMode, theme } = useApp();
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -50,9 +50,12 @@ const App = () => {
             color: mode === 'dark' ? '#f1f1f1' : '#1a1a1a',
           }}
         >
-          <Navbar>
+          { isRehydrated ?
+          (<Navbar>
             <ThemeButton />
-          </Navbar>
+          </Navbar>) : (
+            <h2>Loading...</h2>
+          )}
         </Paper>
       </ThemeProvider>
     </ColorModeContext.Provider>
