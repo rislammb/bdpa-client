@@ -81,7 +81,7 @@ const FilterByLocation = () => {
                         }}
                         select
                         name={field.name}
-                        label={field.label_bn}
+                        label={field.bn_label}
                         value={field.value}
                         onChange={handleLocationChange}
                         variant='standard'
@@ -97,7 +97,7 @@ const FilterByLocation = () => {
                               value={option.id}
                               sx={{ fontSize: 14 }}
                             >
-                              {option.name_bn}
+                              {option.bn_name}
                             </MenuItem>
                           ))
                         ) : (
@@ -120,7 +120,7 @@ const FilterByLocation = () => {
                       }}
                       select
                       name={field.name}
-                      label={field.label_bn}
+                      label={field.bn_label}
                       value={field.value}
                       onChange={handleLocationChange}
                       variant='standard'
@@ -136,7 +136,7 @@ const FilterByLocation = () => {
                             value={option.id}
                             sx={{ fontSize: 14 }}
                           >
-                            {option.name_bn}
+                            {option.bn_name}
                           </MenuItem>
                         ))
                       ) : (
