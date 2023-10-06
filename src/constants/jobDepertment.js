@@ -2,24 +2,24 @@ export const jobDepertmentOptions = [
   {
     id: '1',
     name: 'Directorate General of Family Planning',
-    name_bn: 'পরিবার পরিকল্পনা অধিদপ্তর',
+    bn_name: 'পরিবার পরিকল্পনা অধিদপ্তর',
   },
   {
     id: '2',
     name: 'Directorate General of Health Services',
-    name_bn: 'স্বাস্থ্য অধিদপ্তর',
+    bn_name: 'স্বাস্থ্য অধিদপ্তর',
   },
 
-  { id: '3', name: 'Bangladesh Railway', name_bn: 'বাংলাদেশ রেলওয়ে', },
+  { id: '3', name: 'Bangladesh Railway', bn_name: 'বাংলাদেশ রেলওয়ে', },
   {
     id: '4',
     name: 'Border Guard of Bangladesh',
-    name_bn: 'বর্ডার গার্ড বাংলাদেশ',
+    bn_name: 'বর্ডার গার্ড বাংলাদেশ',
   },
-  { id: '5', name: 'Bangladesh Police', name_bn: 'বাংলাদেশ পুলিশ', },
-  { id: '6', name: 'Bangladesh Bank', name_bn: 'বাংলাদেশ ব্যাংক', },
-  { id: '17', name: 'Pharmacy/Medicine Store', name_bn: 'ফার্মেসী/ঔষধের দোকান', },
-  { id: '18', name: 'Non-Governmental Organization', name_bn: 'বেসরকারী সংস্থা', },
+  { id: '5', name: 'Bangladesh Police', bn_name: 'বাংলাদেশ পুলিশ', },
+  { id: '6', name: 'Bangladesh Bank', bn_name: 'বাংলাদেশ ব্যাংক', },
+  { id: '17', name: 'Pharmacy/Medicine Store', bn_name: 'ফার্মেসী/ঔষধের দোকান', },
+  { id: '18', name: 'Non-Governmental Organization', bn_name: 'বেসরকারী সংস্থা', },
 ];
 
 export const jobDepertmentField = {
@@ -28,12 +28,12 @@ export const jobDepertmentField = {
     {
       id: '0',
       name: '--- Select ---',
-      name_bn: '--- নির্বাচন ---',
+      bn_name: '--- নির্বাচন ---',
     },
     ...jobDepertmentOptions,
   ],
   name: 'jobDepertment',
   label: 'Job Depertment',
-  label_bn: 'চাকুরীর বিভাগ',
+  bn_label: 'চাকুরীর বিভাগ',
   value: '0',
 };
