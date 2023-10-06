@@ -5,56 +5,56 @@ export const INITIAL_LOCATION_INFO = {
   locationType: {
     name: 'locationType',
     label: 'Location Type',
-    label_bn: 'ঠিকানা বা এলাকার ধরন',
+    bn_label: 'ঠিকানা বা এলাকার ধরন',
     value: 'all',
     options: [
       {
         id: 'all',
         name: 'All',
-        name_bn: 'সব',
+        bn_name: 'সব',
       },
       {
         id: '1',
         name: 'Main Posting/Address',
-        name_bn: 'মূল কর্মস্থল/ঠিকানা',
+        bn_name: 'মূল কর্মস্থল/ঠিকানা',
       },
       {
         id: '2',
         name: 'Voter Area',
-        name_bn: 'ভোটার এলাকা',
+        bn_name: 'ভোটার এলাকা',
       },
       {
         id: '3',
         name: 'Deputation Posting',
-        name_bn: 'প্রেষন/সংযুক্ত কর্মস্থল',
+        bn_name: 'প্রেষন/সংযুক্ত কর্মস্থল',
       },
       {
         id: '4',
         name: 'Permanent Address',
-        name_bn: 'স্থায়ী ঠিকানা',
+        bn_name: 'স্থায়ী ঠিকানা',
       },
     ],
   },
   division: {
     name: 'division',
     label: 'Division',
-    label_bn: 'বিভাগ',
+    bn_label: 'বিভাগ',
     value: 'all',
-    options: [{ id: 'all', name: 'All', name_bn: 'সব', }, ...divisions],
+    options: [{ id: 'all', name: 'All', bn_name: 'সব', }, ...divisions],
   },
   district: {
     name: 'district',
     label: 'District',
-    label_bn: 'জেলা',
+    bn_label: 'জেলা',
     value: 'all',
-    options: [{ id: 'all', name: 'All', name_bn: 'সব', }],
+    options: [{ id: 'all', name: 'All', bn_name: 'সব', }],
   },
   upazila: {
     name: 'upazila',
     label: 'Upazila',
-    label_bn: 'উপজেলা',
+    bn_label: 'উপজেলা',
     value: 'all',
-    options: [{ id: 'all', name: 'All', name_bn: 'সব', }],
+    options: [{ id: 'all', name: 'All', bn_name: 'সব', }],
   },
 };
 
@@ -64,7 +64,7 @@ export const INITIAL_DEPERTMENT_INFO = {
     {
       id: 'all',
       name: 'All',
-      name_bn: 'সব',
+      bn_name: 'সব',
     },
     ...jobDepertmentOptions,
   ],
