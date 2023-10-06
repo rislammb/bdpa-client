@@ -46,7 +46,7 @@ const FilterByJobDepertment = () => {
         flex: '1 280px',
       }}
     >
-      <FormLabel component='legend'>Filter by Job Depertment</FormLabel>
+      <FormLabel component='legend'>চাকুরীর বিভাগ অনুযায়ী বাছাই</FormLabel>
       <FormGroup>
         <FormControlLabel
           control={
@@ -55,7 +55,7 @@ const FilterByJobDepertment = () => {
               InputProps={{ style: { fontSize: 14, paddingLeft: '5px' } }}
               select
               name='jobDepertment'
-              label='Select Job Depertment'
+              label='চাকুরীর বিভাগ'
               value={jobDepertmentInfo.value}
               onChange={handleJobDepertmentChange}
               variant='standard'
@@ -71,7 +71,7 @@ const FilterByJobDepertment = () => {
                     value={option.id}
                     sx={{ fontSize: 14 }}
                   >
-                    {option.name}
+                    {option.bn_name}
                   </MenuItem>
                 ))
               ) : (
