@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 
 const columns = [
-  { id: 'regNumber', label: 'নিবন্ধন সংখ্যা', minWidth: 105 },
+  { id: 'regNumber', label: 'নিবন্ধ সংখ্যা', minWidth: 105 },
   { id: 'name', label: 'নাম (English)', minWidth: 130 },
   { id: 'bn_name', label: 'নাম (বাংলা)', minWidth: 130 },
   { id: 'memberId', label: 'সদস্য পরিচিতি', minWidth: 90 },
