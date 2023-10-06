@@ -75,7 +75,7 @@ const DetailsPharmacist = () => {
                       startIcon={<DeleteIcon />}
                       color='error'
                     >
-                      Delete
+                      মুছুন
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -103,7 +103,7 @@ const DetailsPharmacist = () => {
                   fontSize: 17,
                 }}
               >
-                Pharmacist not found!
+                ফার্মাসিস্ট খুঁজে পাওয়া যায় নি!
               </TableCell>
             </TableRow>
           )}
