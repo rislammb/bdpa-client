@@ -62,7 +62,7 @@ const FilterByLocation = () => {
       variant='standard'
       sx={{ flex: '1 280px' }}
     >
-      <FormLabel component='legend'>ঠিকানা অনুযায়ী বাছাই</FormLabel>
+      <FormLabel component='legend'>ঠিকানা বা এলাকা অনুযায়ী বাছাই</FormLabel>
       <FormGroup>
         {locationInfoArray.length > 0 &&
           locationInfoArray.map((field) => {
