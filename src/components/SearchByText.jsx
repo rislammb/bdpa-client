@@ -16,10 +16,10 @@ const SearchByText = () => {
       <TextField
         InputLabelProps={{ color: 'info' }}
         InputProps={{ style: { fontSize: 14, paddingLeft: '5px' } }}
-        label='Search'
+        label='অনুসন্ধান'
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder='Name, Registration or Member ID'
+        placeholder='নাম, নিবন্ধন বা সদস্য পরিচিতি'
         variant='standard'
         sx={{
           width: '100%',
