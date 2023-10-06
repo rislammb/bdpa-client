@@ -62,7 +62,7 @@ const FilterByLocation = () => {
       variant='standard'
       sx={{ flex: '1 280px' }}
     >
-      <FormLabel component='legend'>Filter by location</FormLabel>
+      <FormLabel component='legend'>ঠিকানা অনুযায়ী বাছাই</FormLabel>
       <FormGroup>
         {locationInfoArray.length > 0 &&
           locationInfoArray.map((field) => {
@@ -81,7 +81,7 @@ const FilterByLocation = () => {
                         }}
                         select
                         name={field.name}
-                        label={field.label}
+                        label={field.label_bn}
                         value={field.value}
                         onChange={handleLocationChange}
                         variant='standard'
@@ -97,7 +97,7 @@ const FilterByLocation = () => {
                               value={option.id}
                               sx={{ fontSize: 14 }}
                             >
-                              {option.name}
+                              {option.name_bn}
                             </MenuItem>
                           ))
                         ) : (
@@ -120,7 +120,7 @@ const FilterByLocation = () => {
                       }}
                       select
                       name={field.name}
-                      label={field.label}
+                      label={field.label_bn}
                       value={field.value}
                       onChange={handleLocationChange}
                       variant='standard'
@@ -136,7 +136,7 @@ const FilterByLocation = () => {
                             value={option.id}
                             sx={{ fontSize: 14 }}
                           >
-                            {option.name}
+                            {option.name_bn}
                           </MenuItem>
                         ))
                       ) : (
