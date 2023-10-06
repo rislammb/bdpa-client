@@ -195,7 +195,7 @@ const useDetailsPharmacist = () => {
   const handleDelete = () => {
     if (
       window.confirm(
-        `আপনি মুছে ফেলতে চান '${pharmacist.bn_name} : ${pharmacist.regNumber}'?`
+        `আপনি কি সত্যিই মুছে ফেলতে চান '${pharmacist.bn_name} : ${pharmacist.regNumber}'?`
       )
     ) {
       deletePharmacistData(regNumber);
