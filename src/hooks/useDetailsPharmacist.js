@@ -33,126 +33,126 @@ const useDetailsPharmacist = () => {
 
       const rows = [
         createRow(
-          'Registration Number',
+          'নিবন্ধ সংখ্যা',
           pharmacist.regNumber || '',
           'regNumber',
           '',
           false
         ),
         createRow(
-          'Name (English)',
+          'নাম (English)',
           pharmacist.name || '',
           'name',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Name (Bengali)',
+          'নাম (বাংলা)',
           pharmacist.bn_name || '',
           'bn_name',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Email',
+          'ইমেইল',
           pharmacist.email || '',
           'email',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Mobile',
+          'মোবাইল',
           pharmacist.gender === 'Male' ? pharmacist.mobile : 'Hide now',
           'mobile',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          "Father's Name",
+          "পিতার নাম",
           pharmacist.fathersName || '',
           'fathersName',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          "Mother's Name",
+          "মাতার নাম",
           pharmacist.mothersName || '',
           'mothersName',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Gender',
+          'লিঙ্গ',
           pharmacist.gender || '',
           'gender',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'Date of Birth',
+          'জন্ম তারিখ',
           dayjs(pharmacist.dateOfBirth).format('DD MMM YYYY') || '',
           'dateOfBirth',
           'date',
           isPermittedForEdit
         ),
         createRow(
-          'National ID Number',
+          'জাতীয় পরিচয়পত্র সংখ্যা',
           pharmacist.nationalId || '',
           'nationalId',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Passing Year',
+          'পাশের বছর',
           pharmacist.passingYear || '',
           'passingYear',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'BDPA Member ID',
+          'বিডিপিএ সদস্য সনাক্তকারী সংখ্যা',
           pharmacist.memberId || '',
           'memberId',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Date of Join',
-          dayjs(pharmacist.dateOfJoin).format('DD MMM YYYY') || '',
-          'dateOfJoin',
-          'date',
-          isPermittedForEdit
-        ),
-        createRow(
-          'Job Depertment',
+          'চাকুরীর বিভাগ',
           pharmacist.jobDepertment || '',
           'jobDepertment',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'Main Posting/Address',
+          'যোগদানের তারিখ',
+          dayjs(pharmacist.dateOfJoin).format('DD MMM YYYY') || '',
+          'dateOfJoin',
+          'date',
+          isPermittedForEdit
+        ),
+        createRow(
+          'মূল কর্মস্থল/ঠিকানা',
           getAreaInfo(pharmacist, 'posting'),
           'mainPosting',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'Permanent Address',
+          'স্থায়ী ঠিকানা',
           getAreaInfo(pharmacist, 'permanent'),
           'permanentAddress',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'Voter Area',
+          'ভোটার এলাকা',
           getAreaInfo(pharmacist, 'voter'),
           'voterArea',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'On Deputation/Attachment',
+          'প্রেষনে/সংযুক্ত আছেন?',
           pharmacist.onDeputation,
           'onDeputation',
           'select',
@@ -163,7 +163,7 @@ const useDetailsPharmacist = () => {
       pharmacist.onDeputation === 'Yes' &&
         rows.push(
           createRow(
-            'Deputation Posting/Address',
+            'প্রেষন/সংযুক্ত কর্মস্থল',
             getAreaInfo(pharmacist, 'deputation'),
             'deputationPosting',
             'select',
