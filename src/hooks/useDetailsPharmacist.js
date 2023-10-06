@@ -33,7 +33,7 @@ const useDetailsPharmacist = () => {
 
       const rows = [
         createRow(
-          'নিবন্ধ সংখ্যা',
+          'বি-গ্রেড নিবন্ধ সংখ্যা',
           pharmacist.regNumber || '',
           'regNumber',
           '',
@@ -178,7 +178,7 @@ const useDetailsPharmacist = () => {
   useEffect(() => {
     if (showDeputationRow) {
       const row = createRow(
-        'Deputation/Attachment Posting',
+        'প্রেষন/সংযুক্ত কর্মস্থল',
         getAreaInfo(pharmacist, 'deputation'),
         'deputationPosting',
         'select',
@@ -195,7 +195,7 @@ const useDetailsPharmacist = () => {
   const handleDelete = () => {
     if (
       window.confirm(
-        `Are you sure you want to delete '${pharmacist.name} : ${pharmacist.regNumber}'?`
+        `আপনি মুছে ফেলতে চান '${pharmacist.bn_name} : ${pharmacist.regNumber}'?`
       )
     ) {
       deletePharmacistData(regNumber);
