@@ -7,7 +7,7 @@ const columns = [
   { id: 'regNumber', label: 'নিবন্ধ সংখ্যা', minWidth: 105 },
   { id: 'name', label: 'নাম (English)', minWidth: 130 },
   { id: 'bn_name', label: 'নাম (বাংলা)', minWidth: 130 },
-  { id: 'memberId', label: 'সদস্য পরিচিতি', minWidth: 90 },
+  { id: 'memberId', label: 'সদস্য সনাক্তকারী', minWidth: 90 },
   { id: 'dateOfBirth', label: 'জন্ম তারিখ', minWidth: 110 },
   {
     id: 'mainPosting',
