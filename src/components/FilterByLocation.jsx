@@ -27,7 +27,7 @@ const FilterByLocation = () => {
       locationInfo.division.value = e.target.value;
       locationInfo.district.value = 'all';
       locationInfo.district.options = [
-        { id: 'all', name: 'All' },
+        ...INITIAL_LOCATION_INFO.district.options,
         ...districts.filter((dist) => dist.division_id === e.target.value),
       ];
       locationInfo.upazila = { ...INITIAL_LOCATION_INFO.upazila };
@@ -36,7 +36,7 @@ const FilterByLocation = () => {
       locationInfo.district.value = e.target.value;
       locationInfo.upazila.value = 'all';
       locationInfo.upazila.options = [
-        { id: 'all', name: 'All' },
+        ...INITIAL_LOCATION_INFO.upazila.options,
         ...upazilas.filter((upazila) => upazila.district_id === e.target.value),
       ];
       setLocationInfo(locationInfo);
