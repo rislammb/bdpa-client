@@ -29,7 +29,7 @@ const PharmacistListItem = ({ pharmacist, columns, isTargetBlank }) => (
               text={value}
             />
           ) : column.id === 'voterDistrict' ? (
-            value.name
+            value.bn_name
           ) : (
             value
           )}
