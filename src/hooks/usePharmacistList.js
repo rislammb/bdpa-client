@@ -4,19 +4,19 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 
 const columns = [
-  { id: 'regNumber', label: 'Registration', minWidth: 105 },
-  { id: 'name', label: 'Name', minWidth: 130 },
-  { id: 'bn_name', label: 'Name Bengali', minWidth: 130 },
-  { id: 'memberId', label: 'Member ID', minWidth: 90 },
-  { id: 'dateOfBirth', label: 'Date of Birth', minWidth: 110 },
+  { id: 'regNumber', label: 'নিবন্ধন সংখ্যা', minWidth: 105 },
+  { id: 'name', label: 'নাম (English)', minWidth: 130 },
+  { id: 'bn_name', label: 'নাম (বাংলা)', minWidth: 130 },
+  { id: 'memberId', label: 'সদস্য পরিচিতি', minWidth: 90 },
+  { id: 'dateOfBirth', label: 'জন্ম তারিখ', minWidth: 110 },
   {
     id: 'mainPosting',
-    label: 'Main Posting/Address',
+    label: 'মূল কর্মস্থল/ঠিকানা',
     minWidth: 230,
   },
   {
     id: 'voterDistrict',
-    label: 'Voter District',
+    label: 'ভোটার জেলা',
     minWidth: 95,
   },
 ];
