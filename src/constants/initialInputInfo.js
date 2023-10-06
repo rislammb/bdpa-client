@@ -5,6 +5,7 @@ export const INITIAL_LOCATION_INFO = {
   locationType: {
     name: 'locationType',
     label: 'Location Type',
+    label_bn: 'ঠিকানা বা এলাকার ধরন',
     value: 'all',
     options: [
       {
@@ -37,18 +38,21 @@ export const INITIAL_LOCATION_INFO = {
   division: {
     name: 'division',
     label: 'Division',
+    label_bn: 'বিভাগ',
     value: 'all',
     options: [{ id: 'all', name: 'All', name_bn: 'সব', }, ...divisions],
   },
   district: {
     name: 'district',
     label: 'District',
+    label_bn: 'জেলা',
     value: 'all',
     options: [{ id: 'all', name: 'All', name_bn: 'সব', }],
   },
   upazila: {
     name: 'upazila',
     label: 'Upazila',
+    label_bn: 'উপজেলা',
     value: 'all',
     options: [{ id: 'all', name: 'All', name_bn: 'সব', }],
   },
