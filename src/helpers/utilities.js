@@ -555,7 +555,14 @@ export const pharmacistFromState = (
   };
 };
 
+export const objDeepClone = (obj) => JSON.parse(JSON.stringify(obj));
+
 export const getAreaInfo = (data, area) =>
   `${data[area + 'Place'] ? `${data[area + 'Place']}, ` : ''}${
-    data[area + 'Upazila']?.name ? `${data[area + 'Upazila']?.bn_name}, ` : ''
-  }${data[area + 'District']?.name ? data[area + 'District']?.bn_name : ''}`;
+    data[area + 'Upazila']?.bn_name ? `${data[area + 'Upazila'].bn_name}, ` : ''
+  }${data[area + 'District']?.bn_name ? data[area + 'District'].bn_name : ''}`;
+
+export const generateId = () => {
+  const v4 = () => Math.floor(Math.random() * 99999).toString(16);
+  return v4() + '-' + v4() + '-' + v4();
+};

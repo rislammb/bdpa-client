@@ -1,6 +1,5 @@
 import { useState } from 'react';
-
-const objDeepClone = (obj) => JSON.parse(JSON.stringify(obj));
+import { objDeepClone } from '../helpers/utilities';
 
 const useForm = (initial, validate) => {
   const [state, setState] = useState(mapInitialToState(initial));

@@ -1,46 +1,12 @@
+import { Add } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-
-import { useState } from 'react';
-import AddMember from '../components/AddMember';
+import AddMemberRow from '../components/AddMemberRow';
 import DatePickerComp from '../components/DatePickerComp';
 import SnackbarComp from '../components/Snackbar';
 import useAddCommittee from '../hooks/useAddCommittee';
-
-const initialMembers = [
-  {
-    serialNumber: 'সিরিয়াল নাম্বার',
-    postName: 'পদের নাম',
-    pharmacistId: 'ফার্মাসিস্টের নাম',
-  },
-  {
-    serialNumber: 'সিরিয়াল নাম্বার',
-    postName: 'পদের নাম',
-    pharmacistId: 'ফার্মাসিস্টের নাম',
-  },
-  {
-    serialNumber: 'সিরিয়াল নাম্বার',
-    postName: 'পদের নাম',
-    pharmacistId: 'ফার্মাসিস্টের নাম',
-  },
-  {
-    serialNumber: 'সিরিয়াল নাম্বার',
-    postName: 'পদের নাম',
-    pharmacistId: 'ফার্মাসিস্টের নাম',
-  },
-  {
-    serialNumber: 'সিরিয়াল নাম্বার',
-    postName: 'পদের নাম',
-    pharmacistId: 'ফার্মাসিস্টের নাম',
-  },
-  {
-    serialNumber: 'সিরিয়াল নাম্বার',
-    postName: 'পদের নাম',
-    pharmacistId: 'ফার্মাসিস্টের নাম',
-  },
-];
 
 const AddCommittee = () => {
   const {
@@ -54,13 +20,12 @@ const AddCommittee = () => {
     handleSubmit,
     snackbar,
     handleSnackbarClose,
+    addMemberRow,
+    members,
+    handleChange,
+    defaultProps,
+    deleteMemberRow,
   } = useAddCommittee();
-
-  const [members, setMembers] = useState(initialMembers);
-
-  const handleChange = (e) => {
-    console.log(e.target);
-  };
 
   const formFieldsArray = Object.keys(state).reduce((acc, cur) => {
     acc.push(state[cur]);
@@ -121,16 +86,27 @@ const AddCommittee = () => {
             );
         })}
 
-        <Typography variant='h6' sx={{ mt: 2 }} align='left'>
-          কমিটির সদস্যঃ
-        </Typography>
-        {members.map((member) => (
-          <AddMember
-            key={member.serialNumber}
-            member={member}
-            onChange={handleChange}
-          />
-        ))}
+        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant='h6'>কমিটির সদস্যঃ</Typography>
+          <Button
+            startIcon={<Add />}
+            size='small'
+            variant='contained'
+            onClick={addMemberRow}
+          >
+            সদস্য সারি
+          </Button>
+        </Box>
+        {members.length > 0 &&
+          members.map((member) => (
+            <AddMemberRow
+              key={member.id}
+              member={member}
+              onChange={handleChange}
+              defaultProps={defaultProps}
+              deleteMemberRow={deleteMemberRow}
+            />
+          ))}
       </Box>
       <SnackbarComp
         open={snackbar.open}
@@ -141,10 +117,11 @@ const AddCommittee = () => {
       <Button
         variant='contained'
         type='submit'
+        startIcon={<Add />}
         sx={{ my: 2 }}
         disabled={state.committeTitle?.value.length > 5 || submitting}
       >
-        Add Committee
+        কমিটি
       </Button>
     </Box>
   );

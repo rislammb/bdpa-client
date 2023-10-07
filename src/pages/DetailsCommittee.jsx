@@ -73,7 +73,7 @@ const DetailsCommittee = () => {
             startIcon={<DeleteIcon />}
             color='error'
           >
-            Delete
+            মুছুন
           </Button>
         </Box>
       </CardContent>
