@@ -1,4 +1,7 @@
+import AddIcon from '@mui/icons-material/Add';
+import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
 import {
   Box,
   Button,
@@ -11,6 +14,7 @@ import {
 import TableContainer from '@mui/material/TableContainer';
 
 import dayjs from 'dayjs';
+import AddMemberRow from '../components/AddMemberRow';
 import DetailsCommitteeRow from '../components/DetailsCommitteeRow';
 import TableHeader from '../components/TableHeader';
 import ColorTitle from '../components/ui/ColorTitle';
@@ -18,7 +22,19 @@ import Loading from '../components/ui/Loading';
 import useDetailsCommittee from '../hooks/useDetailsCommittee';
 
 const DetailsCommittee = () => {
-  const { loading, committee, columns, handleDelete } = useDetailsCommittee();
+  const {
+    loading,
+    committee,
+    columns,
+    handleCommitteeDelete,
+    isAddMember,
+    member,
+    defaultProps,
+    toggleAddMember,
+    handleMemberChange,
+    handleMemberSubmit,
+    error,
+  } = useDetailsCommittee();
 
   if (loading)
     return (
@@ -66,15 +82,58 @@ const DetailsCommittee = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <Box sx={{ textAlign: 'center', mt: 3 }}>
+
+        {isAddMember && (
+          <Box sx={{ mt: 3 }}>
+            <AddMemberRow
+              member={member}
+              onChange={handleMemberChange}
+              deleteMemberRow={toggleAddMember}
+              defaultProps={defaultProps}
+              index={0}
+              error={{ members: [error] }}
+            />
+          </Box>
+        )}
+
+        <Box
+          sx={{
+            mt: 3,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <Button
-            onClick={handleDelete}
+            onClick={handleCommitteeDelete}
             variant='contained'
             startIcon={<DeleteIcon />}
             color='error'
           >
-            মুছুন
+            কমিটি মুছুন
           </Button>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            {isAddMember && (
+              <Button
+                onClick={toggleAddMember}
+                variant='contained'
+                startIcon={<ClearIcon />}
+                color='error'
+                size='small'
+              >
+                বাতিল
+              </Button>
+            )}
+            <Button
+              onClick={isAddMember ? handleMemberSubmit : toggleAddMember}
+              variant='contained'
+              startIcon={isAddMember ? <SaveIcon /> : <AddIcon />}
+              color='primary'
+              size='small'
+            >
+              {`সদস্য${isAddMember ? ' সংরক্ষণ' : ''}`}
+            </Button>
+          </Box>
         </Box>
       </CardContent>
     </Card>

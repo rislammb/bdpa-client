@@ -1,4 +1,4 @@
-import { Add } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -10,11 +10,8 @@ import useAddCommittee from '../hooks/useAddCommittee';
 
 const AddCommittee = () => {
   const {
-    state,
-    onFocus,
-    onChange,
-    onBlur,
-    onSubmit,
+    committeeInfo,
+    handleInfoChange,
     submitting,
     error,
     handleSubmit,
@@ -22,74 +19,77 @@ const AddCommittee = () => {
     handleSnackbarClose,
     addMemberRow,
     members,
-    handleChange,
+    handleMemberChange,
     defaultProps,
     deleteMemberRow,
   } = useAddCommittee();
 
-  const formFieldsArray = Object.keys(state).reduce((acc, cur) => {
-    acc.push(state[cur]);
+  const committeeInfoArray = Object.keys(committeeInfo).reduce((acc, cur) => {
+    acc.push(committeeInfo[cur]);
 
     return acc;
   }, []);
 
   return (
     <Box
-      component='form'
       sx={{
         p: 2,
       }}
-      noValidate
-      autoComplete='off'
-      onSubmit={(e) => onSubmit(e, handleSubmit)}
     >
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          maxWidth: '550px',
-          gap: 1.5,
           m: 'auto',
+          maxWidth: '750px',
         }}
+        component='form'
+        noValidate
+        autoComplete='off'
+        onSubmit={handleSubmit}
       >
-        {formFieldsArray.map((field) => {
-          if (field.type === 'date') {
-            return (
-              <DatePickerComp
-                key={field.name}
-                name={field.name}
-                label={field.label}
-                value={field.value}
-                onFocus={onFocus}
-                onChange={onChange}
-                onBlur={onBlur}
-                error={error && error[field.name] ? true : false}
-                helperText={(error && error[field.name]) ?? ''}
-              />
-            );
-          } else
-            return (
-              <TextField
-                InputLabelProps={{ color: 'info' }}
-                key={field.name}
-                name={field.name}
-                label={field.label}
-                value={field.value}
-                onFocus={onFocus}
-                onChange={onChange}
-                onBlur={onBlur}
-                error={error && error[field.name] ? true : false}
-                helperText={(error && error[field.name]) ?? ''}
-                placeholder={field.placeholder}
-                variant='standard'
-              />
-            );
-        })}
-
-        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            maxWidth: '550px',
+            gap: 1.5,
+            m: 'auto',
+          }}
+        >
+          {committeeInfoArray.length > 0 &&
+            committeeInfoArray.map((field) => {
+              if (field.type === 'date') {
+                return (
+                  <DatePickerComp
+                    key={field.name}
+                    name={field.name}
+                    label={field.label}
+                    value={field.value}
+                    onChange={handleInfoChange}
+                    error={error && error[field.name] ? true : false}
+                    helperText={(error && error[field.name]) ?? ''}
+                  />
+                );
+              } else
+                return (
+                  <TextField
+                    InputLabelProps={{ color: 'info' }}
+                    key={field.name}
+                    name={field.name}
+                    label={field.label}
+                    value={field.value}
+                    onChange={handleInfoChange}
+                    error={error && error[field.name] ? true : false}
+                    helperText={(error && error[field.name]) ?? ''}
+                    placeholder={field.placeholder}
+                    variant='standard'
+                  />
+                );
+            })}
+        </Box>
+        <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant='h6'>কমিটির সদস্যঃ</Typography>
           <Button
-            startIcon={<Add />}
+            startIcon={<AddIcon />}
             size='small'
             variant='contained'
             onClick={addMemberRow}
@@ -97,16 +97,37 @@ const AddCommittee = () => {
             সদস্য সারি
           </Button>
         </Box>
-        {members.length > 0 &&
-          members.map((member) => (
-            <AddMemberRow
-              key={member.id}
-              member={member}
-              onChange={handleChange}
-              defaultProps={defaultProps}
-              deleteMemberRow={deleteMemberRow}
-            />
-          ))}
+        <Box
+          sx={{
+            overflow: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+          }}
+        >
+          {members.length > 0 &&
+            members.map((member, index) => (
+              <AddMemberRow
+                key={member.id}
+                member={member}
+                index={index}
+                error={error}
+                onChange={handleMemberChange}
+                defaultProps={defaultProps}
+                deleteMemberRow={deleteMemberRow}
+              />
+            ))}
+        </Box>
+        <Button
+          variant='contained'
+          type='submit'
+          startIcon={<AddIcon />}
+          sx={{ my: 2 }}
+          size='large'
+          disabled={committeeInfo.committeTitle?.value.length > 5 || submitting}
+        >
+          কমিটি
+        </Button>
       </Box>
       <SnackbarComp
         open={snackbar.open}
@@ -114,15 +135,6 @@ const AddCommittee = () => {
         text={snackbar.text}
         handleClose={handleSnackbarClose}
       />
-      <Button
-        variant='contained'
-        type='submit'
-        startIcon={<Add />}
-        sx={{ my: 2 }}
-        disabled={state.committeTitle?.value.length > 5 || submitting}
-      >
-        কমিটি
-      </Button>
     </Box>
   );
 };

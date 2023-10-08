@@ -1,61 +1,35 @@
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { generateId, objDeepClone } from '../helpers/utilities';
-import useForm from './useForm';
+import { initialMember } from '../helpers/member';
+import { generateId, getAreaInfo, objDeepClone } from '../helpers/utilities';
 
-const initial = {
+const initialCommitteeInfo = {
   committeeTitle: {
-    value: '',
     label: 'কমিটির নাম',
+    name: 'committeeTitle',
     placeholder: 'রাজশাহী জেলা কমিটি',
-  },
-  workHasStarted: { value: null, type: 'date', label: 'কার্যক্রম শুরু' },
-  willExpire: { value: null, type: 'date', label: 'মেয়াদ' },
-  indexNumber: {
+    type: 'text',
     value: '',
-    label: 'ক্রমিক ইনডেক্স',
-    placeholder: '07',
   },
-};
-
-const validate = (obj) => {
-  const err = {};
-
-  Object.keys(obj).forEach((key) => {
-    if (key === 'committeeTitle') {
-      if (obj[key].length < 5) {
-        err[key] = 'Committee Title must be at least 5 characters long!';
-      }
-    }
-  });
-
-  return {
-    valid: Object.keys(err).length < 1,
-    data: Object.keys(err).length < 1 ? obj : err,
-  };
-};
-
-// add later
-
-const initialMember = {
-  serialNumber: {
-    name: 'serialNumber',
-    label: 'সিরিয়াল',
-    value: '',
-    placeholder: '০১',
-  },
-  postName: {
-    name: 'postName',
-    label: 'পদের নাম',
-    value: '',
-    placeholder: 'সভাপতি',
-  },
-  pharmacistId: {
-    name: 'pharmacistId',
-    label: 'ফার্মাসিস্ট',
+  workHasStarted: {
+    label: 'কার্যক্রম শুরু',
+    name: 'workHasStarted',
+    type: 'date',
     value: null,
-    placeholder: 'আবদল্লাহ',
+  },
+  willExpire: {
+    label: 'মেয়াদ',
+    name: 'willExpire',
+    type: 'date',
+    value: null,
+  },
+  indexNumber: {
+    label: 'ক্রমিক ইনডেক্স',
+    name: 'indexNumber',
+    placeholder: '07',
+    type: 'text',
+    value: '',
   },
 };
 
@@ -67,16 +41,21 @@ const addMember = (initial = [], count = 1) => {
   return initial;
 };
 
-// add later end
-
+// start use committee hook
 const useAddCommittee = () => {
   const navigate = useNavigate();
-  const { state, onFocus, onChange, onBlur, onSubmit } = useForm(
-    initial,
-    validate
-  );
-  const { submitting, error } = useStoreState((state) => state.committee);
-  const { addCommitteeData } = useStoreActions((action) => action.committee);
+
+  const {
+    committee: { submitting, error },
+    pharmacist: { list },
+  } = useStoreState((state) => state);
+  const {
+    pharmacist: { getPharmacistsData },
+    committee: { addCommitteeData },
+  } = useStoreActions((actions) => actions);
+
+  const [committeeInfo, setCommitteeInfo] = useState(initialCommitteeInfo);
+  const [members, setMembers] = useState(addMember([], 7));
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -84,38 +63,23 @@ const useAddCommittee = () => {
     text: '',
   });
 
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
+  const handleInfoChange = (e, name) => {
+    const clonedState = objDeepClone(committeeInfo);
+
+    if (name === 'workHasStarted' || name === 'willExpire') {
+      console.log('name =>', clonedState[name], e);
+
+      clonedState[name].value = e;
+    } else if (e.target.name === 'indexNumber') {
+      clonedState[e.target.name].value = e.target.value.replace(/[^0-9]/g, '');
+    } else {
+      clonedState[e.target.name].value = e.target.value;
     }
-    setSnackbar({ open: false, severity: snackbar.severity, text: '' });
+
+    setCommitteeInfo(clonedState);
   };
 
-  const handleSubmit = async (value) => {
-    const res = await addCommitteeData({
-      ...value,
-      members: mapMembersToValue(members),
-    });
-
-    if (res) {
-      navigate(`/committees/${res.committeePath}`);
-    } else if (error) {
-      setSnackbar({
-        open: true,
-        severity: 'error',
-        text: 'Committee add to databse faild!.',
-      });
-    }
-  };
-
-  // add later start
-  const { list } = useStoreState((state) => state.pharmacist);
-  const { getPharmacistsData } = useStoreActions(
-    (actions) => actions.pharmacist
-  );
-  const [members, setMembers] = useState(addMember([], 7));
-
-  const handleChange = (e, id) => {
+  const handleMemberChange = (e, id) => {
     const { name, value } = e.target;
 
     const clonedState = objDeepClone(members);
@@ -135,40 +99,76 @@ const useAddCommittee = () => {
   const deleteMemberRow = (id) => {
     const clonedState = objDeepClone(members);
 
-    setMembers(clonedState.filter((item) => item.id !== id));
+    if (clonedState.length > 2) {
+      setMembers(clonedState.filter((item) => item.id !== id));
+    }
+  };
+
+  const handleSnackbarClose = (_event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({ open: false, severity: snackbar.severity, text: '' });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await addCommitteeData({
+        ...mapStateToValue(committeeInfo),
+        members: mapMembersToValue(members),
+      });
+
+      if (res) {
+        navigate(`/committees/${res.committeePath}`);
+      }
+    } catch (err) {
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        text: 'Committee add to databse faild!.',
+      });
+    }
   };
 
   const defaultProps = {
     options: list,
-    getOptionLabel: (option) => option.bn_name,
+    getOptionLabel: (option) =>
+      `${option.bn_name} - ${option.name} - ${option.regNumber} - ${getAreaInfo(
+        option,
+        'posting'
+      )}`,
   };
 
   useEffect(() => {
     if (list.length < 1) getPharmacistsData();
   }, []);
 
-  // add later end
-
   return {
-    state,
-    onFocus,
-    onChange,
-    onBlur,
-    onSubmit,
+    committeeInfo,
+    members,
+    defaultProps,
+    handleInfoChange,
+    handleMemberChange,
+    addMemberRow,
+    deleteMemberRow,
     submitting,
     error,
     handleSubmit,
     snackbar,
     handleSnackbarClose,
-    addMemberRow,
-    members,
-    handleChange,
-    defaultProps,
-    deleteMemberRow,
   };
 };
 
 export default useAddCommittee;
+
+const mapStateToValue = (state) =>
+  Object.keys(state).reduce((acc, cur) => {
+    acc[cur] = state[cur].value;
+
+    return acc;
+  }, {});
 
 const mapMembersToValue = (members) => {
   return members.map((mem) => ({

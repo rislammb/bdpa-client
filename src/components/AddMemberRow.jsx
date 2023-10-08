@@ -4,69 +4,85 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 
-const AddMemberRow = ({ member, onChange, defaultProps, deleteMemberRow }) => {
-  const { id, serialNumber, postName, pharmacistId } = member;
+const AddMemberRow = ({
+  member,
+  index,
+  error,
+  onChange,
+  defaultProps,
+  deleteMemberRow,
+}) => {
+  const memberArray = Object.keys(member).reduce((acc, cur) => {
+    if (cur === 'id') return acc;
+    else {
+      acc.push(member[cur]);
+    }
+    return acc;
+  }, []);
 
-  // const memberArray = Object.keys(member).reduce((acc, cur) => {
-  //   acc.push(member[cur]);
-  //   return acc;
-  // }, []);
+  console.log(error);
+
+  const errorObj = error?.members[index];
 
   return (
-    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-      <TextField
-        InputLabelProps={{ color: 'info' }}
-        sx={{ flex: 1 }}
-        name={serialNumber.name}
-        label={serialNumber.label}
-        value={serialNumber.value}
-        placeholder={serialNumber.placeholder}
-        // onFocus={onFocus}
-        onChange={(e) => onChange(e, id)}
-        // onBlur={onBlur}
-        // error={error && error[field.name] ? true : false}
-        // helperText={(error && error[field.name]) ?? ''}
-        variant='standard'
-      />
-      <TextField
-        InputLabelProps={{ color: 'info' }}
-        sx={{ flex: 2 }}
-        name={postName.name}
-        label={postName.label}
-        value={postName.value}
-        placeholder={postName.placeholder}
-        // onFocus={onFocus}
-        onChange={(e) => onChange(e, id)}
-        // onBlur={onBlur}
-        // error={error && error[field.name] ? true : false}
-        // helperText={(error && error[field.name]) ?? ''}
-        variant='standard'
-      />
-      <Autocomplete
-        {...defaultProps}
-        value={pharmacistId.value}
-        sx={{ flex: 3 }}
-        onChange={(event, newValue) => {
-          onChange(
-            { target: { name: pharmacistId?.name, value: newValue } },
-            id
+    <Box
+      sx={{
+        display: 'flex',
+        gap: 1,
+        alignItems: 'center',
+        minWidth: '620px',
+      }}
+    >
+      {memberArray?.length > 0 &&
+        memberArray.map((property) => {
+          return property.type === 'autocomplete' ? (
+            <Autocomplete
+              {...defaultProps}
+              key={property.name}
+              value={property.value}
+              sx={{ ...property.sx }}
+              onChange={(_event, newValue) => {
+                onChange(
+                  { target: { name: property.name, value: newValue } },
+                  member.id
+                );
+              }}
+              isOptionEqualToValue={(option, value) =>
+                option?._id === value?._id
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={property.label}
+                  variant='standard'
+                  error={errorObj && errorObj[property.name] ? true : false}
+                  helperText={(errorObj && errorObj[property.name]) ?? ''}
+                />
+              )}
+            />
+          ) : (
+            <TextField
+              InputLabelProps={{ color: 'info' }}
+              key={property.name}
+              name={property.name}
+              label={property.label}
+              sx={{ ...property.sx }}
+              value={property.value}
+              placeholder={property.placeholder}
+              onChange={(e) => onChange(e, member.id)}
+              error={errorObj && errorObj[property.name] ? true : false}
+              helperText={(errorObj && errorObj[property.name]) ?? ''}
+              variant='standard'
+            />
           );
-        }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label={pharmacistId.label}
-            variant='standard'
-          />
-        )}
-      />
+        })}
 
       <IconButton
-        onClick={() => deleteMemberRow(id)}
+        onClick={() => deleteMemberRow(member.id)}
         variant='contained'
         color='error'
       >
-        <DeleteIcon />
+        <DeleteIcon fontSize='small' />
       </IconButton>
     </Box>
   );

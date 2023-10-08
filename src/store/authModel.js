@@ -24,7 +24,7 @@ const authModel = {
       actions.setToken(token);
       setAuthToken(token);
     } catch (e) {
-      actions.setError(e.response.data);
+      actions.setError(e.response?.data);
     }
   }),
 };

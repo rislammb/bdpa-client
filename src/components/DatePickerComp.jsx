@@ -20,7 +20,7 @@ const DatePickerComp = ({
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         label={label}
-        value={value}
+        value={value ? dayjs(value) : null}
         onChange={(newValue) => onChange(newValue, name)}
         openTo={openTo}
         views={views}

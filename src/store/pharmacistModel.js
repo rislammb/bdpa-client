@@ -42,7 +42,7 @@ const pharmacistModel = {
       actions.setPharmacists(data);
       actions.setLoading(false);
     } catch (e) {
-      actions.setError(e.response.data);
+      actions.setError(e.response?.data);
       actions.setLoading(false);
     }
   }),
@@ -80,7 +80,7 @@ const pharmacistModel = {
       actions.setDetailsPharmacist(data);
       actions.setLoading(false);
     } catch (e) {
-      actions.setError(e.response.data);
+      actions.setError(e.response?.data);
       actions.setLoading(false);
     }
   }),
@@ -94,7 +94,7 @@ const pharmacistModel = {
 
       return data;
     } catch (e) {
-      actions.setError(e.response.data);
+      actions.setError(e.response?.data);
       actions.setSubmitting(false);
     }
   }),
@@ -107,7 +107,7 @@ const pharmacistModel = {
       actions.setDetailsPharmacist(null);
       actions.setSubmitting(false);
     } catch (e) {
-      actions.setError(e.response.data);
+      actions.setError(e.response?.data);
       actions.setSubmitting(false);
     }
   }),
