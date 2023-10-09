@@ -67,8 +67,6 @@ const useAddCommittee = () => {
     const clonedState = objDeepClone(committeeInfo);
 
     if (name === 'workHasStarted' || name === 'willExpire') {
-      console.log('name =>', clonedState[name], e);
-
       clonedState[name].value = e;
     } else if (e.target.name === 'indexNumber') {
       clonedState[e.target.name].value = e.target.value.replace(/[^0-9]/g, '');
@@ -114,21 +112,13 @@ const useAddCommittee = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await addCommitteeData({
-        ...mapStateToValue(committeeInfo),
-        members: mapMembersToValue(members),
-      });
+    const res = await addCommitteeData({
+      ...mapStateToValue(committeeInfo),
+      members: mapMembersToValue(members),
+    });
 
-      if (res) {
-        navigate(`/committees/${res.committeePath}`);
-      }
-    } catch (err) {
-      setSnackbar({
-        open: true,
-        severity: 'error',
-        text: 'Committee add to databse faild!.',
-      });
+    if (res) {
+      navigate(`/committees/${res.committeePath}`);
     }
   };
 
@@ -140,6 +130,15 @@ const useAddCommittee = () => {
         'posting'
       )}`,
   };
+
+  useEffect(() => {
+    if (typeof error?.message === 'string')
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        text: error.message,
+      });
+  }, [submitting, error?.message]);
 
   useEffect(() => {
     if (list.length < 1) getPharmacistsData();

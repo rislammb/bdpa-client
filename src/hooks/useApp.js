@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import { useStoreActions, useStoreRehydrated, useStoreState } from 'easy-peasy';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { setAuthToken } from '../api/config';
 
 const useApp = () => {
@@ -9,9 +9,15 @@ const useApp = () => {
     auth: { token },
     ui: { mode },
   } = useStoreState((state) => state);
-  const { setMode } = useStoreActions((actions) => actions.ui);
+  const {
+    ui: { setMode },
+    auth: { getVerifyedData },
+  } = useStoreActions((actions) => actions);
 
-  if (isRehydrated && token) setAuthToken(token);
+  if (isRehydrated && token) {
+    setAuthToken(token);
+    getVerifyedData();
+  }
 
   const colorMode = useMemo(
     () => ({
@@ -43,10 +49,6 @@ const useApp = () => {
       }),
     [mode]
   );
-
-  useEffect(() => {
-    localStorage.setItem('BDPA_COLOR_MODE', mode);
-  }, [mode]);
 
   return {
     isRehydrated,

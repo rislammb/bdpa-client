@@ -20,9 +20,7 @@ const AddMemberRow = ({
     return acc;
   }, []);
 
-  console.log(error);
-
-  const errorObj = error?.members[index];
+  const errorObj = error?.members?.length > 0 && error?.members.length[index];
 
   return (
     <Box

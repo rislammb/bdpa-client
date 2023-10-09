@@ -1,5 +1,5 @@
 import { action, thunk } from 'easy-peasy';
-import { userLogin } from '../api/auth';
+import { userLogin, verifyToken } from '../api/auth';
 import { setAuthToken } from '../api/config';
 
 const authModel = {
@@ -14,6 +14,17 @@ const authModel = {
   }),
   setError: action((state, payload) => {
     state.error = payload;
+  }),
+  getVerifyedData: thunk(async (actions) => {
+    try {
+      const { data } = await verifyToken();
+      actions.setUser(data);
+      actions.setError(null);
+    } catch (e) {
+      actions.setError(e.response?.data);
+      actions.setToken(null);
+      setAuthToken(null);
+    }
   }),
   getAuthData: thunk(async (actions, payload) => {
     actions.setError(null);

@@ -84,7 +84,7 @@ const DetailsCommittee = () => {
         </TableContainer>
 
         {isAddMember && (
-          <Box sx={{ mt: 3 }}>
+          <Box sx={{ my: 1.5, overflow: 'auto' }}>
             <AddMemberRow
               member={member}
               onChange={handleMemberChange}
@@ -95,7 +95,6 @@ const DetailsCommittee = () => {
             />
           </Box>
         )}
-
         <Box
           sx={{
             mt: 3,
@@ -110,9 +109,9 @@ const DetailsCommittee = () => {
             startIcon={<DeleteIcon />}
             color='error'
           >
-            কমিটি মুছুন
+            কমিটি
           </Button>
-          <Box sx={{ display: 'flex', gap: 1 }}>
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             {isAddMember && (
               <Button
                 onClick={toggleAddMember}
@@ -131,7 +130,7 @@ const DetailsCommittee = () => {
               color='primary'
               size='small'
             >
-              {`সদস্য${isAddMember ? ' সংরক্ষণ' : ''}`}
+              সদস্য
             </Button>
           </Box>
         </Box>

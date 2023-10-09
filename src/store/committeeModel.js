@@ -71,7 +71,6 @@ const committeeModel = {
 
     try {
       const { data } = await addCommittee(payload);
-
       actions.setSubmitting(false);
       return data;
     } catch (e) {
