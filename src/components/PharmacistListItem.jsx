@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { getAreaInfo } from '../helpers/utilities';
 import Link from './ui/Link';
 
-const PharmacistListItem = ({ pharmacist, columns, isTargetBlank }) => (
+const PharmacistListItem = ({ pharmacist, columns }) => (
   <TableRow hover tabIndex={-1}>
     {columns.map((column) => {
       const value = pharmacist[column.id];
@@ -25,7 +25,6 @@ const PharmacistListItem = ({ pharmacist, columns, isTargetBlank }) => (
           ) : column.id === 'regNumber' || column.id === 'name' ? (
             <Link
               to={`/members/${pharmacist['regNumber']}`}
-              target={isTargetBlank ? '_blank' : ''}
               text={value}
             />
           ) : column.id === 'voterDistrict' ? (
