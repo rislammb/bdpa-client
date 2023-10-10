@@ -76,10 +76,12 @@ export default function ToggleColorMode() {
   );
 
   useEffect(() => {
-    if (isRehydrated && token) {
+    if (isRehydrated) {
       if (token) {
         setAuthToken(token);
         getVerifyedData();
+      } else {
+        setAuthToken();
       }
     }
   }, [isRehydrated, token]);
