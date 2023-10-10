@@ -1,7 +1,5 @@
 import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import React from 'react';
-
 const About = () => {
   const theme = useTheme();
 
@@ -10,8 +8,8 @@ const About = () => {
       <img
         src={
           theme.palette.mode === 'dark'
-            ? `${import.meta.env.PUBLIC_URL}/bdpa_logo.png`
-            : `${import.meta.env.PUBLIC_URL}/bdpa_logo-color.svg`
+            ? `./bdpa_logo.png`
+            : `./bdpa_logo-color.svg`
         }
         alt='logo'
         width='150px'

@@ -4,33 +4,40 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { initialMember } from '../helpers/member';
 import { getAreaInfo, objDeepClone } from '../helpers/utilities';
 
-const columns = [
-  { id: 'serialNumber', label: 'ক্রমিক', minWidth: 35 },
-  { id: 'bn_name', label: 'নাম (বাংলায়)', minWidth: 190 },
-  { id: 'postName', label: 'কমিটি পদবী', minWidth: 210 },
-  { id: 'mobile', label: 'মোবাইল', minWidth: 90 },
-  { id: 'posting', label: 'কর্মস্থল/ঠিকানা', minWidth: 330 },
-];
-
 const useDetailsCommittee = () => {
   const { committeePath } = useParams();
   const navigate = useNavigate();
 
   const {
+    auth: { user },
     committee: { loading, details: committee },
     pharmacist: { list },
     member: { error },
   } = useStoreState((state) => state);
+
+  const columns = [
+    { id: 'serialNumber', label: 'ক্রমিক', minWidth: 35 },
+    { id: 'bn_name', label: 'নাম (বাংলায়)', minWidth: 190 },
+    { id: 'postName', label: 'কমিটি পদবী', minWidth: 190 },
+    { id: 'mobile', label: 'মোবাইল', minWidth: 90 },
+    { id: 'posting', label: 'কর্মস্থল/ঠিকানা', minWidth: 310 },
+  ];
+
+  if (user) columns.push({ id: 'delete', minWidth: '65px' });
+
   const {
     committee: { getDetailsCommitteeData, deleteCommitteeData },
     pharmacist: { getPharmacistsData },
-    member: { addMemberData },
+    member: { setError, addMemberData },
   } = useStoreActions((actions) => actions);
 
   const [isAddMember, setIsAddMember] = useState(false);
   const [member, setMember] = useState({ ...initialMember });
 
-  const toggleAddMember = () => setIsAddMember(!isAddMember);
+  const toggleAddMember = () => {
+    setIsAddMember(!isAddMember);
+    setError(null);
+  };
 
   const handleMemberChange = (e) => {
     const { name, value } = e.target;
@@ -88,6 +95,7 @@ const useDetailsCommittee = () => {
 
   return {
     loading,
+    user,
     committee,
     columns,
     handleCommitteeDelete,

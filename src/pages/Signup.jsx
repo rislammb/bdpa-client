@@ -10,7 +10,6 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { axiosInstance } from '../api/config';
 
 const initialState = { email: '', password: '', confirmPassword: '' };
 
@@ -24,26 +23,7 @@ const Signup = () => {
   };
 
   const handleSubmit = () => {
-    axiosInstance
-      .post('/auth/register', {
-        ...state,
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((e) => {
-        console.log(e.response.data);
-        // setSnackbar({
-        //   open: true,
-        //   severity: 'error',
-        //   text: 'Pharmacist add to databse faild!.',
-        // });
-        if (typeof e.response.data === 'object') {
-          // setError(e.response.data);
-        }
-      });
-
-    // setNotFound(true);
+    console.log('submitting data', state);
   };
 
   return (
@@ -58,7 +38,7 @@ const Signup = () => {
         }}
         title='Signup Page'
       />
-      <CardContent sx={{ display: 'flex', flexDirection: 'column', rowGap: 3 }}>
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <TextField
           InputLabelProps={{ color: 'info' }}
           type='email'

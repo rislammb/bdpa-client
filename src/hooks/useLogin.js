@@ -1,11 +1,11 @@
 import { useStoreActions, useStoreState } from 'easy-peasy';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const initialState = { email: '', password: '' };
 
 const useLogin = () => {
-  const { user } = useStoreState((state) => state.auth);
-  const { getAuthData } = useStoreActions((actions) => actions.auth);
+  const { submitting, error } = useStoreState((state) => state.auth);
+  const { setError, getLoginData } = useStoreActions((actions) => actions.auth);
   const [state, setState] = useState({ ...initialState });
 
   const handleChange = (e) => {
@@ -15,13 +15,18 @@ const useLogin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    getAuthData(state);
+    getLoginData(state);
   };
+
+  useEffect(() => {
+    setError(null);
+  }, []);
 
   return {
     state,
-    user,
+    error,
     handleChange,
+    submitting,
     handleSubmit,
   };
 };

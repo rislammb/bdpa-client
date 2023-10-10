@@ -11,8 +11,9 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { useTheme } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useState } from 'react';
-import { Link, NavLink, Route, Routes } from 'react-router-dom';
+import { Link, Navigate, NavLink, Route, Routes } from 'react-router-dom';
 
 import About from '../pages/About';
 import AddCommittee from '../pages/AddCommittee';
@@ -26,22 +27,28 @@ import PharmacistList from '../pages/PharmacistList';
 import Signup from '../pages/Signup';
 
 const drawerWidth = 240;
-const navItems = [
-  { path: '/members/page/1', text: 'Members' },
-  { path: '/committees', text: 'Committees' },
-  { path: '/members/add', text: 'Add Member' },
-  { path: '/about', text: 'About' },
-  { path: '/login', text: 'Login' },
-];
 
 const Navbar = (props) => {
   const theme = useTheme();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user } = useStoreState((state) => state.auth);
+  const { logout } = useStoreActions((actions) => actions.auth);
+
+  const navItems = [
+    { path: '/members/page/1', text: 'Members' },
+    { path: '/committees', text: 'Committees' },
+    { path: '/about', text: 'About' },
+    { path: '/login', text: user ? 'Logout' : 'Login' },
+  ];
+
+  if (user) navItems.unshift({ path: '/members/add', text: 'Add Member' });
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const handleLogout = () => logout();
 
   const linkStyle = (isActive = false) => ({
     color: isActive ? theme.palette.primary.light : '#f1f1f1',
@@ -58,7 +65,7 @@ const Navbar = (props) => {
       }}
       onClick={handleDrawerToggle}
     >
-      <Typography variant='h6' sx={{ my: 1.5, textAlign: 'center' }}>
+      <Typography variant='h5' sx={{ my: 1.5, textAlign: 'center' }}>
         BDPA
       </Typography>
       <Divider />
@@ -76,6 +83,9 @@ const Navbar = (props) => {
               <NavLink
                 style={({ isActive }) => linkStyle(isActive)}
                 to={item.path}
+                onClick={() => {
+                  if (item.text === 'Logout') handleLogout();
+                }}
               >
                 {item.text}
               </NavLink>
@@ -129,6 +139,9 @@ const Navbar = (props) => {
                 <NavLink
                   style={({ isActive }) => linkStyle(isActive)}
                   to={item.path}
+                  onClick={() => {
+                    if (item.text === 'Logout') handleLogout();
+                  }}
                 >
                   {item.text}
                 </NavLink>
@@ -161,7 +174,10 @@ const Navbar = (props) => {
       <Box component='main' sx={{ p: 1, textAlign: 'center', width: '100%' }}>
         <Toolbar />
         <Routes>
-          <Route path='/members/add' element={<AddPharmacist />} />
+          <Route
+            path='/members/add'
+            element={user ? <AddPharmacist /> : <Navigate to={`/login`} />}
+          />
           <Route
             path='/members/page/:pageNumber'
             element={<PharmacistList />}
@@ -172,10 +188,28 @@ const Navbar = (props) => {
             path='/committees/:committeePath'
             element={<DetailsCommittee />}
           />
-          <Route path='/committees/add' element={<AddCommittee />} />
+          <Route
+            path='/committees/add'
+            element={user ? <AddCommittee /> : <Navigate to={`/login`} />}
+          />
           <Route path='/about' element={<About />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/signup' element={<Signup />} />
+          <Route
+            path='/login'
+            element={
+              user ? <Navigate to={`/members/${user.regNumber}`} /> : <Login />
+            }
+          />
+          <Route
+            path='/signup'
+            element={
+              user?.regNumber ? (
+                <Navigate to={`/members/${user.regNumber}`} />
+              ) : (
+                <Signup />
+              )
+            }
+          />
+
           <Route index element={<Home />} />
         </Routes>
       </Box>

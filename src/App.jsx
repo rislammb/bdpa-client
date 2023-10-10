@@ -10,7 +10,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -41,16 +41,13 @@ export default function ToggleColorMode() {
   } = useStoreState((state) => state);
   const {
     ui: { setMode },
+    auth: { getVerifyedData },
   } = useStoreActions((actions) => actions);
-
-  if (isRehydrated && token) {
-    setAuthToken(token);
-  }
 
   const colorMode = useMemo(
     () => ({
       toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+        setMode();
       },
     }),
     []
@@ -77,6 +74,15 @@ export default function ToggleColorMode() {
       }),
     [mode]
   );
+
+  useEffect(() => {
+    if (isRehydrated && token) {
+      if (token) {
+        setAuthToken(token);
+        getVerifyedData();
+      }
+    }
+  }, [isRehydrated, token]);
 
   return (
     <ColorModeContext.Provider value={colorMode}>

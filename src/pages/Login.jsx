@@ -8,15 +8,12 @@ import {
   Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import useLogin from '../hooks/useLogin';
 
 const Login = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
-  const { state, user, handleChange, handleSubmit } = useLogin();
-
-  if (user?.regNumber) return navigate(`/members/${user.regNumber}`);
+  const { state, error, handleChange, submitting, handleSubmit } = useLogin();
 
   return (
     <Card sx={{ maxWidth: 330, margin: '20px auto' }}>
@@ -32,7 +29,7 @@ const Login = () => {
       <CardContent
         component={'form'}
         onSubmit={handleSubmit}
-        sx={{ display: 'flex', flexDirection: 'column', rowGap: 3 }}
+        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
       >
         <TextField
           InputLabelProps={{ color: 'info' }}
@@ -54,12 +51,22 @@ const Login = () => {
           label='Password'
           variant='standard'
         />
-        <CardActions sx={{ flexDirection: 'column', rowGap: 1 }}>
-          <Button type='submit' variant='contained'>
+        {!submitting && error?.message && (
+          <Typography
+            textAlign={'left'}
+            fontSize={'0.9rem'}
+            width={'100%'}
+            color={'error'}
+          >
+            {error.message}
+          </Typography>
+        )}
+        <CardActions sx={{ flexDirection: 'column', p: 0, rowGap: 1 }}>
+          <Button disabled={submitting} type='submit' variant='contained'>
             Login
           </Button>
           <Typography variant='body2' component='span'>
-            Don&apost have an account? Please{' '}
+            Don&apos;t have an account? Please{' '}
             <Link
               to='/signup'
               style={{

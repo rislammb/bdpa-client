@@ -1,4 +1,5 @@
-import { Box, TextField } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
+import { Box, IconButton, InputAdornment, TextField } from '@mui/material';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 
 const SearchByText = () => {
@@ -15,7 +16,16 @@ const SearchByText = () => {
     >
       <TextField
         InputLabelProps={{ color: 'info' }}
-        InputProps={{ style: { fontSize: 14, paddingLeft: '5px' } }}
+        InputProps={{
+          style: { fontSize: 14, paddingLeft: '5px' },
+          endAdornment: (
+            <InputAdornment position='end'>
+              <IconButton onClick={() => setSearchTerm('')} size='small'>
+                <ClearIcon color='error' fontSize='small' />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
         label='অনুসন্ধান'
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}

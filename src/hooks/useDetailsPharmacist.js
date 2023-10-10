@@ -18,14 +18,16 @@ const useDetailsPharmacist = () => {
   const [showDeputationRow, setShowDeputationRow] = useState(null);
   const [tableRows, setTableRows] = useState([]);
 
-  const { loading, details: pharmacist } = useStoreState(
-    (state) => state.pharmacist
-  );
+  const {
+    auth: { user },
+    pharmacist: { loading, details: pharmacist },
+  } = useStoreState((state) => state);
   const { getDetailsPharmacistData, deletePharmacistData } = useStoreActions(
     (actions) => actions.pharmacist
   );
 
-  const isPermittedForEdit = false;
+  const isPermittedForEdit =
+    user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
 
   useEffect(() => {
     if (pharmacist) {
@@ -68,14 +70,14 @@ const useDetailsPharmacist = () => {
           isPermittedForEdit
         ),
         createRow(
-          "পিতার নাম",
+          'পিতার নাম',
           pharmacist.fathersName || '',
           'fathersName',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          "মাতার নাম",
+          'মাতার নাম',
           pharmacist.mothersName || '',
           'mothersName',
           'text',
@@ -211,6 +213,7 @@ const useDetailsPharmacist = () => {
 
   return {
     loading,
+    user,
     pharmacist,
     tableRows,
     showDeputationRow,

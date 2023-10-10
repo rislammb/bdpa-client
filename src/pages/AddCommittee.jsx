@@ -103,6 +103,7 @@ const AddCommittee = () => {
             display: 'flex',
             flexDirection: 'column',
             gap: 1,
+            pb: 1,
           }}
         >
           {members.length > 0 &&
@@ -110,8 +111,7 @@ const AddCommittee = () => {
               <AddMemberRow
                 key={member.id}
                 member={member}
-                index={index}
-                error={error}
+                error={error?.members && error.members[index]}
                 onChange={handleMemberChange}
                 defaultProps={defaultProps}
                 deleteMemberRow={deleteMemberRow}

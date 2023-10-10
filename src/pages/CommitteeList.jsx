@@ -1,7 +1,10 @@
-import { Add } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
+import ClearIcon from '@mui/icons-material/Clear';
 import {
   Box,
   Button,
+  IconButton,
+  InputAdornment,
   Paper,
   Table,
   TableBody,
@@ -9,15 +12,14 @@ import {
   TextField,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import CommitteeListRow from '../components/CommitteeListRow';
 import EmptyTableRow from '../components/EmptyTableRow';
 import TableHeader from '../components/TableHeader';
+import Loading from '../components/ui/Loading';
 import useCommitteeList from '../hooks/useCommitteeList';
 
-import CommitteeListRow from '../components/CommitteeListRow';
-import Loading from '../components/ui/Loading';
-
 const CommitteeList = () => {
-  const { loading, filteredList, searchTerm, setSearchTerm, columns } =
+  const { loading, user, filteredList, searchTerm, setSearchTerm, columns } =
     useCommitteeList();
 
   if (loading)
@@ -46,22 +48,33 @@ const CommitteeList = () => {
       >
         <TextField
           InputLabelProps={{ color: 'info' }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position='end'>
+                <IconButton onClick={() => setSearchTerm('')} size='small'>
+                  <ClearIcon color='error' fontSize='small' />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
           name='search'
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           label={'কমিটি অনুসন্ধান'}
           placeholder={'কেন্দ্রীয় কমিটি...'}
           variant='standard'
-          sx={{ width: '190px' }}
+          sx={{ width: '210px' }}
         />
-        <Button
-          startIcon={<Add />}
-          component={RouterLink}
-          to='/committees/add'
-          variant='contained'
-        >
-          কমিটি
-        </Button>
+        {user && (
+          <Button
+            startIcon={<AddIcon />}
+            component={RouterLink}
+            to='/committees/add'
+            variant='contained'
+          >
+            কমিটি
+          </Button>
+        )}
       </Box>
 
       <Paper>

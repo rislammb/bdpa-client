@@ -6,7 +6,6 @@ import TextField from '@mui/material/TextField';
 
 const AddMemberRow = ({
   member,
-  index,
   error,
   onChange,
   defaultProps,
@@ -19,8 +18,6 @@ const AddMemberRow = ({
     }
     return acc;
   }, []);
-
-  const errorObj = error?.members?.length > 0 && error?.members.length[index];
 
   return (
     <Box
@@ -53,8 +50,8 @@ const AddMemberRow = ({
                   {...params}
                   label={property.label}
                   variant='standard'
-                  error={errorObj && errorObj[property.name] ? true : false}
-                  helperText={(errorObj && errorObj[property.name]) ?? ''}
+                  error={error && error[property.name] ? true : false}
+                  helperText={(error && error[property.name]) ?? ''}
                 />
               )}
             />
@@ -68,8 +65,8 @@ const AddMemberRow = ({
               value={property.value}
               placeholder={property.placeholder}
               onChange={(e) => onChange(e, member.id)}
-              error={errorObj && errorObj[property.name] ? true : false}
-              helperText={(errorObj && errorObj[property.name]) ?? ''}
+              error={error && error[property.name] ? true : false}
+              helperText={(error && error[property.name]) ?? ''}
               variant='standard'
             />
           );

@@ -8,9 +8,10 @@ const columns = [
 ];
 
 const useCommitteeList = () => {
-  const { loading, filteredList, searchTerm } = useStoreState(
-    (state) => state.committee
-  );
+  const {
+    committee: { loading, filteredList, searchTerm },
+    auth: { user },
+  } = useStoreState((state) => state);
   const { getCommitteesData, setSearchTerm } = useStoreActions(
     (actions) => actions.committee
   );
@@ -19,7 +20,7 @@ const useCommitteeList = () => {
     getCommitteesData();
   }, []);
 
-  return { loading, filteredList, columns, searchTerm, setSearchTerm };
+  return { loading, user, filteredList, columns, searchTerm, setSearchTerm };
 };
 
 export default useCommitteeList;

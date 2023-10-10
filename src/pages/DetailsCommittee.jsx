@@ -24,6 +24,7 @@ import useDetailsCommittee from '../hooks/useDetailsCommittee';
 const DetailsCommittee = () => {
   const {
     loading,
+    user,
     committee,
     columns,
     handleCommitteeDelete,
@@ -83,57 +84,64 @@ const DetailsCommittee = () => {
           </Table>
         </TableContainer>
 
-        {isAddMember && (
-          <Box sx={{ my: 1.5, overflow: 'auto' }}>
-            <AddMemberRow
-              member={member}
-              onChange={handleMemberChange}
-              deleteMemberRow={toggleAddMember}
-              defaultProps={defaultProps}
-              index={0}
-              error={{ members: [error] }}
-            />
-          </Box>
-        )}
-        <Box
-          sx={{
-            mt: 3,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Button
-            onClick={handleCommitteeDelete}
-            variant='contained'
-            startIcon={<DeleteIcon />}
-            color='error'
-          >
-            কমিটি
-          </Button>
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+        {user && (
+          <>
             {isAddMember && (
-              <Button
-                onClick={toggleAddMember}
-                variant='contained'
-                startIcon={<ClearIcon />}
-                color='error'
-                size='small'
-              >
-                বাতিল
-              </Button>
+              <Box sx={{ my: 1.5, overflow: 'auto', pb: 1 }}>
+                <AddMemberRow
+                  member={member}
+                  onChange={handleMemberChange}
+                  deleteMemberRow={toggleAddMember}
+                  defaultProps={defaultProps}
+                  index={0}
+                  error={error}
+                />
+              </Box>
             )}
-            <Button
-              onClick={isAddMember ? handleMemberSubmit : toggleAddMember}
-              variant='contained'
-              startIcon={isAddMember ? <SaveIcon /> : <AddIcon />}
-              color='primary'
-              size='small'
+            <Box
+              sx={{
+                mt: 3,
+                display: 'flex',
+                flexDirection: { xs: 'column-reverse', sm: 'row' },
+                gap: 2,
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
             >
-              সদস্য
-            </Button>
-          </Box>
-        </Box>
+              <Button
+                onClick={handleCommitteeDelete}
+                variant='contained'
+                startIcon={<DeleteIcon />}
+                size='large'
+                color='error'
+              >
+                কমিটি মুছুন
+              </Button>
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                {isAddMember && (
+                  <Button
+                    onClick={toggleAddMember}
+                    variant='contained'
+                    startIcon={<ClearIcon />}
+                    color='error'
+                    size='small'
+                  >
+                    বাতিল
+                  </Button>
+                )}
+                <Button
+                  onClick={isAddMember ? handleMemberSubmit : toggleAddMember}
+                  variant='contained'
+                  startIcon={isAddMember ? <SaveIcon /> : <AddIcon />}
+                  color='primary'
+                  size='small'
+                >
+                  {isAddMember ? 'সদস্য সংরক্ষণ' : 'সদস্য'}
+                </Button>
+              </Box>
+            </Box>
+          </>
+        )}
       </CardContent>
     </Card>
   );

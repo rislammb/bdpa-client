@@ -14,6 +14,7 @@ import useDetailsPharmacist from '../hooks/useDetailsPharmacist';
 const DetailsPharmacist = () => {
   const {
     loading,
+    user,
     pharmacist,
     tableRows,
     showDeputationRow,
@@ -62,23 +63,25 @@ const DetailsPharmacist = () => {
                     }
                   />
                 ))}
-                <TableRow
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell
-                    colSpan={3}
-                    sx={{ padding: 1.5, textAlign: 'center' }}
+                {user && (
+                  <TableRow
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                    <Button
-                      onClick={handleDelete}
-                      variant='contained'
-                      startIcon={<DeleteIcon />}
-                      color='error'
+                    <TableCell
+                      colSpan={3}
+                      sx={{ padding: 1.5, textAlign: 'center' }}
                     >
-                      মুছুন
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                      <Button
+                        onClick={handleDelete}
+                        variant='contained'
+                        startIcon={<DeleteIcon />}
+                        color='error'
+                      >
+                        ফার্মাসিস্ট মুছুন
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                )}
               </>
             ) : (
               [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((num) => (
