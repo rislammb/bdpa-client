@@ -33,7 +33,7 @@ const PharmacistListItem = ({ pharmacist, columns }) => {
             ) : column.id === 'regNumber' || column.id === 'name' ? (
               <Link to={`/members/${pharmacist['regNumber']}`} text={value} />
             ) : column.id === 'voterDistrict' ? (
-              value.bn_name
+              language === 'BN' ? value.bn_name : value.name
             ) : (
               value
             )}
