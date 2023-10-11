@@ -1,5 +1,3 @@
-import { jobDepertmentOptions } from '../constants/jobDepertment';
-
 const divisionFilter = (list, locationValue, divisionValue) => {
   if (locationValue === '1') {
     if (divisionValue === 'all') {
@@ -121,12 +119,9 @@ const depertmentFilter = (list, depertmentInfo) => {
   if (depertmentInfo.value === 'all') {
     return list;
   } else {
-    const strDepertment =
-      jobDepertmentOptions.find(
-        (depertment) => depertment.id === depertmentInfo.value
-      )?.name ?? '';
-
-    return list.filter((item) => item.jobDepertment === strDepertment);
+    return list.filter(
+      (item) => item.jobDepertment.id === depertmentInfo.value
+    );
   }
 };
 

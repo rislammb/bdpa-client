@@ -1,16 +1,15 @@
 import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-const Home = () => {
+const BnHome = () => {
   const theme = useTheme();
 
   return (
     <Box sx={{ my: 3, mx: 1 }}>
       <Typography variant='h4' sx={{ mb: 4 }}>
-        Assalamu Alaikum
+        আস সালামু আলাইকুম
       </Typography>
       <Typography variant='h5'>
-        Welcome to{' '}
         <Typography
           color={
             theme.palette.mode === 'dark'
@@ -19,15 +18,15 @@ const Home = () => {
           }
           variant='span'
         >
-          Bangladesh Diploma Pharmacist Association (BDPA)
+          বাংলাদেশ ডিপ্লোমা ফার্মাসিস্ট এসোসিয়েশন (বিডিপিএ)
         </Typography>{' '}
-        website
+        এর ওয়েবসাইটে আপনাকে স্বাগতম
       </Typography>
       <Typography variant='h6' sx={{ mt: 1 }}>
-        Developed by: Rajshahi District
+        ডেভেলপ করেছেঃ রাজশাহী জেলা
       </Typography>
     </Box>
   );
 };
 
-export default Home;
+export default BnHome;

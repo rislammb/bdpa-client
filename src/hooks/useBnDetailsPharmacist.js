@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getAreaInfo } from '../helpers/utilities';
+import { getBnAreaInfo } from '../helpers/utilities';
 
 const createRow = (th, value, name, type, edit) => ({
   th,
@@ -12,7 +12,7 @@ const createRow = (th, value, name, type, edit) => ({
   edit,
 });
 
-const useDetailsPharmacist = () => {
+const useBnDetailsPharmacist = () => {
   let { regNumber } = useParams();
   const navigate = useNavigate();
   const [showDeputationRow, setShowDeputationRow] = useState(null);
@@ -35,129 +35,127 @@ const useDetailsPharmacist = () => {
 
       const rows = [
         createRow(
-          'Registration number',
+          'বি-গ্রেড নিবন্ধ সংখ্যা',
           pharmacist.regNumber || '',
           'regNumber',
           '',
           false
         ),
         createRow(
-          'Name (English)',
+          'নাম (English)',
           pharmacist.name || '',
           'name',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Name (বাংলা)',
+          'নাম (বাংলা)',
           pharmacist.bn_name || '',
           'bn_name',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Email',
+          'ইমেইল',
           pharmacist.email || '',
           'email',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Mobile number',
-          pharmacist.gender === 'Male'
-            ? pharmacist.mobile?.name ?? ''
-            : 'Hide now',
+          'মোবাইল',
+          pharmacist.gender === 'Male' ? pharmacist.mobile : 'Hide now',
           'mobile',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Fathers Name',
-          pharmacist.fathersName?.name || '',
+          'পিতার নাম',
+          pharmacist.fathersName?.bn_name || '',
           'fathersName',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Mothers Name',
-          pharmacist.mothersName?.name || '',
+          'মাতার নাম',
+          pharmacist.mothersName?.bn_name || '',
           'mothersName',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Gender',
-          pharmacist.gender?.name || '',
+          'লিঙ্গ',
+          pharmacist.gender?.bn_name || '',
           'gender',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'Date of birth',
+          'জন্ম তারিখ',
           dayjs(pharmacist.dateOfBirth).format('DD MMM YYYY') || '',
           'dateOfBirth',
           'date',
           isPermittedForEdit
         ),
         createRow(
-          'National ID',
-          pharmacist.nationalId?.name || '',
+          'জাতীয় পরিচয়পত্র সংখ্যা',
+          pharmacist.nationalId?.bn_name || '',
           'nationalId',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Passing year',
-          pharmacist.passingYear?.name || '',
+          'পাশের বছর',
+          pharmacist.passingYear?.bn_name || '',
           'passingYear',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'BDPA member ID',
+          'বিডিপিএ সদস্য সনাক্তকারী সংখ্যা',
           pharmacist.memberId || '',
           'memberId',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Job Depertment',
-          pharmacist.jobDepertment?.name || '',
+          'চাকুরীর বিভাগ',
+          pharmacist.jobDepertment?.bn_name || '',
           'jobDepertment',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'Date of join',
+          'যোগদানের তারিখ',
           dayjs(pharmacist.dateOfJoin).format('DD MMM YYYY') || '',
           'dateOfJoin',
           'date',
           isPermittedForEdit
         ),
         createRow(
-          'Main posting/Address',
-          getAreaInfo(pharmacist, 'posting'),
+          'মূল কর্মস্থল/ঠিকানা',
+          getBnAreaInfo(pharmacist, 'posting'),
           'mainPosting',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'Permanent Address',
-          getAreaInfo(pharmacist, 'permanent'),
+          'স্থায়ী ঠিকানা',
+          getBnAreaInfo(pharmacist, 'permanent'),
           'permanentAddress',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'Voter Area',
-          getAreaInfo(pharmacist, 'voter'),
+          'ভোটার এলাকা',
+          getBnAreaInfo(pharmacist, 'voter'),
           'voterArea',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'On deputation/attachment',
-          pharmacist.onDeputation?.name,
+          'প্রেষনে/সংযুক্ত আছেন?',
+          pharmacist.onDeputation?.name ?? '',
           'onDeputation',
           'select',
           isPermittedForEdit
@@ -167,8 +165,8 @@ const useDetailsPharmacist = () => {
       pharmacist.onDeputation?.name === 'Yes' &&
         rows.push(
           createRow(
-            'Deputation/attachment posting',
-            getAreaInfo(pharmacist, 'deputation'),
+            'প্রেষন/সংযুক্ত কর্মস্থল',
+            getBnAreaInfo(pharmacist, 'deputation'),
             'deputationPosting',
             'select',
             isPermittedForEdit
@@ -182,8 +180,8 @@ const useDetailsPharmacist = () => {
   useEffect(() => {
     if (showDeputationRow) {
       const row = createRow(
-        'Deputation/attachment posting',
-        getAreaInfo(pharmacist, 'deputation'),
+        'প্রেষন/সংযুক্ত কর্মস্থল',
+        getBnAreaInfo(pharmacist, 'deputation'),
         'deputationPosting',
         'select',
         true
@@ -199,7 +197,7 @@ const useDetailsPharmacist = () => {
   const handleDelete = () => {
     if (
       window.confirm(
-        `Are you sure you want to delete '${pharmacist.bn_name} : ${pharmacist.regNumber}'?`
+        `আপনি কি সত্যিই মুছে ফেলতে চান '${pharmacist.bn_name} : ${pharmacist.regNumber}'?`
       )
     ) {
       deletePharmacistData(regNumber);
@@ -224,4 +222,4 @@ const useDetailsPharmacist = () => {
   };
 };
 
-export default useDetailsPharmacist;
+export default useBnDetailsPharmacist;

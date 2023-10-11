@@ -6,8 +6,8 @@ const uiModel = {
   setMode: action((state) => {
     state.mode = state.mode === 'light' ? 'dark' : 'light';
   }),
-  setLanguage: action((state, payload) => {
-    state.language = payload;
+  toggleLanguage: action((state) => {
+    state.language = state.language === 'BN' ? 'EN' : 'BN';
   }),
 };
 

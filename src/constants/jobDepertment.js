@@ -10,16 +10,24 @@ export const jobDepertmentOptions = [
     bn_name: 'স্বাস্থ্য অধিদপ্তর',
   },
 
-  { id: '3', name: 'Bangladesh Railway', bn_name: 'বাংলাদেশ রেলওয়ে', },
+  { id: '3', name: 'Bangladesh Railway', bn_name: 'বাংলাদেশ রেলওয়ে' },
   {
     id: '4',
     name: 'Border Guard of Bangladesh',
     bn_name: 'বর্ডার গার্ড বাংলাদেশ',
   },
-  { id: '5', name: 'Bangladesh Police', bn_name: 'বাংলাদেশ পুলিশ', },
-  { id: '6', name: 'Bangladesh Bank', bn_name: 'বাংলাদেশ ব্যাংক', },
-  { id: '17', name: 'Pharmacy/Medicine Store', bn_name: 'ফার্মেসী/ঔষধের দোকান', },
-  { id: '18', name: 'Non-Governmental Organization', bn_name: 'বেসরকারী সংস্থা', },
+  { id: '5', name: 'Bangladesh Police', bn_name: 'বাংলাদেশ পুলিশ' },
+  { id: '6', name: 'Bangladesh Bank', bn_name: 'বাংলাদেশ ব্যাংক' },
+  {
+    id: '17',
+    name: 'Pharmacy/Medicine Store',
+    bn_name: 'ফার্মেসী/ঔষধের দোকান',
+  },
+  {
+    id: '18',
+    name: 'Non-Governmental Organization',
+    bn_name: 'বেসরকারী সংস্থা',
+  },
 ];
 
 export const jobDepertmentField = {

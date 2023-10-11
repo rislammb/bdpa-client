@@ -1,7 +1,8 @@
-import { Paper } from '@mui/material';
+import { Button, Paper } from '@mui/material';
 import { useStoreActions, useStoreRehydrated, useStoreState } from 'easy-peasy';
 import './App.css';
 import { setAuthToken } from './api/config';
+import BnNavbar from './components/BnNavBar';
 import Navbar from './components/Navbar';
 import Loading from './components/ui/Loading';
 
@@ -33,11 +34,22 @@ function ThemeButton() {
   );
 }
 
+const LanguageButton = () => {
+  const { language } = useStoreState((state) => state.ui);
+  const { toggleLanguage } = useStoreActions((actions) => actions.ui);
+
+  return (
+    <Button color='inherit' onClick={toggleLanguage}>
+      {language === 'BN' ? 'EN' : 'বাংলা'}
+    </Button>
+  );
+};
+
 export default function ToggleColorMode() {
   const isRehydrated = useStoreRehydrated();
   const {
     auth: { token },
-    ui: { mode },
+    ui: { mode, language },
   } = useStoreState((state) => state);
   const {
     ui: { setMode },
@@ -86,11 +98,23 @@ export default function ToggleColorMode() {
     }
   }, [isRehydrated, token]);
 
+  useEffect(() => {
+    if (language === 'BN') {
+      document.title = 'বিডিপিএ - বাংলাদেশ ডিপ্লোমা ফার্মাসিস্ট এসোসিয়েশন';
+    } else {
+      document.title = 'BDPA - Bangladesh Diploma Pharmacist Association';
+    }
+  }, [language]);
+
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         {isRehydrated ? (
-          <App />
+          language === 'BN' ? (
+            <BnApp />
+          ) : (
+            <App />
+          )
         ) : (
           <Box sx={{ p: 3 }}>
             <Loading />
@@ -112,8 +136,27 @@ const App = () => {
       }}
     >
       <Navbar>
+        <LanguageButton />
         <ThemeButton />
       </Navbar>
+    </Paper>
+  );
+};
+
+const BnApp = () => {
+  const theme = useTheme();
+
+  return (
+    <Paper
+      className='app'
+      sx={{
+        color: theme.palette.mode === 'dark' ? '#f1f1f1' : '#1a1a1a',
+      }}
+    >
+      <BnNavbar>
+        <LanguageButton />
+        <ThemeButton />
+      </BnNavbar>
     </Paper>
   );
 };
