@@ -155,7 +155,7 @@ const useBnDetailsPharmacist = () => {
         ),
         createRow(
           'প্রেষনে/সংযুক্ত আছেন?',
-          pharmacist.onDeputation?.name ?? '',
+          pharmacist.onDeputation?.bn_name ?? '',
           'onDeputation',
           'select',
           isPermittedForEdit
