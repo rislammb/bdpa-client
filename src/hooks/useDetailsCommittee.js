@@ -19,7 +19,7 @@ const useDetailsCommittee = () => {
     { id: 'serialNumber', label: 'ক্রমিক', minWidth: 35 },
     { id: 'bn_name', label: 'নাম (বাংলায়)', minWidth: 190 },
     { id: 'postName', label: 'কমিটি পদবী', minWidth: 190 },
-    { id: 'mobile.bn_name', label: 'মোবাইল', minWidth: 90 },
+    { id: 'mobile', label: 'মোবাইল', minWidth: 90 },
     { id: 'posting', label: 'কর্মস্থল/ঠিকানা', minWidth: 310 },
   ];
 
