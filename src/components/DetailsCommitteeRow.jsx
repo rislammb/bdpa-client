@@ -46,6 +46,8 @@ const DetailsCommitteeRow = ({ member, columns }) => {
           >
             {column.id === 'bn_name' ? (
               <Link to={`/members/${member.regNumber}`} text={value} />
+            ) : column.id === 'mobile' ? (
+              value?.bn_name
             ) : column.id === 'delete' ? (
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <IconButton
