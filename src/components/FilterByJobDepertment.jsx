@@ -9,10 +9,15 @@ import {
 import { useStoreActions, useStoreState } from 'easy-peasy';
 
 const FilterByJobDepertment = () => {
-  const { jobDepertmentInfo } = useStoreState((state) => state.pharmacist);
+  const {
+    pharmacist: { jobDepertmentInfo },
+    ui: { language },
+  } = useStoreState((state) => state);
   const { setJobDepertmentInfo } = useStoreActions(
     (actions) => actions.pharmacist
   );
+  const isBn = language === 'BN' ? true : false;
+
   const handleJobDepertmentChange = (e) => {
     jobDepertmentInfo.value = e.target.value;
     setJobDepertmentInfo(jobDepertmentInfo);
@@ -46,7 +51,9 @@ const FilterByJobDepertment = () => {
         flex: '1 280px',
       }}
     >
-      <FormLabel component='legend'>চাকুরীর বিভাগ অনুযায়ী বাছাই</FormLabel>
+      <FormLabel component='legend'>
+        {isBn ? 'চাকুরীর বিভাগ অনুযায়ী বাছাই' : 'Filter by job depertment'}
+      </FormLabel>
       <FormGroup>
         <FormControlLabel
           control={
@@ -55,7 +62,7 @@ const FilterByJobDepertment = () => {
               InputProps={{ style: { fontSize: 14, paddingLeft: '5px' } }}
               select
               name='jobDepertment'
-              label='চাকুরীর বিভাগ'
+              label={isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment'}
               value={jobDepertmentInfo.value}
               onChange={handleJobDepertmentChange}
               variant='standard'
@@ -71,7 +78,7 @@ const FilterByJobDepertment = () => {
                     value={option.id}
                     sx={{ fontSize: 14 }}
                   >
-                    {option.bn_name}
+                    {isBn ? option.bn_name : option.name}
                   </MenuItem>
                 ))
               ) : (

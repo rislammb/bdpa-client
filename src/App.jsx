@@ -1,5 +1,5 @@
 import { Button, Paper } from '@mui/material';
-import { useStoreActions, useStoreRehydrated, useStoreState } from 'easy-peasy';
+import { useStoreActions, useStoreState } from 'easy-peasy';
 import './App.css';
 import { setAuthToken } from './api/config';
 import BnNavbar from './components/BnNavBar';
@@ -46,9 +46,9 @@ const LanguageButton = () => {
 };
 
 export default function ToggleColorMode() {
-  const isRehydrated = useStoreRehydrated();
+  // const isRehydrated = useStoreRehydrated();
   const {
-    auth: { token },
+    auth: { loading, token },
     ui: { mode, language },
   } = useStoreState((state) => state);
   const {
@@ -88,15 +88,13 @@ export default function ToggleColorMode() {
   );
 
   useEffect(() => {
-    if (isRehydrated) {
-      if (token) {
-        setAuthToken(token);
-        getVerifyedData();
-      } else {
-        setAuthToken();
-      }
+    if (token) {
+      setAuthToken(token);
+      getVerifyedData();
+    } else {
+      setAuthToken();
     }
-  }, [isRehydrated, token]);
+  }, [token, getVerifyedData]);
 
   useEffect(() => {
     if (language === 'BN') {
@@ -109,16 +107,14 @@ export default function ToggleColorMode() {
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
-        {isRehydrated ? (
-          language === 'BN' ? (
-            <BnApp />
-          ) : (
-            <App />
-          )
-        ) : (
+        {loading ? (
           <Box sx={{ p: 3 }}>
             <Loading />
           </Box>
+        ) : language === 'BN' ? (
+          <BnApp />
+        ) : (
+          <App />
         )}
       </ThemeProvider>
     </ColorModeContext.Provider>

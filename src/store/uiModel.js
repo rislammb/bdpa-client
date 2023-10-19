@@ -1,8 +1,12 @@
 import { action } from 'easy-peasy';
 
 const uiModel = {
+  loading: true,
   mode: 'light',
   language: 'BN',
+  setLoading: action((state, payload) => {
+    state.loading = payload;
+  }),
   setMode: action((state) => {
     state.mode = state.mode === 'light' ? 'dark' : 'light';
   }),

@@ -1,7 +1,10 @@
 import { MenuItem, TextField } from '@mui/material';
-import React from 'react';
+import { useStoreState } from 'easy-peasy';
 
 const SelectComponent = ({ name, label, value, options, onChange, style }) => {
+  const { language } = useStoreState((state) => state.ui);
+  const isBn = language === 'BN' ? true : false;
+
   return (
     <TextField
       InputLabelProps={{ color: 'info' }}
@@ -13,9 +16,9 @@ const SelectComponent = ({ name, label, value, options, onChange, style }) => {
       variant='standard'
       style={{ textAlign: 'left', ...style }}
     >
-      {options.map((option) => (
+      {options?.map((option) => (
         <MenuItem key={option.id} value={option.id}>
-          {option.name}
+          {isBn ? option.bn_name : option.name}
         </MenuItem>
       ))}
     </TextField>

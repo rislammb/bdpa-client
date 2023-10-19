@@ -8,10 +8,10 @@ export const genderField = {
   type: 'select',
   name: 'gender',
   label: 'Gender',
-  bn_label: 'Gender',
+  bn_label: 'লিঙ্গ',
   options: [
-    { id: '0', name: '--- Select ---', bn_name: '--- নির্বাচন ---' },
+    { id: '', name: '--- Select ---', bn_name: '--- নির্বাচন ---' },
     ...genderOptions,
   ],
-  value: '0',
+  value: '',
 };

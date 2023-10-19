@@ -18,6 +18,8 @@ export const jobDepertmentOptions = [
   },
   { id: '5', name: 'Bangladesh Police', bn_name: 'বাংলাদেশ পুলিশ' },
   { id: '6', name: 'Bangladesh Bank', bn_name: 'বাংলাদেশ ব্যাংক' },
+  { id: '7', name: 'Retired', bn_name: 'অবসরপ্রাপ্ত' },
+  { id: '8', name: 'University', bn_name: 'বিশ্ববিদ্যালয়' },
   {
     id: '17',
     name: 'Pharmacy/Medicine Store',
@@ -34,7 +36,7 @@ export const jobDepertmentField = {
   type: 'select',
   options: [
     {
-      id: '0',
+      id: '',
       name: '--- Select ---',
       bn_name: '--- নির্বাচন ---',
     },
@@ -43,5 +45,5 @@ export const jobDepertmentField = {
   name: 'jobDepertment',
   label: 'Job Depertment',
   bn_label: 'চাকুরীর বিভাগ',
-  value: '0',
+  value: '',
 };

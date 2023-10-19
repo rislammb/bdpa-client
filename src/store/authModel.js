@@ -3,10 +3,14 @@ import { userLogin, verifyToken } from '../api/auth';
 import { setAuthToken } from '../api/config';
 
 const authModel = {
+  loading: true,
   token: null,
   user: null,
   error: null,
   submitting: false,
+  setLoading: action((state, payload) => {
+    state.loading = payload;
+  }),
   setSubmitting: action((state, payload) => {
     state.submitting = payload;
   }),
@@ -18,10 +22,10 @@ const authModel = {
   }),
   setUser: action((state, payload) => {
     state.user = payload;
+    state.loading = false;
   }),
   getVerifyedData: thunk(async (actions) => {
     actions.setError(null);
-    console.log('start token verification');
     try {
       const { data } = await verifyToken();
       actions.setUser(data);

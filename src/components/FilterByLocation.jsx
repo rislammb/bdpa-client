@@ -12,8 +12,12 @@ import { INITIAL_LOCATION_INFO } from '../constants/initialInputInfo';
 import { upazilas } from '../constants/upazilas';
 
 const FilterByLocation = () => {
-  const { locationInfo } = useStoreState((state) => state.pharmacist);
+  const {
+    pharmacist: { locationInfo },
+    ui: { language },
+  } = useStoreState((state) => state);
   const { setLocationInfo } = useStoreActions((actions) => actions.pharmacist);
+  const isBn = language === 'BN' ? true : false;
 
   const handleLocationChange = (e) => {
     if (e.target.name === 'locationType') {
@@ -62,7 +66,9 @@ const FilterByLocation = () => {
       variant='standard'
       sx={{ flex: '1 280px' }}
     >
-      <FormLabel component='legend'>ঠিকানা বা এলাকা অনুযায়ী বাছাই</FormLabel>
+      <FormLabel component='legend'>
+        {isBn ? 'ঠিকানা বা এলাকা অনুযায়ী বাছাই' : 'Filter by address/area'}
+      </FormLabel>
       <FormGroup>
         {locationInfoArray.length > 0 &&
           locationInfoArray.map((field) => {
@@ -81,7 +87,7 @@ const FilterByLocation = () => {
                         }}
                         select
                         name={field.name}
-                        label={field.bn_label}
+                        label={isBn ? field.bn_label : field.label}
                         value={field.value}
                         onChange={handleLocationChange}
                         variant='standard'
@@ -97,7 +103,7 @@ const FilterByLocation = () => {
                               value={option.id}
                               sx={{ fontSize: 14 }}
                             >
-                              {option.bn_name}
+                              {isBn ? option.bn_name : option.name}
                             </MenuItem>
                           ))
                         ) : (
@@ -120,7 +126,7 @@ const FilterByLocation = () => {
                       }}
                       select
                       name={field.name}
-                      label={field.bn_label}
+                      label={isBn ? field.bn_label : field.label}
                       value={field.value}
                       onChange={handleLocationChange}
                       variant='standard'
@@ -136,7 +142,7 @@ const FilterByLocation = () => {
                             value={option.id}
                             sx={{ fontSize: 14 }}
                           >
-                            {option.bn_name}
+                            {isBn ? option.bn_name : option.name}
                           </MenuItem>
                         ))
                       ) : (

@@ -3,8 +3,12 @@ import { Box, IconButton, InputAdornment, TextField } from '@mui/material';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 
 const SearchByText = () => {
-  const { searchTerm } = useStoreState((state) => state.pharmacist);
+  const {
+    pharmacist: { searchTerm },
+    ui: { language },
+  } = useStoreState((state) => state);
   const { setSearchTerm } = useStoreActions((actions) => actions.pharmacist);
+  const isBn = language === 'BN' ? true : false;
 
   return (
     <Box
@@ -21,15 +25,19 @@ const SearchByText = () => {
           endAdornment: (
             <InputAdornment position='end'>
               <IconButton onClick={() => setSearchTerm('')} size='small'>
-                <ClearIcon color='error' fontSize='small' />
+                <ClearIcon fontSize='small' />
               </IconButton>
             </InputAdornment>
           ),
         }}
-        label='অনুসন্ধান'
+        label={isBn ? 'অনুসন্ধান' : 'Search'}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder='নাম, নিবন্ধন বা সদস্য পরিচিতি'
+        placeholder={
+          isBn
+            ? 'নাম, নিবন্ধন বা সদস্য পরিচিতি'
+            : 'Name, Registration or Member ID'
+        }
         variant='standard'
         sx={{
           width: '100%',

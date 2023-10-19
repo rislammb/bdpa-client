@@ -3,8 +3,12 @@ import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
+import { useStoreState } from 'easy-peasy';
 
 const PostingGroup = ({ postingInfo, onChange, label, error, style }) => {
+  const { language } = useStoreState((state) => state.ui);
+  const isBn = language === 'BN' ? true : false;
+
   return (
     <FormControl
       sx={{
@@ -29,7 +33,7 @@ const PostingGroup = ({ postingInfo, onChange, label, error, style }) => {
                       InputLabelProps={{ color: 'info' }}
                       select
                       name={field.name}
-                      label={field.label}
+                      label={isBn ? field.bn_label : field.label}
                       value={field.value}
                       onChange={onChange}
                       variant='standard'
@@ -44,7 +48,7 @@ const PostingGroup = ({ postingInfo, onChange, label, error, style }) => {
                             key={field.name + option.id}
                             value={option.id}
                           >
-                            {option.name}
+                            {isBn ? option.bn_name : option.name}
                           </MenuItem>
                         ))
                       ) : (
@@ -63,7 +67,7 @@ const PostingGroup = ({ postingInfo, onChange, label, error, style }) => {
                     <TextField
                       InputLabelProps={{ color: 'info' }}
                       name={field.name}
-                      label={field.label}
+                      label={isBn ? field.bn_label : field.label}
                       value={field.value}
                       error={error && error[field.name] ? true : false}
                       helperText={

@@ -22,7 +22,10 @@ import { voterAreaFields } from '../constants/voterAreaFields';
 import { pharmacistFromState } from '../helpers/utilities';
 
 const AddPharmacist = () => {
-  const { submitting, error } = useStoreState((state) => state.pharmacist);
+  const {
+    ui: { language },
+    pharmacist: { submitting, error },
+  } = useStoreState((state) => state);
   const { addPharmacistData } = useStoreActions(
     (actions) => actions.pharmacist
   );
@@ -42,6 +45,8 @@ const AddPharmacist = () => {
     severity: 'info',
     text: '',
   });
+
+  const isBn = language === 'BN' ? true : false;
 
   const formFieldsArray = Object.keys(formFields).reduce((acc, cur) => {
     acc.push(formFields[cur]);
@@ -156,7 +161,7 @@ const AddPharmacist = () => {
             (item) => item.division_id === prevState.postingDivision.value
           ),
         ],
-        value: '0',
+        value: '',
       },
       postingUpazila: {
         ...addPostingFields.postingUpazila,
@@ -175,7 +180,7 @@ const AddPharmacist = () => {
             (item) => item.district_id === prevState.postingDistrict.value
           ),
         ],
-        value: '0',
+        value: '',
       },
     }));
   }, [postingFields.postingDistrict.value]);
@@ -191,7 +196,7 @@ const AddPharmacist = () => {
             (item) => item.division_id === prevState.permanentDivision.value
           ),
         ],
-        value: '0',
+        value: '',
       },
       permanentUpazila: {
         ...addPermanentFields.permanentUpazila,
@@ -210,7 +215,7 @@ const AddPharmacist = () => {
             (item) => item.district_id === prevState.permanentDistrict.value
           ),
         ],
-        value: '0',
+        value: '',
       },
     }));
   }, [permanentFields.permanentDistrict.value]);
@@ -226,7 +231,7 @@ const AddPharmacist = () => {
             (item) => item.division_id === voterArea.voterDivision.value
           ),
         ],
-        value: '0',
+        value: '',
       },
     }));
   }, [voterArea.voterDivision.value]);
@@ -246,7 +251,7 @@ const AddPharmacist = () => {
             (item) => item.division_id === prevState.deputationDivision.value
           ),
         ],
-        value: '0',
+        value: '',
       },
       deputationUpazila: {
         ...addDeputationFields.deputationUpazila,
@@ -265,7 +270,7 @@ const AddPharmacist = () => {
             (item) => item.district_id === prevState.deputationDistrict.value
           ),
         ],
-        value: '0',
+        value: '',
       },
     }));
   }, [deputationFields.deputationDistrict.value]);
@@ -313,7 +318,7 @@ const AddPharmacist = () => {
                 key={field.name}
                 select
                 name={field.name}
-                label={field.label}
+                label={isBn ? field.bn_label : field.label}
                 value={field.value}
                 onChange={handleChange}
                 variant='standard'
@@ -321,7 +326,7 @@ const AddPharmacist = () => {
               >
                 {field.options.map((option) => (
                   <MenuItem key={option.id} value={option.id}>
-                    {option.name}
+                    {isBn ? option.bn_name : option.name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -331,7 +336,7 @@ const AddPharmacist = () => {
               <DatePickerComp
                 key={field.name}
                 name={field.name}
-                label={field.label}
+                label={isBn ? field.bn_label : field.label}
                 value={field.value}
                 onChange={handleChange}
                 disableFuture
@@ -344,7 +349,7 @@ const AddPharmacist = () => {
                 InputLabelProps={{ color: 'info' }}
                 key={field.name}
                 name={field.name}
-                label={field.label}
+                label={isBn ? field.bn_label : field.label}
                 value={field.value}
                 onChange={handleChange}
                 error={error && error[field.name] ? true : false}
@@ -354,6 +359,24 @@ const AddPharmacist = () => {
               />
             );
         })}
+        <PostingGroup
+          label={isBn ? 'ভোটার এলাকা' : 'Voter Area'}
+          postingInfo={voterAreaArray}
+          onChange={handleVoterAreaChange}
+          error={error}
+        />
+        <PostingGroup
+          label={isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main Posting/Address'}
+          postingInfo={postingFieldsArray}
+          onChange={handlePostingChange}
+          error={error}
+        />
+        <PostingGroup
+          label={isBn ? 'স্থায়ী ঠিকানা' : 'Permanent Address'}
+          postingInfo={permanentFieldsArray}
+          onChange={handlePermanentChange}
+          error={error}
+        />
         <Box
           sx={{
             display: 'inline-flex',
@@ -363,34 +386,17 @@ const AddPharmacist = () => {
         >
           <SelectComponent
             name='onDeputation'
-            label='On Deputation/Attachment'
+            label={isBn ? 'পেষন/সংযুক্ত আছেন?' : 'On Deputation/Attachment'}
             value={onDeputation}
             options={[...onDeputationOptions]}
             onChange={(e) => setOnDeputation(e.target.value)}
           />
         </Box>
-        <PostingGroup
-          label='Voter Area'
-          postingInfo={voterAreaArray}
-          onChange={handleVoterAreaChange}
-          error={error}
-        />
-        <PostingGroup
-          label='Main Posting/Address'
-          postingInfo={postingFieldsArray}
-          onChange={handlePostingChange}
-          error={error}
-        />
-        <PostingGroup
-          label='Permanent Address'
-          postingInfo={permanentFieldsArray}
-          onChange={handlePermanentChange}
-          error={error}
-        />
-
         {onDeputation === '2' && (
           <PostingGroup
-            label='Deputation/Attachment Address'
+            label={
+              isBn ? 'প্রেষন/সংযুক্ত ঠিকানা' : 'Deputation/Attachment Address'
+            }
             postingInfo={deputationFieldsArray}
             onChange={handleDeputationChange}
             error={error}

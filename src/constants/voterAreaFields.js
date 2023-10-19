@@ -3,16 +3,21 @@ import { divisions } from './divisions';
 export const voterAreaFields = {
   voterDivision: {
     type: 'select',
-    options: [{ id: '0', name: '--- Select ---' }, ...divisions],
+    options: [
+      { id: '', name: '--- Select ---', bn_name: '--- নির্বাচন ---' },
+      ...divisions,
+    ],
     name: 'voterDivision',
     label: 'Voter Division',
-    value: '0',
+    bn_label: 'ভোটার বিভাগ',
+    value: '',
   },
   voterDistrict: {
     type: 'select',
-    options: [{ id: '0', name: '--- Select ---' }],
+    options: [{ id: '', name: '--- Select ---', bn_name: '--- নির্বাচন ---' }],
     name: 'voterDistrict',
     label: 'Voter District',
-    value: '0',
+    bn_label: 'ভোটার জেলা',
+    value: '',
   },
 };
