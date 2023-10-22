@@ -528,7 +528,7 @@ export const pharmacistFromState = (
   const permanentValues = permanentValueFromState(permanentFields);
 
   const voterAreaValues = voterValueFromState(voterAreaFields);
-  const deputationValues = deputationValueFromState(deputationFields);
+  const deputationValues = deputationValueFromState(voterArea);
 
   return {
     ...formValues,
