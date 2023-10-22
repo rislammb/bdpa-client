@@ -2,7 +2,6 @@ import { Button, Paper } from '@mui/material';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import './App.css';
 import { setAuthToken } from './api/config';
-import BnNavbar from './components/BnNavBar';
 import Navbar from './components/Navbar';
 import Loading from './components/ui/Loading';
 
@@ -45,15 +44,14 @@ const LanguageButton = () => {
   );
 };
 
-export default function ToggleColorMode() {
-  // const isRehydrated = useStoreRehydrated();
+export default function AppProvider() {
   const {
     auth: { loading, token },
     ui: { mode, language },
   } = useStoreState((state) => state);
   const {
     ui: { setMode },
-    auth: { getVerifyedData },
+    auth: { getVerifyedData, setLoading },
   } = useStoreActions((actions) => actions);
 
   const colorMode = useMemo(
@@ -92,7 +90,8 @@ export default function ToggleColorMode() {
       setAuthToken(token);
       getVerifyedData();
     } else {
-      setAuthToken();
+      setAuthToken('');
+      setLoading(false);
     }
   }, [token, getVerifyedData]);
 
@@ -111,8 +110,6 @@ export default function ToggleColorMode() {
           <Box sx={{ p: 3 }}>
             <Loading />
           </Box>
-        ) : language === 'BN' ? (
-          <BnApp />
         ) : (
           <App />
         )}
@@ -135,24 +132,6 @@ const App = () => {
         <LanguageButton />
         <ThemeButton />
       </Navbar>
-    </Paper>
-  );
-};
-
-const BnApp = () => {
-  const theme = useTheme();
-
-  return (
-    <Paper
-      className='app'
-      sx={{
-        color: theme.palette.mode === 'dark' ? '#f1f1f1' : '#1a1a1a',
-      }}
-    >
-      <BnNavbar>
-        <LanguageButton />
-        <ThemeButton />
-      </BnNavbar>
     </Paper>
   );
 };

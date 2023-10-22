@@ -88,7 +88,9 @@ const DetailsPharmacistRow = ({
       setIsEditOpen(false);
     } else {
       // postingFieldsFromPharmacist(pharmacist);
-      setInputValue(tableData);
+      if (row.name === 'mobile') {
+        setInputValue(pharmacist?.mobile?.name);
+      } else setInputValue(tableData);
       setIsEditOpen(true);
     }
   };
@@ -141,21 +143,22 @@ const DetailsPharmacistRow = ({
   const handleSubmit = () => {
     setError({});
     let dataForSubmit = null;
-    let dataForTd = '';
+    let dataForCell = '';
+
     if (row.name === 'gender') {
       const strGender =
         genderOptions.find((option) => option.id === gender.value)?.name || '';
       dataForSubmit = { gender: strGender };
-      dataForTd = strGender;
+      dataForCell = strGender;
     } else if (row.name === 'jobDepertment') {
       const strJobDepertment =
         jobDepertmentOptions.find((option) => option.id === jobDepertment.value)
           ?.name || '';
       dataForSubmit = { jobDepertment: strJobDepertment };
-      dataForTd = strJobDepertment;
+      dataForCell = strJobDepertment;
     } else if (row.name === 'mainPosting') {
       dataForSubmit = postingValueFromState(postingFields);
-      dataForTd = `${
+      dataForCell = `${
         dataForSubmit.postingPlace ? `${dataForSubmit.postingPlace}, ` : ''
       }${
         dataForSubmit.postingUpazila?.name
@@ -168,7 +171,7 @@ const DetailsPharmacistRow = ({
       }`;
     } else if (row.name === 'permanentAddress') {
       dataForSubmit = permanentValueFromState(permanentFields);
-      dataForTd = `${
+      dataForCell = `${
         dataForSubmit.permanentPlace ? `${dataForSubmit.permanentPlace}, ` : ''
       }${
         dataForSubmit.permanentUpazila?.name
@@ -184,10 +187,10 @@ const DetailsPharmacistRow = ({
         (opt) => opt.id === onDeputation
       )?.name;
       dataForSubmit = { onDeputation: data };
-      dataForTd = data;
+      dataForCell = data;
     } else if (row.name === 'voterArea') {
       dataForSubmit = voterValueFromState(voterFields);
-      dataForTd = `${
+      dataForCell = `${
         dataForSubmit.voterDistrict?.name
           ? `${dataForSubmit.voterDistrict?.name}, `
           : ''
@@ -198,7 +201,7 @@ const DetailsPharmacistRow = ({
       }`;
     } else if (row.name === 'deputationPosting') {
       dataForSubmit = deputationValueFromState(deputationFields);
-      dataForTd = `${
+      dataForCell = `${
         dataForSubmit.deputationPlace
           ? `${dataForSubmit.deputationPlace}, `
           : ''
@@ -213,16 +216,18 @@ const DetailsPharmacistRow = ({
       }`;
     } else {
       dataForSubmit = { [row.name]: inputValue };
-      dataForTd = inputValue;
+      dataForCell = inputValue;
     }
 
+    console.log('data for submit', dataForSubmit);
+    console.log('data for cell', dataForCell);
     axiosInstance
-      .patch(`/pharmacist/${pharmacist.regNumber}`, dataForSubmit)
+      .patch(`/pharmacist/reg/${pharmacist.regNumber}`, dataForSubmit)
       .then(() => {
         if (row.name === 'onDeputation') {
           handleShowDeputation(dataForSubmit['onDeputation']);
         }
-        setTableData(dataForTd);
+        setTableData(dataForCell);
         setIsEditOpen(false);
       })
       .catch((e) => {
@@ -263,6 +268,8 @@ const DetailsPharmacistRow = ({
     }
   }, []);
 
+  console.log(error[row.name]);
+
   return (
     <TableRow
       key={row.th}
@@ -298,9 +305,9 @@ const DetailsPharmacistRow = ({
               value={inputValue}
               onChange={handleChange}
               variant='standard'
-              error={error[row.name] ? true : false}
               sx={{ width: '100%', fontSize: '7px' }}
-              helperText={error[row.name] || ''}
+              error={error[row.name] ? true : false}
+              helperText={error[row.name]?.text ?? ''}
             />
           ) : row.type === 'date' ? (
             <DatePickerComp

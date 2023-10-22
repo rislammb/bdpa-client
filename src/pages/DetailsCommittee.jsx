@@ -24,7 +24,8 @@ import useDetailsCommittee from '../hooks/useDetailsCommittee';
 const DetailsCommittee = () => {
   const {
     loading,
-    user,
+    isBn,
+    isPermittedForEdit,
     committee,
     columns,
     handleCommitteeDelete,
@@ -43,7 +44,12 @@ const DetailsCommittee = () => {
         <Loading />
       </Box>
     );
-  if (!committee) return <Typography>Committee not found!</Typography>;
+  if (!committee)
+    return (
+      <Typography>
+        {isBn ? 'কমিটি খুঁজে পাওয়া যায় নি!' : 'Committee not found!'}
+      </Typography>
+    );
 
   return (
     <Card sx={{ maxWidth: '1100px', margin: 'auto' }}>
@@ -57,14 +63,18 @@ const DetailsCommittee = () => {
             gap: 1,
           }}
         >
-          <ColorTitle variant='h5' text={committee.committeeTitle} />
+          <ColorTitle
+            variant='h5'
+            text={isBn ? committee.bn_committeeTitle : committee.committeeTitle}
+          />
 
           <Typography>
-            কার্যক্রম শুরুঃ{' '}
+            {isBn ? 'কার্যক্রম শুরুঃ ' : 'Work has started: '}
             {dayjs(committee.workHasStarted).format('DD MMM YYYY')}
           </Typography>
           <Typography>
-            মেয়াদঃ {dayjs(committee.willExpire).format('DD MMM YYYY')}
+            {isBn ? 'মেয়াদঃ ' : 'Will expire: '}
+            {dayjs(committee.willExpire).format('DD MMM YYYY')}
           </Typography>
         </Box>
 
@@ -84,7 +94,7 @@ const DetailsCommittee = () => {
           </Table>
         </TableContainer>
 
-        {user && (
+        {isPermittedForEdit && (
           <>
             {isAddMember && (
               <Box sx={{ my: 1.5, overflow: 'auto', pb: 1 }}>
@@ -115,7 +125,7 @@ const DetailsCommittee = () => {
                 size='large'
                 color='error'
               >
-                কমিটি মুছুন
+                {isBn ? 'কমিটি' : 'Committee'}
               </Button>
               <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                 {isAddMember && (
@@ -126,7 +136,7 @@ const DetailsCommittee = () => {
                     color='error'
                     size='small'
                   >
-                    বাতিল
+                    {isBn ? 'বাতিল' : 'Cancel'}
                   </Button>
                 )}
                 <Button
@@ -136,7 +146,13 @@ const DetailsCommittee = () => {
                   color='primary'
                   size='small'
                 >
-                  {isAddMember ? 'সদস্য সংরক্ষণ' : 'সদস্য'}
+                  {isAddMember
+                    ? isBn
+                      ? 'সদস্য সংরক্ষণ'
+                      : 'Save member'
+                    : isBn
+                    ? 'সদস্য'
+                    : 'Member'}
                 </Button>
               </Box>
             </Box>

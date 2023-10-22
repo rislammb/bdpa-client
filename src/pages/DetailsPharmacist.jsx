@@ -14,6 +14,7 @@ import useDetailsPharmacist from '../hooks/useDetailsPharmacist';
 const DetailsPharmacist = () => {
   const {
     loading,
+    isBn,
     user,
     pharmacist,
     tableRows,
@@ -77,7 +78,7 @@ const DetailsPharmacist = () => {
                         startIcon={<DeleteIcon />}
                         color='error'
                       >
-                        ফার্মাসিস্ট মুছুন
+                        {isBn ? 'ফার্মাসিস্ট মুছুন' : 'Delete Pharmacist'}
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -106,7 +107,9 @@ const DetailsPharmacist = () => {
                   fontSize: 17,
                 }}
               >
-                ফার্মাসিস্ট খুঁজে পাওয়া যায় নি!
+                {isBn
+                  ? 'ফার্মাসিস্ট খুঁজে পাওয়া যায় নি!'
+                  : 'Pharmacist not found!'}
               </TableCell>
             </TableRow>
           )}

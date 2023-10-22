@@ -12,9 +12,12 @@ import TableHeader from '../components/TableHeader';
 import Loading from '../components/ui/Loading';
 import usePharmacistList from '../hooks/usePharmacistList';
 
+import { enToBnNumber } from '../helpers/number';
+
 const PharmacistList = () => {
   const {
     loading,
+    isBn,
     list,
     filteredList,
     columns,
@@ -73,15 +76,30 @@ const PharmacistList = () => {
             }}
           >
             <Typography>
-              Showing{' '}
-              {filteredList.length > 0 ? (page - 1) * rowsPerPage + 1 : 0} to{' '}
-              {page * rowsPerPage < filteredList.length
-                ? page * rowsPerPage
-                : filteredList.length}{' '}
-              of {filteredList.length} entries{' '}
+              {isBn
+                ? `${enToBnNumber(
+                    filteredList.length
+                  )} টির মধ্যে ${enToBnNumber(
+                    filteredList.length > 0 ? (page - 1) * rowsPerPage + 1 : 0
+                  )} থেকে ${enToBnNumber(
+                    page * rowsPerPage < filteredList.length
+                      ? page * rowsPerPage
+                      : filteredList.length
+                  )} টি দেখাচ্ছে `
+                : `Showing ${
+                    filteredList.length > 0 ? (page - 1) * rowsPerPage + 1 : 0
+                  } to ${
+                    page * rowsPerPage < filteredList.length
+                      ? page * rowsPerPage
+                      : filteredList.length
+                  } of ${filteredList.length} entries `}
               {filteredList.length < list.length && (
                 <Typography component={'span'}>
-                  (filtered from {list.length} total entries)
+                  {isBn
+                    ? `( বাছাই করা হয়েছে মোট ${enToBnNumber(
+                        list.length
+                      )} টি থেকে )`
+                    : `( filtered from ${list.length} total entries )`}
                 </Typography>
               )}
             </Typography>

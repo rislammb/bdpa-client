@@ -1,5 +1,10 @@
 export const jobDepertmentOptions = [
   {
+    id: '',
+    name: '--- Select ---',
+    bn_name: '--- নির্বাচন ---',
+  },
+  {
     id: '1',
     name: 'Directorate General of Family Planning',
     bn_name: 'পরিবার পরিকল্পনা অধিদপ্তর',
@@ -34,14 +39,7 @@ export const jobDepertmentOptions = [
 
 export const jobDepertmentField = {
   type: 'select',
-  options: [
-    {
-      id: '',
-      name: '--- Select ---',
-      bn_name: '--- নির্বাচন ---',
-    },
-    ...jobDepertmentOptions,
-  ],
+  options: [...jobDepertmentOptions],
   name: 'jobDepertment',
   label: 'Job Depertment',
   bn_label: 'চাকুরীর বিভাগ',

@@ -1,16 +1,19 @@
 import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useStoreState } from 'easy-peasy';
 
 const Home = () => {
   const theme = useTheme();
+  const { language } = useStoreState((state) => state.ui);
+  const isBn = language === 'BN' ? true : false;
 
   return (
     <Box sx={{ my: 3, mx: 1 }}>
       <Typography variant='h4' sx={{ mb: 4 }}>
-        Assalamu Alaikum
+        {isBn ? 'আস সালামু আলাইকুম' : 'Assalamu Alaikum'}
       </Typography>
       <Typography variant='h5'>
-        Welcome to{' '}
+        {isBn ? '' : 'Welcome to'}
         <Typography
           color={
             theme.palette.mode === 'dark'
@@ -19,12 +22,16 @@ const Home = () => {
           }
           variant='span'
         >
-          Bangladesh Diploma Pharmacist Association (BDPA)
+          {isBn
+            ? 'বাংলাদেশ ডিপ্লোমা ফার্মাসিস্ট এসোসিয়েশন (বিডিপিএ) '
+            : ' Bangladesh Diploma Pharmacist Association (BDPA) '}
         </Typography>{' '}
-        website
+        {isBn ? 'এর ওয়েবসাইটে আপনাকে স্বাগতম।' : 'website.'}
       </Typography>
       <Typography variant='h6' sx={{ mt: 1 }}>
-        Developed by: Rajshahi District
+        {isBn
+          ? 'ডেভেলপ করেছেঃ রাজশাহী জেলা'
+          : 'Developed by: Rajshahi District'}
       </Typography>
     </Box>
   );

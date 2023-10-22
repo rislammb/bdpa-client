@@ -31,6 +31,7 @@ const authModel = {
       actions.setUser(data);
     } catch (e) {
       actions.setError(e.response?.data);
+      actions.setLoading(false);
       actions.setToken(null);
       actions.setUser(null);
       setAuthToken(null);

@@ -1,7 +1,6 @@
 import { action } from 'easy-peasy';
 
 const uiModel = {
-  loading: true,
   mode: 'light',
   language: 'BN',
   setLoading: action((state, payload) => {

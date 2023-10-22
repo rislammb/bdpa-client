@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getAreaInfo } from '../helpers/utilities';
+import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
 
 const createRow = (th, value, name, type, edit) => ({
   th,
@@ -19,145 +19,172 @@ const useDetailsPharmacist = () => {
   const [tableRows, setTableRows] = useState([]);
 
   const {
+    ui: { language },
     auth: { user },
     pharmacist: { loading, details: pharmacist },
   } = useStoreState((state) => state);
   const { getDetailsPharmacistData, deletePharmacistData } = useStoreActions(
     (actions) => actions.pharmacist
   );
+  const isBn = language === 'BN' ? true : false;
 
   const isPermittedForEdit =
-    user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
+    user?.roles?.includes('SUPER_ADMIN') ||
+    user?.roles?.includes('ADMIN') ||
+    user?.regNumber === regNumber;
+  const isSuperAdmin = user?.roles?.includes('SUPER_ADMIN');
 
   useEffect(() => {
     if (pharmacist) {
-      setShowDeputationRow(pharmacist.onDeputation === 'Yes' ? true : false);
+      setShowDeputationRow(
+        pharmacist.onDeputation?.name === 'Yes' ? true : false
+      );
 
       const rows = [
         createRow(
-          'Registration number',
-          pharmacist.regNumber || '',
+          isBn ? 'বি-গ্রেড নিবন্ধন সংখ্যা' : 'Registration number',
+          pharmacist.regNumber,
           'regNumber',
           '',
           false
         ),
         createRow(
-          'Name (English)',
-          pharmacist.name || '',
+          isBn ? 'নাম (English)' : 'Name (English)',
+          pharmacist.name,
           'name',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Name (বাংলা)',
-          pharmacist.bn_name || '',
+          isBn ? 'নাম (বাংলা)' : 'Name (বাংলা)',
+          pharmacist.bn_name,
           'bn_name',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Email',
-          pharmacist.email || '',
+          isBn ? 'ইমেইল' : 'Email',
+          pharmacist.email,
           'email',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Mobile number',
-          pharmacist.gender === 'Male'
-            ? pharmacist.mobile?.name ?? ''
+          isBn ? 'মোবাইল নাম্বার' : 'Mobile number',
+          pharmacist.gender?.name === 'Male'
+            ? isBn
+              ? pharmacist.mobile?.bn_name
+              : pharmacist.mobile?.name ?? ''
             : 'Hide now',
           'mobile',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Fathers Name',
-          pharmacist.fathersName?.name || '',
+          isBn ? 'পিতার নাম' : 'Fathers Name',
+          pharmacist.fathersName?.name && pharmacist.fathersName?.bn_name
+            ? `${pharmacist.fathersName?.name} - ${pharmacist.fathersName?.bn_name}`
+            : pharmacist.fathersName?.name
+            ? pharmacist.fathersName?.name
+            : pharmacist.fathersName?.bn_name ?? '',
           'fathersName',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Mothers Name',
-          pharmacist.mothersName?.name || '',
+          isBn ? 'মাতার নাম' : 'Mothers Name',
+          pharmacist.mothersName?.name && pharmacist.mothersName?.bn_name
+            ? `${pharmacist.mothersName?.name} - ${pharmacist.mothersName?.bn_name}`
+            : pharmacist.mothersName?.name
+            ? pharmacist.mothersName?.name
+            : pharmacist.mothersName?.bn_name ?? '',
           'mothersName',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Gender',
-          pharmacist.gender?.name || '',
+          isBn ? 'লিঙ্গ' : 'Gender',
+          isBn ? pharmacist.gender?.bn_name : pharmacist.gender?.name,
           'gender',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'Date of birth',
-          dayjs(pharmacist.dateOfBirth).format('DD MMM YYYY') || '',
+          isBn ? 'জন্ম তারিখ' : 'Date of birth',
+          dayjs(pharmacist.dateOfBirth).format('DD MMM YYYY'),
           'dateOfBirth',
           'date',
           isPermittedForEdit
         ),
         createRow(
-          'National ID',
-          pharmacist.nationalId?.name || '',
+          isBn ? 'জাতীয় পরিচয়পত্র নাম্বার' : 'National ID',
+          isBn ? pharmacist.nationalId?.bn_name : pharmacist.nationalId?.name,
           'nationalId',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Passing year',
-          pharmacist.passingYear?.name || '',
+          isBn ? 'পাশের বছর' : 'Passing year',
+          isBn ? pharmacist.passingYear?.bn_name : pharmacist.passingYear?.name,
           'passingYear',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'BDPA member ID',
+          isBn ? 'বিডিপিএ সদস্য সনাক্তকারী সংখ্যা' : 'BDPA member ID',
           pharmacist.memberId || '',
           'memberId',
           'text',
           isPermittedForEdit
         ),
         createRow(
-          'Job Depertment',
-          pharmacist.jobDepertment?.name || '',
+          isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment',
+          isBn
+            ? pharmacist.jobDepertment?.bn_name
+            : pharmacist.jobDepertment?.name,
           'jobDepertment',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'Date of join',
+          isBn ? 'যোগদানের তারিখ' : 'Date of join',
           dayjs(pharmacist.dateOfJoin).format('DD MMM YYYY') || '',
           'dateOfJoin',
           'date',
           isPermittedForEdit
         ),
         createRow(
-          'Main posting/Address',
-          getAreaInfo(pharmacist, 'posting'),
+          isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main posting/Address',
+          isBn
+            ? getBnAreaInfo(pharmacist, 'posting')
+            : getAreaInfo(pharmacist, 'posting'),
           'mainPosting',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'Permanent Address',
-          getAreaInfo(pharmacist, 'permanent'),
+          isBn ? 'স্থায়ী ঠিকানা' : 'Permanent Address',
+          isBn
+            ? getBnAreaInfo(pharmacist, 'permanent')
+            : getAreaInfo(pharmacist, 'permanent'),
           'permanentAddress',
           'select',
           isPermittedForEdit
         ),
         createRow(
-          'Voter Area',
-          getAreaInfo(pharmacist, 'voter'),
+          isBn ? 'ভোটার জেলা' : 'Voter District',
+          isBn
+            ? getBnAreaInfo(pharmacist, 'voter')
+            : getAreaInfo(pharmacist, 'voter'),
           'voterArea',
           'select',
-          isPermittedForEdit
+          isSuperAdmin
         ),
         createRow(
-          'On deputation/attachment',
-          pharmacist.onDeputation?.name,
+          isBn ? 'প্রেষনে/সংযুক্ত আছেন?' : 'On deputation/attachment?',
+          isBn
+            ? pharmacist.onDeputation?.bn_name
+            : pharmacist.onDeputation?.name,
           'onDeputation',
           'select',
           isPermittedForEdit
@@ -167,8 +194,10 @@ const useDetailsPharmacist = () => {
       pharmacist.onDeputation?.name === 'Yes' &&
         rows.push(
           createRow(
-            'Deputation/attachment posting',
-            getAreaInfo(pharmacist, 'deputation'),
+            isBn ? 'প্রেষন/সংযুক্ত কর্মস্থল' : 'Deputation/attachment posting',
+            isBn
+              ? getBnAreaInfo(pharmacist, 'deputation')
+              : getAreaInfo(pharmacist, 'deputation'),
             'deputationPosting',
             'select',
             isPermittedForEdit
@@ -177,13 +206,15 @@ const useDetailsPharmacist = () => {
 
       setTableRows(rows);
     } else setTableRows([]);
-  }, [pharmacist, isPermittedForEdit]);
+  }, [pharmacist, isPermittedForEdit, isBn]);
 
   useEffect(() => {
     if (showDeputationRow) {
       const row = createRow(
-        'Deputation/attachment posting',
-        getAreaInfo(pharmacist, 'deputation'),
+        isBn ? 'প্রেষন/সংযুক্ত কর্মস্থল' : 'Deputation/attachment posting',
+        isBn
+          ? getBnAreaInfo(pharmacist, 'deputation')
+          : getAreaInfo(pharmacist, 'deputation'),
         'deputationPosting',
         'select',
         true
@@ -199,7 +230,9 @@ const useDetailsPharmacist = () => {
   const handleDelete = () => {
     if (
       window.confirm(
-        `Are you sure you want to delete '${pharmacist.bn_name} : ${pharmacist.regNumber}'?`
+        isBn
+          ? `আপনি কি সত্যিই মুছে ফেলতে চান '${pharmacist.bn_name} : ${pharmacist.regNumber}'?`
+          : `Are you sure you want to delete '${pharmacist.name} : ${pharmacist.regNumber}'?`
       )
     ) {
       deletePharmacistData(regNumber);
@@ -208,13 +241,14 @@ const useDetailsPharmacist = () => {
   };
 
   useEffect(() => {
-    if (regNumber && regNumber !== pharmacist?.regNumber) {
+    if (regNumber) {
       getDetailsPharmacistData(regNumber);
     }
-  }, [regNumber, pharmacist?.regNumber]);
+  }, [regNumber]);
 
   return {
     loading,
+    isBn,
     user,
     pharmacist,
     tableRows,

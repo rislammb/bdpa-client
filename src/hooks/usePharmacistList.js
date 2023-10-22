@@ -3,20 +3,40 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useStoreActions, useStoreState } from 'easy-peasy';
 
-const columns = [
-  { id: 'regNumber', label: 'Reg Number', minWidth: 105 },
-  { id: 'name', label: 'Name (English)', minWidth: 130 },
-  { id: 'bn_name', label: 'Name (বাংলা)', minWidth: 130 },
-  { id: 'memberId', label: 'Member ID', minWidth: 90 },
-  { id: 'dateOfBirth', label: 'Date of Birth', minWidth: 110 },
+const getColumns = (isBn) => [
+  {
+    id: 'regNumber',
+    label: isBn ? 'নিবন্ধন সংখ্যা' : 'Reg Number',
+    minWidth: 105,
+  },
+  {
+    id: 'name',
+    label: isBn ? 'নাম (English)' : 'Name (English)',
+    minWidth: 130,
+  },
+  {
+    id: 'bn_name',
+    label: isBn ? 'নাম (বাংলা)' : 'Name (বাংলা)',
+    minWidth: 130,
+  },
+  {
+    id: 'memberId',
+    label: isBn ? 'সদস্য সনাক্তকারী' : 'Member ID',
+    minWidth: 90,
+  },
+  {
+    id: 'dateOfBirth',
+    label: isBn ? 'জন্ম তারিখ' : 'Date of Birth',
+    minWidth: 110,
+  },
   {
     id: 'mainPosting',
-    label: 'Main postiong/Address',
+    label: isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main postiong/Address',
     minWidth: 230,
   },
   {
     id: 'voterDistrict',
-    label: 'Voter Area',
+    label: isBn ? 'ভোটার জেলা' : 'Voter District',
     minWidth: 95,
   },
 ];
@@ -26,12 +46,14 @@ const usePharmacistList = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(Number(pageNumber) ?? 1);
 
-  const { loading, list, filteredList } = useStoreState(
-    (state) => state.pharmacist
-  );
+  const {
+    ui: { language },
+    pharmacist: { loading, list, filteredList },
+  } = useStoreState((state) => state);
   const { getPharmacistsData } = useStoreActions(
     (actions) => actions.pharmacist
   );
+  const isBn = language === 'BN' ? true : false;
 
   const rowsPerPage = 50;
 
@@ -41,9 +63,7 @@ const usePharmacistList = () => {
   };
 
   useEffect(() => {
-    if (list.length < 1) {
-      getPharmacistsData();
-    }
+    getPharmacistsData();
   }, []);
 
   useEffect(() => {
@@ -58,9 +78,10 @@ const usePharmacistList = () => {
 
   return {
     loading,
+    isBn,
     list,
     filteredList,
-    columns,
+    columns: getColumns(isBn),
     rowsPerPage,
     page,
     handleChange,

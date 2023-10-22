@@ -9,12 +9,6 @@ import { onDeputationOptions } from '../constants/onDeputationFields';
 import { upazilas } from '../constants/upazilas';
 import { voterAreaFields } from '../constants/voterAreaFields';
 
-export const arraySortByDate = (array) => {
-  return array.sort((a, b) =>
-    a.dateOfJoin > b.dateOfJoin ? 1 : a.dateOfJoin < b.dateOfJoin ? -1 : 0
-  );
-};
-
 export const postingFieldsFromPharmacist = (pharmacist) => {
   return {
     ...Object.keys({ ...addPostingFields }).reduce((acc, cur) => {
@@ -361,7 +355,15 @@ export const postingValueFromState = (postingFields) => {
             name: '',
             bn_name: '',
           };
-    } else acc[cur] = postingFields[cur].value;
+    } else if (cur === 'postingPlace') {
+      acc[cur] = { ...acc[cur], name: postingFields[cur].value };
+    } else if (cur === 'bn_postingPlace') {
+      acc['postingPlace'] = {
+        ...acc['postingPlace'],
+        bn_name: postingFields[cur].value,
+      };
+    }
+
     return acc;
   }, {});
 };
@@ -398,7 +400,15 @@ export const permanentValueFromState = (permanentFields) => {
             name: '',
             bn_name: '',
           };
-    } else acc[cur] = permanentFields[cur].value;
+    } else if (cur === 'permanentPlace') {
+      acc[cur] = { ...acc[cur], name: permanentFields[cur].value };
+    } else if (cur === 'bn_permanentPlace') {
+      acc['permanentPlace'] = {
+        ...acc['permanentPlace'],
+        bn_name: permanentFields[cur].value,
+      };
+    }
+
     return acc;
   }, {});
 };
@@ -416,7 +426,7 @@ export const voterValueFromState = (voterAreaFields) => {
             name: '',
             bn_name: '',
           };
-    } else {
+    } else if (cur === 'voterDistrict') {
       const district = districts.find(
         (item) => item.id === voterAreaFields[cur].value
       );
@@ -460,7 +470,15 @@ export const deputationValueFromState = (deputationFields) => {
             name: '',
             bn_name: '',
           };
-    } else acc[cur] = deputationFields[cur].value;
+    } else if (cur === 'deputationPlace') {
+      acc[cur] = { ...acc[cur], name: deputationFields[cur].value };
+    } else if (cur === 'bn_deputationPlace') {
+      acc['deputationPlace'] = {
+        ...acc['deputationPlace'],
+        bn_name: deputationFields[cur].value,
+      };
+    }
+
     return acc;
   }, {});
 };
@@ -474,83 +492,50 @@ export const pharmacistFromState = (
   deputationFields
 ) => {
   const formValues = Object.keys(formFields).reduce((acc, cur) => {
-    if (cur === 'gender') {
+    if (cur === 'fathersName' || cur === 'mothersName' || cur === 'institute') {
+      acc[cur] = { ...acc[cur], name: formFields[cur]?.value };
+    } else if (cur === 'bn_fathersName') {
+      acc['fathersName'] = {
+        ...acc['fathersName'],
+        bn_name: formFields[cur]?.value,
+      };
+    } else if (cur === 'bn_mothersName') {
+      acc['mothersName'] = {
+        ...acc['mothersName'],
+        bn_name: formFields[cur]?.value,
+      };
+    } else if (cur === 'bn_institute') {
+      acc['institute'] = {
+        ...acc['institute'],
+        bn_name: formFields[cur]?.value,
+      };
+    } else if (cur === 'gender') {
       const gender = genderOptions.find(
         (item) => item.id === formFields[cur].value
       );
-      acc[cur] = gender ? gender.name : '';
+      acc[cur] = gender;
     } else if (cur === 'jobDepertment') {
       const depertment = jobDepertmentOptions.find(
         (item) => item.id === formFields[cur].value
       );
-      acc[cur] = depertment ? depertment.name : '';
+      acc[cur] = depertment;
     } else acc[cur] = formFields[cur].value;
+
     return acc;
   }, {});
 
   const postingValues = postingValueFromState(postingFields);
   const permanentValues = permanentValueFromState(permanentFields);
 
-  const voterAreaValues = Object.keys(voterArea).reduce((acc, cur) => {
-    if (cur === 'voterDivision') {
-      const division = divisions.find(
-        (item) => item.id === voterArea[cur].value
-      );
-      acc[cur] = division
-        ? division
-        : {
-            id: '',
-            name: '',
-            bn_name: '',
-          };
-    } else if (cur === 'voterDistrict') {
-      const district = districts.find(
-        (item) => item.id === voterArea[cur].value
-      );
-      acc[cur] = district
-        ? district
-        : { id: '', division_id: '', name: '', bn_name: '' };
-    }
-    return acc;
-  }, {});
-
-  const deputationValues = Object.keys(deputationFields).reduce((acc, cur) => {
-    if (cur === 'deputationDivision') {
-      const division = divisions.find(
-        (item) => item.id === deputationFields[cur].value
-      );
-      acc[cur] = division
-        ? division
-        : {
-            id: '',
-            name: '',
-            bn_name: '',
-          };
-    } else if (cur === 'deputationDistrict') {
-      const district = districts.find(
-        (item) => item.id === deputationFields[cur].value
-      );
-      acc[cur] = district
-        ? district
-        : { id: '', division_id: '', name: '', bn_name: '' };
-    } else if (cur === 'deputationUpazila') {
-      const upazila = upazilas.find(
-        (item) => item.id === deputationFields[cur].value
-      );
-      acc[cur] = upazila
-        ? upazila
-        : { id: '', district_id: '', name: '', bn_name: '' };
-    } else acc[cur] = deputationFields[cur].value;
-    return acc;
-  }, {});
+  const voterAreaValues = voterValueFromState(voterAreaFields);
+  const deputationValues = deputationValueFromState(deputationFields);
 
   return {
     ...formValues,
     ...postingValues,
     ...permanentValues,
     ...voterAreaValues,
-    onDeputation: onDeputationOptions.find((opt) => opt.id === onDeputation)
-      ?.name,
+    onDeputation: onDeputationOptions.find((opt) => opt.id === onDeputation),
     ...deputationValues,
   };
 };

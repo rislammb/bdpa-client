@@ -19,8 +19,15 @@ import Loading from '../components/ui/Loading';
 import useCommitteeList from '../hooks/useCommitteeList';
 
 const CommitteeList = () => {
-  const { loading, user, filteredList, searchTerm, setSearchTerm, columns } =
-    useCommitteeList();
+  const {
+    loading,
+    isBn,
+    user,
+    filteredList,
+    searchTerm,
+    setSearchTerm,
+    columns,
+  } = useCommitteeList();
 
   if (loading)
     return (
@@ -52,7 +59,7 @@ const CommitteeList = () => {
             endAdornment: (
               <InputAdornment position='end'>
                 <IconButton onClick={() => setSearchTerm('')} size='small'>
-                  <ClearIcon color='error' fontSize='small' />
+                  <ClearIcon fontSize='small' />
                 </IconButton>
               </InputAdornment>
             ),
@@ -60,8 +67,8 @@ const CommitteeList = () => {
           name='search'
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          label={'কমিটি অনুসন্ধান'}
-          placeholder={'কেন্দ্রীয় কমিটি...'}
+          label={isBn ? 'কমিটি অনুসন্ধান' : 'Search Committee'}
+          placeholder={isBn ? 'কেন্দ্রীয় কমিটি...' : 'Central Committee'}
           variant='standard'
           sx={{ width: '210px' }}
         />
@@ -72,7 +79,7 @@ const CommitteeList = () => {
             to='/committees/add'
             variant='contained'
           >
-            কমিটি
+            {isBn ? 'কমিটি' : 'Committee'}
           </Button>
         )}
       </Box>

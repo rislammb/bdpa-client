@@ -2,28 +2,45 @@ import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { initialMember } from '../helpers/member';
-import { getAreaInfo, objDeepClone } from '../helpers/utilities';
+import { getAreaInfo, getBnAreaInfo, objDeepClone } from '../helpers/utilities';
+
+const getColumns = (isBn) => [
+  { id: 'serialNumber', label: isBn ? 'ক্রমিক' : 'Serial', minWidth: 35 },
+  {
+    id: 'bn_name',
+    label: isBn ? 'নাম (বাংলা)' : 'Name (Enslish)',
+    minWidth: 150,
+  },
+  {
+    id: 'postName',
+    label: isBn ? 'কমিটি পদবী' : 'Committee post',
+    minWidth: 150,
+  },
+  { id: 'mobile', label: isBn ? 'মোবাইল' : 'Mobile', minWidth: 90 },
+  {
+    id: 'posting',
+    label: isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main posting/address',
+    minWidth: 280,
+  },
+];
 
 const useDetailsCommittee = () => {
   const { committeePath } = useParams();
   const navigate = useNavigate();
 
   const {
+    ui: { language },
     auth: { user },
     committee: { loading, details: committee },
     pharmacist: { list },
     member: { error },
   } = useStoreState((state) => state);
+  const isBn = language === 'BN' ? true : false;
+  const isPermittedForEdit =
+    user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
 
-  const columns = [
-    { id: 'serialNumber', label: 'ক্রমিক', minWidth: 35 },
-    { id: 'bn_name', label: 'নাম (বাংলায়)', minWidth: 190 },
-    { id: 'postName', label: 'কমিটি পদবী', minWidth: 190 },
-    { id: 'mobile', label: 'মোবাইল', minWidth: 90 },
-    { id: 'posting', label: 'কর্মস্থল/ঠিকানা', minWidth: 310 },
-  ];
-
-  if (user) columns.push({ id: 'delete', minWidth: '65px' });
+  const columns = getColumns(isBn);
+  if (isPermittedForEdit) columns.push({ id: 'delete', minWidth: '65px' });
 
   const {
     committee: { getDetailsCommitteeData, deleteCommitteeData },
@@ -67,7 +84,9 @@ const useDetailsCommittee = () => {
   const handleCommitteeDelete = () => {
     if (
       window.confirm(
-        `Are you sure you want to delete '${committee.committeeTitle}'?`
+        isBn
+          ? `আপনি কি সত্যিই '${committee.bn_committeeTitle}' মুছতে চান?`
+          : `Are you sure you want to delete '${committee.committeeTitle}'?`
       )
     ) {
       deleteCommitteeData(committeePath);
@@ -78,10 +97,13 @@ const useDetailsCommittee = () => {
   const defaultProps = {
     options: list,
     getOptionLabel: (option) =>
-      `${option.bn_name} - ${option.name} - ${option.regNumber} - ${getAreaInfo(
-        option,
-        'posting'
-      )}`,
+      isBn
+        ? `${option.bn_name} - ${option.name} - ${
+            option.regNumber
+          } - ${getAreaInfo(option, 'posting')}`
+        : `${option.name} - ${option.bn_name} - ${
+            option.regNumber
+          } - ${getBnAreaInfo(option, 'posting')}`,
   };
 
   useEffect(() => {
@@ -89,13 +111,14 @@ const useDetailsCommittee = () => {
   }, []);
 
   useEffect(() => {
-    if (committeePath && committeePath !== committee?.committeePath)
-      getDetailsCommitteeData(committeePath);
-  }, [committeePath, committee?.committeePath]);
+    if (committeePath) getDetailsCommitteeData(committeePath);
+  }, [committeePath]);
 
   return {
     loading,
+    isBn,
     user,
+    isPermittedForEdit,
     committee,
     columns,
     handleCommitteeDelete,
