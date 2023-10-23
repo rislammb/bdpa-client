@@ -419,20 +419,12 @@ export const voterValueFromState = (voterAreaFields) => {
       const division = divisions.find(
         (item) => item.id === voterAreaFields[cur].value
       );
-      acc[cur] = division
-        ? division
-        : {
-            id: '',
-            name: '',
-            bn_name: '',
-          };
+      acc[cur] = division;
     } else if (cur === 'voterDistrict') {
       const district = districts.find(
         (item) => item.id === voterAreaFields[cur].value
       );
-      acc[cur] = district
-        ? district
-        : { id: '', division_id: '', name: '', bn_name: '' };
+      acc[cur] = district;
     }
     return acc;
   }, {});
@@ -527,8 +519,8 @@ export const pharmacistFromState = (
   const postingValues = postingValueFromState(postingFields);
   const permanentValues = permanentValueFromState(permanentFields);
 
-  const voterAreaValues = voterValueFromState(voterAreaFields);
-  const deputationValues = deputationValueFromState(voterArea);
+  const voterAreaValues = voterValueFromState(voterArea);
+  const deputationValues = deputationValueFromState(deputationFields);
 
   return {
     ...formValues,
@@ -543,11 +535,13 @@ export const pharmacistFromState = (
 export const objDeepClone = (obj) => JSON.parse(JSON.stringify(obj));
 
 export const getBnAreaInfo = (data, area) =>
+  data &&
   `${data[area + 'Place']?.bn_name ? `${data[area + 'Place'].bn_name}, ` : ''}${
     data[area + 'Upazila']?.bn_name ? `${data[area + 'Upazila'].bn_name}, ` : ''
   }${data[area + 'District']?.bn_name ? data[area + 'District'].bn_name : ''}`;
 
 export const getAreaInfo = (data, area) =>
+  data &&
   `${data[area + 'Place']?.name ? `${data[area + 'Place'].name}, ` : ''}${
     data[area + 'Upazila']?.name ? `${data[area + 'Upazila'].name}, ` : ''
   }${data[area + 'District']?.name ? data[area + 'District'].name : ''}`;

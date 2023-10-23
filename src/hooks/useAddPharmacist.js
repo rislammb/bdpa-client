@@ -286,7 +286,7 @@ const useAddPharmacist = () => {
       setSnackbar({
         open: true,
         severity: 'error',
-        text: 'Committee add to databse faild!.',
+        text: 'Pharmacist add to database faild!.',
       });
     }
   };

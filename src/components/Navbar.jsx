@@ -32,17 +32,30 @@ const Navbar = (props) => {
   const theme = useTheme();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { user } = useStoreState((state) => state.auth);
+  const {
+    auth: { user },
+    ui: { language },
+  } = useStoreState((state) => state);
   const { logout } = useStoreActions((actions) => actions.auth);
+  const isBn = language === 'BN' ? true : false;
 
   const navItems = [
-    { path: '/members/page/1', text: 'Members' },
-    { path: '/committees', text: 'Committees' },
-    { path: '/about', text: 'About' },
-    { path: '/login', text: user ? 'Logout' : 'Login' },
+    { path: '/members/page/1', text: 'Members', bn_text: 'সদস্য' },
+    { path: '/committees', text: 'Committees', bn_text: 'কমিটি' },
+    { path: '/about', text: 'About BDPA', bn_text: 'বিডিপিএ সম্পর্কে' },
+    {
+      path: '/login',
+      text: user ? 'Logout' : 'Login',
+      bn_text: user ? 'লগ আউট' : 'লগ ইন',
+    },
   ];
 
-  if (user) navItems.unshift({ path: '/members/add', text: 'Add Member' });
+  if (user)
+    navItems.unshift({
+      path: '/members/add',
+      text: 'Add Member',
+      bn_text: 'সদস্য যোগ',
+    });
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -66,14 +79,14 @@ const Navbar = (props) => {
       onClick={handleDrawerToggle}
     >
       <Typography variant='h5' sx={{ my: 1.5, textAlign: 'center' }}>
-        BDPA
+        {isBn ? 'বিডিপিএ' : 'BDPA'}
       </Typography>
       <Divider />
       <List>
         <ListItem disablePadding>
           <ListItemButton>
             <NavLink style={linkStyle()} to='/'>
-              Home
+              {isBn ? 'হোম' : 'Home'}
             </NavLink>
           </ListItemButton>
         </ListItem>
@@ -87,7 +100,7 @@ const Navbar = (props) => {
                   if (item.text === 'Logout') handleLogout();
                 }}
               >
-                {item.text}
+                {isBn ? item.bn_text : item.text}
               </NavLink>
             </ListItemButton>
           </ListItem>
@@ -128,12 +141,12 @@ const Navbar = (props) => {
             onClick={handleDrawerToggle}
             sx={{
               mr: 0,
-              display: { sm: 'none' },
+              display: { md: 'none' },
             }}
           >
             <MenuIcon />
           </IconButton>
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+          <Box sx={{ display: { xs: 'none', md: 'block' } }}>
             {navItems.map((item) => (
               <Button key={item.text} sx={{ color: '#f1f1f1' }}>
                 <NavLink
@@ -143,7 +156,7 @@ const Navbar = (props) => {
                     if (item.text === 'Logout') handleLogout();
                   }}
                 >
-                  {item.text}
+                  {isBn ? item.bn_text : item.text}
                 </NavLink>
               </Button>
             ))}
@@ -161,7 +174,7 @@ const Navbar = (props) => {
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            display: { xs: 'block', sm: 'none' },
+            display: { xs: 'block', md: 'none' },
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,

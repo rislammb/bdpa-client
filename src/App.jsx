@@ -1,16 +1,16 @@
-import { Button, Paper } from '@mui/material';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { Paper, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import { useStoreActions, useStoreState } from 'easy-peasy';
+import { createContext, useContext, useEffect, useMemo } from 'react';
+
 import './App.css';
 import { setAuthToken } from './api/config';
 import Navbar from './components/Navbar';
 import Loading from './components/ui/Loading';
-
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
-import { createContext, useContext, useEffect, useMemo } from 'react';
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -38,9 +38,9 @@ const LanguageButton = () => {
   const { toggleLanguage } = useStoreActions((actions) => actions.ui);
 
   return (
-    <Button color='inherit' onClick={toggleLanguage}>
-      {language === 'BN' ? 'EN' : 'বাংলা'}
-    </Button>
+    <IconButton color='inherit' onClick={toggleLanguage}>
+      <Typography>{language === 'BN' ? 'EN' : 'BN'}</Typography>
+    </IconButton>
   );
 };
 

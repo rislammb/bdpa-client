@@ -2,31 +2,11 @@ import Close from '@mui/icons-material/Close';
 import Done from '@mui/icons-material/Done';
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import { IconButton, TableCell, TableRow, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
-import DatePickerComp from './DatePickerComp';
 
-import dayjs from 'dayjs';
-import { axiosInstance } from '../api/config';
-import { genderField, genderOptions } from '../constants/gender';
-import {
-  jobDepertmentField,
-  jobDepertmentOptions,
-} from '../constants/jobDepertment';
+import { genderOptionsWithEmpty } from '../constants/gender';
 import { onDeputationOptions } from '../constants/onDeputationFields';
-import {
-  changeHandlerForDeputationGroup,
-  changeHandlerForPermanentGroup,
-  changeHandlerForPostingGroup,
-  changeHandlerForVoterGroup,
-  deputationFieldsFromPharmacist,
-  deputationValueFromState,
-  permanentFieldsFromPharmacist,
-  permanentValueFromState,
-  postingFieldsFromPharmacist,
-  postingValueFromState,
-  voterFieldsFromPharmacist,
-  voterValueFromState,
-} from '../helpers/utilities';
+import useDetailsPharmacistRow from '../hooks/useDetailsPharmacistRow';
+import DatePickerComp from './DatePickerComp';
 import PostingGroup from './PostingGroup';
 import SelectComponent from './SelectComponent';
 
@@ -35,240 +15,35 @@ const DetailsPharmacistRow = ({
   pharmacist,
   showDeputationRow,
   handleShowDeputation,
+  setSnackbar,
 }) => {
-  const [tableData, setTableData] = useState(null);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(null);
-  const [gender, setGender] = useState(null);
-  const [jobDepertment, setJobDepertment] = useState(null);
-  const [postingFields, setPostingFields] = useState(null);
-  const [permanentFields, setPermanentFields] = useState(null);
-  const [voterFields, setVoterFields] = useState(
-    voterFieldsFromPharmacist(pharmacist)
-  );
-  const [onDeputation, setOnDeputation] = useState(
-    onDeputationOptions.find((opt) => opt.name === pharmacist.onDeputation)?.id
-  );
-  const [deputationFields, setDeputationFields] = useState(null);
-
-  // const [deputationFields, setDeputationFields] = useState(null);
-  const [error, setError] = useState({});
-
-  const postingFieldsArray =
-    postingFields &&
-    Object.keys(postingFields).reduce((acc, cur) => {
-      acc.push(postingFields[cur]);
-      return acc;
-    }, []);
-
-  const permanentFieldsArray =
-    permanentFields &&
-    Object.keys(permanentFields).reduce((acc, cur) => {
-      acc.push(permanentFields[cur]);
-      return acc;
-    }, []);
-
-  const voterAreaArray =
-    voterFields &&
-    Object.keys(voterFields).reduce((acc, cur) => {
-      acc.push(voterFields[cur]);
-      return acc;
-    }, []);
-
-  const deputationFieldsArray =
-    deputationFields &&
-    Object.keys(deputationFields).reduce((acc, cur) => {
-      acc.push(deputationFields[cur]);
-      return acc;
-    }, []);
-
-  const handleIsEditOpen = () => {
-    setError({});
-    if (isEditOpen) {
-      setIsEditOpen(false);
-    } else {
-      // postingFieldsFromPharmacist(pharmacist);
-      if (row.name === 'mobile') {
-        setInputValue(pharmacist?.mobile?.name);
-      } else setInputValue(tableData);
-      setIsEditOpen(true);
-    }
-  };
-
-  const handleChange = (e, name) => {
-    if (name === 'dateOfBirth' || name === 'dateOfJoin') {
-      setInputValue(e);
-    } else {
-      setInputValue(e.target.value);
-    }
-  };
-
-  const handlePostingChange = (e) => {
-    setPostingFields((prevState) => {
-      return changeHandlerForPostingGroup(
-        prevState,
-        e.target.name,
-        e.target.value
-      );
-    });
-  };
-  const handlePermanentChange = (e) => {
-    setPermanentFields((prevState) => {
-      return changeHandlerForPermanentGroup(
-        prevState,
-        e.target.name,
-        e.target.value
-      );
-    });
-  };
-  const handleDeputationChange = (e) => {
-    setDeputationFields((prevState) => {
-      return changeHandlerForDeputationGroup(
-        prevState,
-        e.target.name,
-        e.target.value
-      );
-    });
-  };
-  const handleVoterAreaChange = (e) => {
-    setVoterFields((prevState) => {
-      return changeHandlerForVoterGroup(
-        prevState,
-        e.target.name,
-        e.target.value
-      );
-    });
-  };
-
-  const handleSubmit = () => {
-    setError({});
-    let dataForSubmit = null;
-    let dataForCell = '';
-
-    if (row.name === 'gender') {
-      const strGender =
-        genderOptions.find((option) => option.id === gender.value)?.name || '';
-      dataForSubmit = { gender: strGender };
-      dataForCell = strGender;
-    } else if (row.name === 'jobDepertment') {
-      const strJobDepertment =
-        jobDepertmentOptions.find((option) => option.id === jobDepertment.value)
-          ?.name || '';
-      dataForSubmit = { jobDepertment: strJobDepertment };
-      dataForCell = strJobDepertment;
-    } else if (row.name === 'mainPosting') {
-      dataForSubmit = postingValueFromState(postingFields);
-      dataForCell = `${
-        dataForSubmit.postingPlace ? `${dataForSubmit.postingPlace}, ` : ''
-      }${
-        dataForSubmit.postingUpazila?.name
-          ? `${dataForSubmit.postingUpazila?.name}, `
-          : ''
-      }${
-        dataForSubmit.postingDistrict?.name
-          ? dataForSubmit.postingDistrict?.name
-          : ''
-      }`;
-    } else if (row.name === 'permanentAddress') {
-      dataForSubmit = permanentValueFromState(permanentFields);
-      dataForCell = `${
-        dataForSubmit.permanentPlace ? `${dataForSubmit.permanentPlace}, ` : ''
-      }${
-        dataForSubmit.permanentUpazila?.name
-          ? `${dataForSubmit.permanentUpazila?.name}, `
-          : ''
-      }${
-        dataForSubmit.permanentDistrict?.name
-          ? dataForSubmit.permanentDistrict?.name
-          : ''
-      }`;
-    } else if (row.name === 'onDeputation') {
-      const data = onDeputationOptions.find(
-        (opt) => opt.id === onDeputation
-      )?.name;
-      dataForSubmit = { onDeputation: data };
-      dataForCell = data;
-    } else if (row.name === 'voterArea') {
-      dataForSubmit = voterValueFromState(voterFields);
-      dataForCell = `${
-        dataForSubmit.voterDistrict?.name
-          ? `${dataForSubmit.voterDistrict?.name}, `
-          : ''
-      }${
-        dataForSubmit.voterDivision?.name
-          ? `${dataForSubmit.voterDivision?.name} Division`
-          : ''
-      }`;
-    } else if (row.name === 'deputationPosting') {
-      dataForSubmit = deputationValueFromState(deputationFields);
-      dataForCell = `${
-        dataForSubmit.deputationPlace
-          ? `${dataForSubmit.deputationPlace}, `
-          : ''
-      }${
-        dataForSubmit.deputationUpazila?.name
-          ? `${dataForSubmit.deputationUpazila?.name}, `
-          : ''
-      }${
-        dataForSubmit.deputationDistrict?.name
-          ? dataForSubmit.deputationDistrict?.name
-          : ''
-      }`;
-    } else {
-      dataForSubmit = { [row.name]: inputValue };
-      dataForCell = inputValue;
-    }
-
-    console.log('data for submit', dataForSubmit);
-    console.log('data for cell', dataForCell);
-    axiosInstance
-      .patch(`/pharmacist/reg/${pharmacist.regNumber}`, dataForSubmit)
-      .then(() => {
-        if (row.name === 'onDeputation') {
-          handleShowDeputation(dataForSubmit['onDeputation']);
-        }
-        setTableData(dataForCell);
-        setIsEditOpen(false);
-      })
-      .catch((e) => {
-        if (typeof e.response.data === 'object') {
-          setError(e.response.data);
-        }
-        setTableData(row.td);
-      });
-  };
-
-  useEffect(() => {
-    setTableData(row.td);
-    if (row.name === 'gender') {
-      const tempGender = { ...genderField };
-      if (pharmacist.gender) {
-        tempGender.value =
-          genderOptions.find((option) => option.name === pharmacist.gender)
-            ?.id || '0';
-        setGender(tempGender);
-      } else setGender(tempGender);
-    } else if (row.name === 'jobDepertment') {
-      const tempJobDepertment = { ...jobDepertmentField };
-      if (pharmacist.jobDepertment) {
-        tempJobDepertment.value =
-          jobDepertmentOptions.find(
-            (option) => option.name === pharmacist.jobDepertment
-          )?.id || '0';
-        setJobDepertment(tempJobDepertment);
-      } else {
-        setJobDepertment(tempJobDepertment);
-      }
-    } else if (row.name === 'mainPosting') {
-      setPostingFields(postingFieldsFromPharmacist(pharmacist));
-    } else if (row.name === 'permanentAddress') {
-      setPermanentFields(permanentFieldsFromPharmacist(pharmacist));
-    } else if (row.name === 'deputationPosting') {
-      setDeputationFields(deputationFieldsFromPharmacist(pharmacist));
-    }
-  }, []);
-
-  console.log(error[row.name]);
+  const {
+    isBn,
+    isEditOpen,
+    inputValue,
+    handleChange,
+    error,
+    handleIsEditOpen,
+    jobDepertment,
+    setJobDepertment,
+    postingFieldsArray,
+    handlePostingChange,
+    permanentFieldsArray,
+    handlePermanentChange,
+    voterAreaArray,
+    handleVoterAreaChange,
+    onDeputation,
+    setOnDeputation,
+    deputationFieldsArray,
+    handleDeputationChange,
+    tableData,
+    handleSubmit,
+  } = useDetailsPharmacistRow({
+    row,
+    pharmacist,
+    handleShowDeputation,
+    setSnackbar,
+  });
 
   return (
     <TableRow
@@ -276,8 +51,8 @@ const DetailsPharmacistRow = ({
       sx={{
         display: 'grid',
         gridTemplateColumns: {
-          xs: row.edit ? '1fr 2fr 85px' : '1fr 2fr',
-          sm: row.edit ? '1fr 2fr 93px' : '1fr 2fr',
+          xs: row.isEdit ? '1fr 2fr 85px' : '1fr 2fr',
+          sm: row.isEdit ? '1fr 2fr 93px' : '1fr 2fr',
         },
         '&:last-child td, &:last-child th': { border: 0 },
       }}
@@ -306,9 +81,27 @@ const DetailsPharmacistRow = ({
               onChange={handleChange}
               variant='standard'
               sx={{ width: '100%', fontSize: '7px' }}
-              error={error[row.name] ? true : false}
-              helperText={error[row.name]?.text ?? ''}
+              error={error && error[row.name] ? true : false}
+              helperText={
+                error &&
+                error[row.name] &&
+                (isBn
+                  ? error[row.name]?.bn_text ?? ''
+                  : error[row.name]?.text ?? '')
+              }
             />
+          ) : row.type === 'textGroup' && row['textGroupFields'] ? (
+            row['textGroupFields'].map((item) => (
+              <TextField
+                key={item.name}
+                name={item.name}
+                label={isBn ? item.bn_label : item.label}
+                value={inputValue && inputValue[item.name]}
+                onChange={handleChange}
+                variant='standard'
+                sx={{ width: '100%', fontSize: '7px' }}
+              />
+            ))
           ) : row.type === 'date' ? (
             <DatePickerComp
               name={row.name}
@@ -318,13 +111,9 @@ const DetailsPharmacistRow = ({
           ) : row.name === 'gender' ? (
             <SelectComponent
               name='gender'
-              value={gender.value}
-              options={gender.options}
-              onChange={(e) =>
-                setGender((prev) => {
-                  return { ...prev, value: e.target.value };
-                })
-              }
+              value={inputValue.id}
+              options={genderOptionsWithEmpty}
+              onChange={handleChange}
               style={{ width: '100%' }}
             />
           ) : row.name === 'jobDepertment' ? (
@@ -378,8 +167,6 @@ const DetailsPharmacistRow = ({
           ) : (
             ''
           )
-        ) : row.type === 'date' ? (
-          dayjs(tableData).format('DD MMM YYYY')
         ) : row.type === 'deputationPosting' ? (
           showDeputationRow ? (
             tableData
@@ -390,18 +177,18 @@ const DetailsPharmacistRow = ({
           tableData
         )}
       </TableCell>
-      {row.edit && (
+      {row.isEdit && (
         <TableCell
           sx={{ padding: { xs: '1px 13px 1px 3px', sm: '3px 15px 3px 5px' } }}
         >
-          {row.edit &&
+          {row.isEdit &&
             (isEditOpen ? (
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <IconButton
                   edge='end'
                   aria-label='edit'
                   onClick={handleIsEditOpen}
-                  disabled={!row.edit}
+                  disabled={!row.isEdit}
                 >
                   <Close />
                 </IconButton>
@@ -409,7 +196,7 @@ const DetailsPharmacistRow = ({
                   edge='end'
                   aria-label='edit'
                   onClick={handleSubmit}
-                  disabled={!row.edit}
+                  disabled={!row.isEdit}
                 >
                   <Done />
                 </IconButton>
@@ -421,7 +208,7 @@ const DetailsPharmacistRow = ({
                   edge='end'
                   aria-label='edit'
                   onClick={() => handleIsEditOpen(row.name)}
-                  disabled={!row.edit}
+                  disabled={!row.isEdit}
                 >
                   <EditOutlined />
                 </IconButton>

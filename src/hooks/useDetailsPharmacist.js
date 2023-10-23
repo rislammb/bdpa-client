@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
 
-const createRow = (th, value, name, type, edit) => ({
+const createRow = (th, value, name, type, isEdit, textGroupFields) => ({
   th,
   td: value,
   name,
   type,
-  edit,
+  isEdit,
+  textGroupFields,
 });
 
 const useDetailsPharmacist = () => {
@@ -17,6 +18,11 @@ const useDetailsPharmacist = () => {
   const navigate = useNavigate();
   const [showDeputationRow, setShowDeputationRow] = useState(null);
   const [tableRows, setTableRows] = useState([]);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    severity: 'info',
+    text: '',
+  });
 
   const {
     ui: { language },
@@ -32,7 +38,14 @@ const useDetailsPharmacist = () => {
     user?.roles?.includes('SUPER_ADMIN') ||
     user?.roles?.includes('ADMIN') ||
     user?.regNumber === regNumber;
-  const isSuperAdmin = user?.roles?.includes('SUPER_ADMIN');
+  const isAdmin = user?.roles?.includes('SUPER_ADMIN');
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({ open: false, severity: snackbar.severity, text: '' });
+  };
 
   useEffect(() => {
     if (pharmacist) {
@@ -71,7 +84,7 @@ const useDetailsPharmacist = () => {
         ),
         createRow(
           isBn ? 'মোবাইল নাম্বার' : 'Mobile number',
-          pharmacist.gender?.name === 'Male'
+          pharmacist.gender?.name === 'Male' || isPermittedForEdit
             ? isBn
               ? pharmacist.mobile?.bn_name
               : pharmacist.mobile?.name ?? ''
@@ -82,25 +95,41 @@ const useDetailsPharmacist = () => {
         ),
         createRow(
           isBn ? 'পিতার নাম' : 'Fathers Name',
-          pharmacist.fathersName?.name && pharmacist.fathersName?.bn_name
-            ? `${pharmacist.fathersName?.name} - ${pharmacist.fathersName?.bn_name}`
-            : pharmacist.fathersName?.name
-            ? pharmacist.fathersName?.name
-            : pharmacist.fathersName?.bn_name ?? '',
+          isBn ? pharmacist.fathersName?.bn_name : pharmacist.fathersName?.name,
           'fathersName',
-          'text',
-          isPermittedForEdit
+          'textGroup',
+          isPermittedForEdit,
+          [
+            {
+              name: 'name',
+              label: "Father's name (English)",
+              bn_label: 'পিতার নাম (English)',
+            },
+            {
+              name: 'bn_name',
+              label: "Father's name (বাংলা)",
+              bn_label: 'পিতার নাম (বাংলা)',
+            },
+          ]
         ),
         createRow(
           isBn ? 'মাতার নাম' : 'Mothers Name',
-          pharmacist.mothersName?.name && pharmacist.mothersName?.bn_name
-            ? `${pharmacist.mothersName?.name} - ${pharmacist.mothersName?.bn_name}`
-            : pharmacist.mothersName?.name
-            ? pharmacist.mothersName?.name
-            : pharmacist.mothersName?.bn_name ?? '',
+          isBn ? pharmacist.mothersName?.bn_name : pharmacist.mothersName?.name,
           'mothersName',
-          'text',
-          isPermittedForEdit
+          'textGroup',
+          isPermittedForEdit,
+          [
+            {
+              name: 'name',
+              label: "Mother's name (English)",
+              bn_label: 'মায়ের নাম (English)',
+            },
+            {
+              name: 'bn_name',
+              label: "Mother's name (বাংলা)",
+              bn_label: 'মায়ের নাম (বাংলা)',
+            },
+          ]
         ),
         createRow(
           isBn ? 'লিঙ্গ' : 'Gender',
@@ -111,7 +140,9 @@ const useDetailsPharmacist = () => {
         ),
         createRow(
           isBn ? 'জন্ম তারিখ' : 'Date of birth',
-          dayjs(pharmacist.dateOfBirth).format('DD MMM YYYY'),
+          pharmacist.dateOfBirth
+            ? dayjs(pharmacist.dateOfBirth).format('DD MMM YYYY')
+            : '',
           'dateOfBirth',
           'date',
           isPermittedForEdit
@@ -148,7 +179,9 @@ const useDetailsPharmacist = () => {
         ),
         createRow(
           isBn ? 'যোগদানের তারিখ' : 'Date of join',
-          dayjs(pharmacist.dateOfJoin).format('DD MMM YYYY') || '',
+          pharmacist.dateOfJoin
+            ? dayjs(pharmacist.dateOfJoin).format('DD MMM YYYY')
+            : '',
           'dateOfJoin',
           'date',
           isPermittedForEdit
@@ -178,7 +211,7 @@ const useDetailsPharmacist = () => {
             : getAreaInfo(pharmacist, 'voter'),
           'voterArea',
           'select',
-          isSuperAdmin
+          isAdmin
         ),
         createRow(
           isBn ? 'প্রেষনে/সংযুক্ত আছেন?' : 'On deputation/attachment?',
@@ -249,12 +282,15 @@ const useDetailsPharmacist = () => {
   return {
     loading,
     isBn,
-    user,
+    isAdmin,
     pharmacist,
     tableRows,
     showDeputationRow,
     setShowDeputationRow,
     handleDelete,
+    snackbar,
+    setSnackbar,
+    handleSnackbarClose,
   };
 };
 

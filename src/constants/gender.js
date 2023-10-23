@@ -1,8 +1,12 @@
 export const genderOptions = [
-  { id: '', name: '--- Select ---', bn_name: '--- নির্বাচন ---' },
   { id: '1', name: 'Male', bn_name: 'পুরুষ' },
   { id: '2', name: 'Female', bn_name: 'মহিলা' },
   { id: '3', name: 'Other', bn_name: 'অন্যান্য' },
+];
+
+export const genderOptionsWithEmpty = [
+  { id: '', name: '--- Select ---', bn_name: '--- নির্বাচন ---' },
+  ...genderOptions,
 ];
 
 export const genderField = {
@@ -10,6 +14,9 @@ export const genderField = {
   name: 'gender',
   label: 'Gender',
   bn_label: 'লিঙ্গ',
-  options: [...genderOptions],
+  options: [
+    { id: '', name: '--- Select ---', bn_name: '--- নির্বাচন ---' },
+    ...genderOptions,
+  ],
   value: '',
 };

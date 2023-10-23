@@ -7,7 +7,9 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
+
 import DetailsPharmacistRow from '../components/DetailsPharmacistRow';
+import SnackbarComp from '../components/Snackbar';
 import Loading from '../components/ui/Loading';
 import useDetailsPharmacist from '../hooks/useDetailsPharmacist';
 
@@ -15,12 +17,15 @@ const DetailsPharmacist = () => {
   const {
     loading,
     isBn,
-    user,
+    isAdmin,
     pharmacist,
     tableRows,
     showDeputationRow,
     setShowDeputationRow,
     handleDelete,
+    snackbar,
+    setSnackbar,
+    handleSnackbarClose,
   } = useDetailsPharmacist();
 
   return loading ? (
@@ -62,9 +67,10 @@ const DetailsPharmacist = () => {
                     handleShowDeputation={(data) =>
                       setShowDeputationRow(data === 'Yes' ? true : false)
                     }
+                    setSnackbar={setSnackbar}
                   />
                 ))}
-                {user && (
+                {isAdmin && (
                   <TableRow
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
@@ -115,6 +121,13 @@ const DetailsPharmacist = () => {
           )}
         </TableBody>
       </Table>
+
+      <SnackbarComp
+        open={snackbar.open}
+        severity={snackbar.severity}
+        text={snackbar.text}
+        handleClose={handleSnackbarClose}
+      />
     </TableContainer>
   );
 };

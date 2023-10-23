@@ -4,6 +4,7 @@ import {
   deletePharmacist,
   getDetailsPharmacist,
   getPharmacists,
+  updatePharmacist,
 } from '../api/pharmacist';
 import {
   INITIAL_DEPERTMENT_INFO,
@@ -92,6 +93,20 @@ const pharmacistModel = {
       const { data } = await addPharmacist(payload);
       actions.setSubmitting(false);
 
+      return data;
+    } catch (e) {
+      actions.setError(e.response?.data);
+      actions.setSubmitting(false);
+    }
+  }),
+  updatePharmacistData: thunk(async (actions, payload) => {
+    actions.setError(null);
+    actions.setSubmitting(true);
+
+    try {
+      const { data } = await updatePharmacist(payload);
+      actions.setDetailsPharmacist(data);
+      actions.setSubmitting(false);
       return data;
     } catch (e) {
       actions.setError(e.response?.data);
