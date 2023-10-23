@@ -4,6 +4,7 @@ import EditOutlined from '@mui/icons-material/EditOutlined';
 import { IconButton, TableCell, TableRow, TextField } from '@mui/material';
 
 import { genderOptionsWithEmpty } from '../constants/gender';
+import { jobDepertmentOptionsWithEmpty } from '../constants/jobDepertment';
 import { onDeputationOptions } from '../constants/onDeputationFields';
 import useDetailsPharmacistRow from '../hooks/useDetailsPharmacistRow';
 import DatePickerComp from './DatePickerComp';
@@ -119,13 +120,9 @@ const DetailsPharmacistRow = ({
           ) : row.name === 'jobDepertment' ? (
             <SelectComponent
               name='jobDepertment'
-              value={jobDepertment.value}
-              options={jobDepertment.options}
-              onChange={(e) =>
-                setJobDepertment((prev) => {
-                  return { ...prev, value: e.target.value };
-                })
-              }
+              value={inputValue.id}
+              options={jobDepertmentOptionsWithEmpty}
+              onChange={handleChange}
               style={{ width: '100%' }}
             />
           ) : row.name === 'mainPosting' ? (

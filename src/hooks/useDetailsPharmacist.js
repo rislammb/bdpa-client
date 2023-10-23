@@ -133,7 +133,11 @@ const useDetailsPharmacist = () => {
         ),
         createRow(
           isBn ? 'লিঙ্গ' : 'Gender',
-          isBn ? pharmacist.gender?.bn_name : pharmacist.gender?.name,
+          pharmacist.gender.id
+            ? isBn
+              ? pharmacist.gender?.bn_name
+              : pharmacist.gender?.name
+            : '',
           'gender',
           'select',
           isPermittedForEdit
@@ -155,6 +159,25 @@ const useDetailsPharmacist = () => {
           isPermittedForEdit
         ),
         createRow(
+          isBn ? 'ইন্সটিটিউটের নাম' : 'Institute Name',
+          isBn ? pharmacist.institute?.bn_name : pharmacist.institute?.name,
+          'institute',
+          'textGroup',
+          isPermittedForEdit,
+          [
+            {
+              name: 'name',
+              label: 'Institute Name (English)',
+              bn_label: 'ইন্সটিটিউটের নাম (English)',
+            },
+            {
+              name: 'bn_name',
+              label: 'Institute Name (বাংলা)',
+              bn_label: 'ইন্সটিটিউটের নাম (বাংলা)',
+            },
+          ]
+        ),
+        createRow(
           isBn ? 'পাশের বছর' : 'Passing year',
           isBn ? pharmacist.passingYear?.bn_name : pharmacist.passingYear?.name,
           'passingYear',
@@ -170,9 +193,11 @@ const useDetailsPharmacist = () => {
         ),
         createRow(
           isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment',
-          isBn
-            ? pharmacist.jobDepertment?.bn_name
-            : pharmacist.jobDepertment?.name,
+          pharmacist.jobDepertment.id
+            ? isBn
+              ? pharmacist.jobDepertment?.bn_name
+              : pharmacist.jobDepertment?.name
+            : '',
           'jobDepertment',
           'select',
           isPermittedForEdit

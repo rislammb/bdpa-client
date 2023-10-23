@@ -5,6 +5,7 @@ import { genderOptionsWithEmpty } from '../constants/gender';
 import {
   jobDepertmentField,
   jobDepertmentOptions,
+  jobDepertmentOptionsWithEmpty,
 } from '../constants/jobDepertment';
 import { onDeputationOptions } from '../constants/onDeputationFields';
 import {
@@ -86,15 +87,10 @@ const useDetailsPharmacistRow = ({
     } else {
       if (row.name === 'mobile') {
         setInputValue(pharmacist?.mobile?.name);
-      } else if (row.type === 'textGroup') {
+      } else if (row.type === 'textGroup' || row.type === 'select') {
         setInputValue(pharmacist && pharmacist[row.name]);
-      } else if (row.name === 'gender') {
-        setInputValue(
-          genderOptionsWithEmpty.find(
-            (item) => item.id === pharmacist?.gender.id
-          )
-        );
       } else setInputValue(tableData);
+
       setIsEditOpen(true);
     }
   };
@@ -110,6 +106,10 @@ const useDetailsPharmacistRow = ({
     } else if (row.name === 'gender') {
       setInputValue(
         genderOptionsWithEmpty.find((item) => item.id === e.target.value)
+      );
+    } else if (row.name === 'jobDepertment') {
+      setInputValue(
+        jobDepertmentOptionsWithEmpty.find((item) => item.id === e.target.value)
       );
     } else {
       setInputValue(e.target.value);
@@ -160,16 +160,12 @@ const useDetailsPharmacistRow = ({
     if (
       row.name === 'fathersName' ||
       row.name === 'mothersName' ||
-      row.name === 'gender'
+      row.name === 'gender' ||
+      row.name === 'institute' ||
+      row.name === 'jobDepertment'
     ) {
       dataForSubmit = { [row.name]: inputValue };
       dataForCell = isBn ? inputValue.bn_name : inputValue.name;
-    } else if (row.name === 'jobDepertment') {
-      const strJobDepertment =
-        jobDepertmentOptions.find((option) => option.id === jobDepertment.value)
-          ?.name || '';
-      dataForSubmit = { jobDepertment: strJobDepertment };
-      dataForCell = strJobDepertment;
     } else if (row.name === 'mainPosting') {
       dataForSubmit = postingValueFromState(postingFields);
       dataForCell = `${
