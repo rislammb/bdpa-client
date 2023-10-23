@@ -32,16 +32,18 @@ export const jobDepertmentOptions = [
   },
 ];
 
+export const jobDepertmentOptionsWithEmpty = [
+  {
+    id: '',
+    name: '--- Select ---',
+    bn_name: '--- নির্বাচন ---',
+  },
+  ...jobDepertmentOptions,
+];
+
 export const jobDepertmentField = {
   type: 'select',
-  options: [
-    {
-      id: '',
-      name: '--- Select ---',
-      bn_name: '--- নির্বাচন ---',
-    },
-    ...jobDepertmentOptions,
-  ],
+  options: jobDepertmentOptionsWithEmpty,
   name: 'jobDepertment',
   label: 'Job Depertment',
   bn_label: 'চাকুরীর বিভাগ',
