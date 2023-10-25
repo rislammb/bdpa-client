@@ -25,9 +25,7 @@ const DetailsPharmacistRow = ({
     handleChange,
     error,
     handleIsEditOpen,
-    jobDepertment,
-    setJobDepertment,
-    postingFieldsArray,
+    addressFieldsArray,
     handlePostingChange,
     permanentFieldsArray,
     handlePermanentChange,
@@ -108,6 +106,12 @@ const DetailsPharmacistRow = ({
               name={row.name}
               value={inputValue}
               onChange={handleChange}
+              disableFuture
+              referenceDate={'2003-05-23'}
+              // <DatePickerComp
+              //   name={row.name}
+              //   value={inputValue}
+              //   onChange={handleChange}
             />
           ) : row.name === 'gender' ? (
             <SelectComponent
@@ -125,24 +129,10 @@ const DetailsPharmacistRow = ({
               onChange={handleChange}
               style={{ width: '100%' }}
             />
-          ) : row.name === 'mainPosting' ? (
+          ) : row.type === 'area' ? (
             <PostingGroup
-              postingInfo={postingFieldsArray}
-              onChange={handlePostingChange}
-              error={error}
-              style={{ width: '100%' }}
-            />
-          ) : row.name === 'permanentAddress' ? (
-            <PostingGroup
-              postingInfo={permanentFieldsArray}
-              onChange={handlePermanentChange}
-              error={error}
-              style={{ width: '100%' }}
-            />
-          ) : row.name === 'voterArea' ? (
-            <PostingGroup
-              postingInfo={voterAreaArray}
-              onChange={handleVoterAreaChange}
+              postingInfo={addressFieldsArray}
+              onChange={handleChange}
               error={error}
               style={{ width: '100%' }}
             />

@@ -8,6 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useStoreState } from 'easy-peasy';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -15,7 +16,10 @@ const initialState = { email: '', password: '', confirmPassword: '' };
 
 const Signup = () => {
   const theme = useTheme();
+  const { language } = useStoreState((state) => state.ui);
   const [state, setState] = useState({ ...initialState });
+
+  const isBn = language === 'BN' ? true : false;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,7 +40,7 @@ const Signup = () => {
               ? theme.palette.primary.light
               : theme.palette.primary.main,
         }}
-        title='Signup Page'
+        title={isBn ? 'সাইন আপ' : 'Signup'}
       />
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <TextField
@@ -46,7 +50,7 @@ const Signup = () => {
           value={state.email}
           onChange={handleChange}
           placeholder='abc@email.com'
-          label='Enter your email'
+          label={isBn ? 'ইমেইল' : 'Enter your email'}
           variant='standard'
           // error={notFound}
           // helperText={notFound ? 'Email not found!' : ''}
@@ -58,7 +62,7 @@ const Signup = () => {
           value={state.password}
           onChange={handleChange}
           placeholder='********'
-          label='Password'
+          label={isBn ? 'পাসওয়ার্ড' : 'Password'}
           variant='standard'
         />
         <TextField
@@ -68,16 +72,18 @@ const Signup = () => {
           value={state.confirmPassword}
           onChange={handleChange}
           placeholder='********'
-          label='Confirm Password'
+          label={isBn ? 'পাসওয়ার্ড নিশ্চিত করুন' : 'Confirm Password'}
           variant='standard'
         />
 
         <CardActions sx={{ flexDirection: 'column', rowGap: 1 }}>
           <Button onClick={handleSubmit} variant='contained'>
-            Signup
+            {isBn ? 'সাইন আপ' : 'Signup'}
           </Button>
           <Typography variant='body2' component='span'>
-            Already have an account? Please{' '}
+            {isBn
+              ? 'ইতোমধ্যে আপনার একাউন্ট আছে? '
+              : 'Already have an account? Please '}
             <Link
               to='/login'
               style={{
@@ -87,7 +93,7 @@ const Signup = () => {
                     : theme.palette.primary.main,
               }}
             >
-              login
+              {isBn ? 'লগইন করুন' : 'login'}
             </Link>
           </Typography>
         </CardActions>

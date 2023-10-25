@@ -9,39 +9,48 @@ import { onDeputationOptions } from '../constants/onDeputationFields';
 import { upazilas } from '../constants/upazilas';
 import { voterAreaFields } from '../constants/voterAreaFields';
 
-export const postingFieldsFromPharmacist = (pharmacist) => {
+export const areaFieldsFromPharmacist = (pharmacist, areaName) => {
+  const selectedFields =
+    areaName === 'posting'
+      ? addPostingFields
+      : areaName === 'permanent'
+      ? addPermanentFields
+      : areaName === 'voter'
+      ? voterAreaFields
+      : areaName === 'deputation'
+      ? addDeputationFields
+      : null;
+
   return {
-    ...Object.keys({ ...addPostingFields }).reduce((acc, cur) => {
-      acc[cur] = { ...addPostingFields[cur] };
-      if (cur === 'postingDivision') {
-        if (pharmacist[cur].id) {
-          acc[cur].value = pharmacist[cur].id;
-        }
-      } else if (cur === 'postingDistrict') {
-        if (pharmacist[cur].id) {
-          acc[cur].options = [
-            ...addPostingFields[cur].options,
-            ...districts.filter(
-              (district) =>
-                district.division_id === pharmacist['postingDivision'].id
-            ),
-          ];
-          acc[cur].value = pharmacist[cur].id;
-        }
-      } else if (cur === 'postingUpazila') {
-        if (pharmacist[cur].id) {
-          acc[cur].options = [
-            ...addPostingFields[cur].options,
-            ...upazilas.filter(
-              (upazila) =>
-                upazila.district_id === pharmacist['postingDistrict'].id
-            ),
-          ];
-          acc[cur].value = pharmacist[cur].id;
-        }
-      } else {
-        acc[cur].value = pharmacist[cur] || '';
+    ...Object.keys({ ...selectedFields }).reduce((acc, cur) => {
+      acc[cur] = { ...selectedFields[cur] };
+
+      if (cur === areaName + 'Division') {
+        acc[cur].value = pharmacist[cur].id;
+      } else if (cur === areaName + 'District') {
+        acc[cur].options = [
+          ...selectedFields[cur].options,
+          ...districts.filter(
+            (district) =>
+              district.division_id === pharmacist[areaName + 'Division'].id
+          ),
+        ];
+        acc[cur].value = pharmacist[cur].id;
+      } else if (cur === areaName + 'Upazila') {
+        acc[cur].options = [
+          ...selectedFields[cur].options,
+          ...upazilas.filter(
+            (upazila) =>
+              upazila.district_id === pharmacist[areaName + 'District'].id
+          ),
+        ];
+        acc[cur].value = pharmacist[cur].id;
+      } else if (cur === areaName + 'Place') {
+        acc[cur].value = pharmacist[cur]?.name;
+      } else if (cur === 'bn_' + areaName + 'Place') {
+        acc[cur].value = pharmacist[areaName + 'Place']?.bn_name;
       }
+
       return acc;
     }, {}),
   };
@@ -148,53 +157,47 @@ export const deputationFieldsFromPharmacist = (pharmacist) => {
   };
 };
 
-export const changeHandlerForPostingGroup = (prevState, name, value) => {
-  if (name === 'postingDivision') {
-    return {
-      ...prevState,
-      [name]: {
-        ...prevState[name],
-        value: value,
-      },
-      postingDistrict: {
-        ...prevState['postingDistrict'],
-        options: [
-          ...addPostingFields['postingDistrict'].options,
-          ...districts.filter((district) => district.division_id === value),
-        ],
-        value: '0',
-      },
-      postingUpazila: {
-        ...prevState['postingUpazila'],
-        options: [...addPostingFields['postingUpazila'].options],
-        value: '0',
-      },
-    };
-  } else if (name === 'postingDistrict') {
-    return {
-      ...prevState,
-      [name]: {
-        ...prevState[name],
-        value: value,
-      },
-      postingUpazila: {
-        ...prevState['postingUpazila'],
-        options: [
-          ...addPostingFields['postingUpazila'].options,
-          ...upazilas.filter((upazila) => upazila.district_id === value),
-        ],
-        value: '0',
-      },
-    };
+export const changeHandlerForAreaGroup = (prevState, name, value, areaName) => {
+  const selectedFields =
+    areaName === 'posting'
+      ? addPostingFields
+      : areaName === 'permanent'
+      ? addPermanentFields
+      : areaName === 'voter'
+      ? voterAreaFields
+      : areaName === 'deputation'
+      ? addDeputationFields
+      : null;
+
+  const clonedState = objDeepClone(prevState);
+  if (name === areaName + 'Division') {
+    clonedState[name].value = value;
+    clonedState[areaName + 'District'].options = [
+      ...selectedFields[areaName + 'District'].options,
+      ...districts.filter((district) => district.division_id === value),
+    ];
+
+    if (clonedState[areaName + 'Upazila']) {
+      clonedState[areaName + 'District'].value = '';
+      clonedState[areaName + 'Upazila'].options = [
+        ...selectedFields[areaName + 'Upazila'].options,
+      ];
+      clonedState[areaName + 'Upazila'].value = '';
+    }
+  } else if (name === areaName + 'District') {
+    clonedState[name].value = value;
+    if (clonedState[areaName + 'Upazila']) {
+      clonedState[areaName + 'Upazila'].options = [
+        ...selectedFields[areaName + 'Upazila'].options,
+        ...upazilas.filter((upazila) => upazila.district_id === value),
+      ];
+      clonedState[areaName + 'Upazila'].value = '';
+    }
   } else {
-    return {
-      ...prevState,
-      [name]: {
-        ...prevState[name],
-        value: value,
-      },
-    };
+    clonedState[name].value = value;
   }
+
+  return clonedState;
 };
 
 export const changeHandlerForPermanentGroup = (prevState, name, value) => {
@@ -368,6 +371,39 @@ export const postingValueFromState = (postingFields) => {
   }, {});
 };
 
+export const areaValuesFromState = (areaFields, areaName) => {
+  const res = Object.keys(areaFields).reduce((acc, cur) => {
+    if (cur === areaName + 'Division') {
+      const division = divisions.find(
+        (item) => item.id === areaFields[cur].value
+      );
+      acc[cur] = division;
+    } else if (cur === areaName + 'District') {
+      const district = districts.find(
+        (item) => item.id === areaFields[cur].value
+      );
+      acc[cur] = district;
+    } else if (cur === areaName + 'Upazila') {
+      const upazila = upazilas.find(
+        (item) => item.id === areaFields[cur].value
+      );
+      acc[cur] = upazila;
+    } else if (cur === areaName + 'Place') {
+      acc[cur] = { ...acc[cur], name: areaFields[cur].value };
+    } else if (cur === 'bn_' + areaName + 'Place') {
+      acc[areaName + 'Place'] = {
+        ...acc[areaName + 'Place'],
+        bn_name: areaFields[cur].value,
+      };
+    }
+
+    return acc;
+  }, {});
+
+  console.log('response ', res);
+  return res;
+};
+
 export const permanentValueFromState = (permanentFields) => {
   return Object.keys(permanentFields).reduce((acc, cur) => {
     if (cur === 'permanentDivision') {
@@ -534,17 +570,36 @@ export const pharmacistFromState = (
 
 export const objDeepClone = (obj) => JSON.parse(JSON.stringify(obj));
 
-export const getBnAreaInfo = (data, area) =>
-  data &&
-  `${data[area + 'Place']?.bn_name ? `${data[area + 'Place'].bn_name}, ` : ''}${
-    data[area + 'Upazila']?.bn_name ? `${data[area + 'Upazila'].bn_name}, ` : ''
-  }${data[area + 'District']?.bn_name ? data[area + 'District'].bn_name : ''}`;
+export const getBnAreaInfo = (data, areaName) => {
+  return (
+    data &&
+    `${
+      data[areaName + 'Place']?.bn_name
+        ? `${data[areaName + 'Place'].bn_name}, `
+        : ''
+    }${
+      data[areaName + 'Upazila']?.bn_name
+        ? `${data[areaName + 'Upazila'].bn_name}, `
+        : ''
+    }${
+      data[areaName + 'District']?.bn_name
+        ? data[areaName + 'District'].bn_name
+        : ''
+    }`
+  );
+};
 
-export const getAreaInfo = (data, area) =>
+export const getAreaInfo = (data, areaName) =>
   data &&
-  `${data[area + 'Place']?.name ? `${data[area + 'Place'].name}, ` : ''}${
-    data[area + 'Upazila']?.name ? `${data[area + 'Upazila'].name}, ` : ''
-  }${data[area + 'District']?.name ? data[area + 'District'].name : ''}`;
+  `${
+    data[areaName + 'Place']?.name ? `${data[areaName + 'Place'].name}, ` : ''
+  }${
+    data[areaName + 'Upazila']?.name
+      ? `${data[areaName + 'Upazila'].name}, `
+      : ''
+  }${
+    data[areaName + 'District']?.name ? data[areaName + 'District'].name : ''
+  }`;
 
 export const generateId = () => {
   const v4 = () => Math.floor(Math.random() * 99999).toString(16);

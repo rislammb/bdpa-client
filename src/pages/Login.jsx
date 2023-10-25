@@ -13,7 +13,8 @@ import useLogin from '../hooks/useLogin';
 
 const Login = () => {
   const theme = useTheme();
-  const { state, error, handleChange, submitting, handleSubmit } = useLogin();
+  const { isBn, state, error, handleChange, submitting, handleSubmit } =
+    useLogin();
 
   return (
     <Card sx={{ maxWidth: 330, margin: '20px auto' }}>
@@ -24,7 +25,7 @@ const Login = () => {
               ? theme.palette.primary.light
               : theme.palette.primary.main,
         }}
-        title='Login Page'
+        title={isBn ? 'লগ ইন' : 'Login'}
       />
       <CardContent
         component={'form'}
@@ -38,7 +39,7 @@ const Login = () => {
           value={state.email}
           onChange={handleChange}
           placeholder='abc@email.co'
-          label='Email'
+          label={isBn ? 'ইমেইল' : 'Email'}
           variant='standard'
         />
         <TextField
@@ -48,7 +49,7 @@ const Login = () => {
           value={state.password}
           onChange={handleChange}
           placeholder='**********'
-          label='Password'
+          label={isBn ? 'পাসওয়ার্ড' : 'Password'}
           variant='standard'
         />
         {!submitting && error?.message && (
@@ -63,10 +64,12 @@ const Login = () => {
         )}
         <CardActions sx={{ flexDirection: 'column', p: 0, rowGap: 1 }}>
           <Button disabled={submitting} type='submit' variant='contained'>
-            Login
+            {isBn ? 'লগ ইন' : 'Login'}
           </Button>
           <Typography variant='body2' component='span'>
-            Don&apos;t have an account? Please{' '}
+            {isBn
+              ? 'আপনার কি একাউন্ট নেই? '
+              : 'Don&apos;t have an account? Please '}
             <Link
               to='/signup'
               style={{
@@ -76,7 +79,7 @@ const Login = () => {
                     : theme.palette.primary.main,
               }}
             >
-              signup
+              {isBn ? 'একাউন্ট খুলুন' : 'signup'}
             </Link>
           </Typography>
         </CardActions>

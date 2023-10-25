@@ -4,9 +4,14 @@ import { useEffect, useState } from 'react';
 const initialState = { email: '', password: '' };
 
 const useLogin = () => {
-  const { submitting, error } = useStoreState((state) => state.auth);
+  const {
+    ui: { language },
+    auth: { submitting, error },
+  } = useStoreState((state) => state);
   const { setError, getLoginData } = useStoreActions((actions) => actions.auth);
   const [state, setState] = useState({ ...initialState });
+
+  const isBn = language === 'BN' ? true : false;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,6 +28,7 @@ const useLogin = () => {
   }, []);
 
   return {
+    isBn,
     state,
     error,
     handleChange,

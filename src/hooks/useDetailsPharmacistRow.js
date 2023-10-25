@@ -1,26 +1,22 @@
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 
+import dayjs from 'dayjs';
 import { genderOptionsWithEmpty } from '../constants/gender';
-import {
-  jobDepertmentField,
-  jobDepertmentOptions,
-  jobDepertmentOptionsWithEmpty,
-} from '../constants/jobDepertment';
+import { jobDepertmentOptionsWithEmpty } from '../constants/jobDepertment';
 import { onDeputationOptions } from '../constants/onDeputationFields';
 import {
+  areaFieldsFromPharmacist,
+  areaValuesFromState,
+  changeHandlerForAreaGroup,
   changeHandlerForDeputationGroup,
   changeHandlerForPermanentGroup,
-  changeHandlerForPostingGroup,
   changeHandlerForVoterGroup,
   deputationFieldsFromPharmacist,
-  deputationValueFromState,
+  getAreaInfo,
+  getBnAreaInfo,
   permanentFieldsFromPharmacist,
-  permanentValueFromState,
-  postingFieldsFromPharmacist,
-  postingValueFromState,
   voterFieldsFromPharmacist,
-  voterValueFromState,
 } from '../helpers/utilities';
 
 const useDetailsPharmacistRow = ({
@@ -40,8 +36,6 @@ const useDetailsPharmacistRow = ({
   const [tableData, setTableData] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [inputValue, setInputValue] = useState(null);
-  const [jobDepertment, setJobDepertment] = useState(null);
-  const [postingFields, setPostingFields] = useState(null);
   const [permanentFields, setPermanentFields] = useState(null);
   const [voterFields, setVoterFields] = useState(
     voterFieldsFromPharmacist(pharmacist)
@@ -53,12 +47,17 @@ const useDetailsPharmacistRow = ({
 
   const isBn = language === 'BN' ? true : false;
 
-  const postingFieldsArray =
-    postingFields &&
-    Object.keys(postingFields).reduce((acc, cur) => {
-      acc.push(postingFields[cur]);
-      return acc;
-    }, []);
+  const addressFieldsArray =
+    inputValue &&
+    (row.name === 'mainPosting' ||
+    row.name === 'permanentAddress' ||
+    row.name === 'voterArea' ||
+    row.name === 'deputationPosting'
+      ? Object.keys(inputValue).reduce((acc, cur) => {
+          acc.push(inputValue[cur]);
+          return acc;
+        }, [])
+      : []);
 
   const permanentFieldsArray =
     permanentFields &&
@@ -81,14 +80,28 @@ const useDetailsPharmacistRow = ({
       return acc;
     }, []);
 
+  // console.log('input value =>', inputValue);
+
   const handleIsEditOpen = () => {
     if (isEditOpen) {
       setIsEditOpen(false);
     } else {
       if (row.name === 'mobile') {
         setInputValue(pharmacist?.mobile?.name);
-      } else if (row.type === 'textGroup' || row.type === 'select') {
+      } else if (
+        row.type === 'textGroup' ||
+        row.type === 'select' ||
+        row.type === 'date'
+      ) {
         setInputValue(pharmacist && pharmacist[row.name]);
+      } else if (row.name === 'mainPosting') {
+        setInputValue(areaFieldsFromPharmacist(pharmacist, 'posting'));
+      } else if (row.name === 'permanentAddress') {
+        setInputValue(areaFieldsFromPharmacist(pharmacist, 'permanent'));
+      } else if (row.name === 'voterArea') {
+        setInputValue(areaFieldsFromPharmacist(pharmacist, 'voter'));
+      } else if (row.name === 'deputationPosting') {
+        setInputValue(areaFieldsFromPharmacist(pharmacist, 'deputation'));
       } else setInputValue(tableData);
 
       setIsEditOpen(true);
@@ -111,20 +124,47 @@ const useDetailsPharmacistRow = ({
       setInputValue(
         jobDepertmentOptionsWithEmpty.find((item) => item.id === e.target.value)
       );
+    } else if (row.name === 'mainPosting') {
+      setInputValue(
+        changeHandlerForAreaGroup(
+          inputValue,
+          e.target.name,
+          e.target.value,
+          'posting'
+        )
+      );
+    } else if (row.name === 'permanentAddress') {
+      setInputValue(
+        changeHandlerForAreaGroup(
+          inputValue,
+          e.target.name,
+          e.target.value,
+          'permanent'
+        )
+      );
+    } else if (row.name === 'voterArea') {
+      setInputValue(
+        changeHandlerForAreaGroup(
+          inputValue,
+          e.target.name,
+          e.target.value,
+          'voter'
+        )
+      );
+    } else if (row.name === 'deputationPosting') {
+      setInputValue(
+        changeHandlerForAreaGroup(
+          inputValue,
+          e.target.name,
+          e.target.value,
+          'deputation'
+        )
+      );
     } else {
       setInputValue(e.target.value);
     }
   };
 
-  const handlePostingChange = (e) => {
-    setPostingFields((prevState) => {
-      return changeHandlerForPostingGroup(
-        prevState,
-        e.target.name,
-        e.target.value
-      );
-    });
-  };
   const handlePermanentChange = (e) => {
     setPermanentFields((prevState) => {
       return changeHandlerForPermanentGroup(
@@ -157,80 +197,53 @@ const useDetailsPharmacistRow = ({
     let dataForSubmit = null;
     let dataForCell = '';
 
-    if (
-      row.name === 'fathersName' ||
-      row.name === 'mothersName' ||
-      row.name === 'gender' ||
-      row.name === 'institute' ||
-      row.name === 'jobDepertment'
-    ) {
+    if (row.type === 'textGroup') {
       dataForSubmit = { [row.name]: inputValue };
       dataForCell = isBn ? inputValue.bn_name : inputValue.name;
+    } else if (row.tpe === 'select') {
+      dataForSubmit = {
+        [row.name]: inputValue.id
+          ? inputValue
+          : { id: '', name: '', bn_name: '' },
+      };
+      dataForCell = inputValue.id
+        ? isBn
+          ? inputValue.bn_name
+          : inputValue.name
+        : '';
+    } else if (row.type === 'date') {
+      dataForSubmit = {
+        [row.name]: inputValue,
+      };
+      dataForCell = dayjs(inputValue).format('DD MMM YYYY');
     } else if (row.name === 'mainPosting') {
-      dataForSubmit = postingValueFromState(postingFields);
-      dataForCell = `${
-        dataForSubmit.postingPlace ? `${dataForSubmit.postingPlace}, ` : ''
-      }${
-        dataForSubmit.postingUpazila?.name
-          ? `${dataForSubmit.postingUpazila?.name}, `
-          : ''
-      }${
-        dataForSubmit.postingDistrict?.name
-          ? dataForSubmit.postingDistrict?.name
-          : ''
-      }`;
+      dataForSubmit = areaValuesFromState(inputValue, 'posting');
+      dataForCell = isBn
+        ? getBnAreaInfo(dataForSubmit, 'posting')
+        : getAreaInfo(dataForSubmit, 'posting');
     } else if (row.name === 'permanentAddress') {
-      dataForSubmit = permanentValueFromState(permanentFields);
-      dataForCell = `${
-        dataForSubmit.permanentPlace ? `${dataForSubmit.permanentPlace}, ` : ''
-      }${
-        dataForSubmit.permanentUpazila?.name
-          ? `${dataForSubmit.permanentUpazila?.name}, `
-          : ''
-      }${
-        dataForSubmit.permanentDistrict?.name
-          ? dataForSubmit.permanentDistrict?.name
-          : ''
-      }`;
-    } else if (row.name === 'onDeputation') {
-      const data = onDeputationOptions.find(
-        (opt) => opt.id === onDeputation
-      )?.name;
-      dataForSubmit = { onDeputation: data };
-      dataForCell = data;
+      console.log('permanent called');
+      dataForSubmit = areaValuesFromState(inputValue, 'permanent');
+      dataForCell = isBn
+        ? getBnAreaInfo(dataForSubmit, 'permanent')
+        : getAreaInfo(dataForSubmit, 'permanent');
     } else if (row.name === 'voterArea') {
-      dataForSubmit = voterValueFromState(voterFields);
-      dataForCell = `${
-        dataForSubmit.voterDistrict?.name
-          ? `${dataForSubmit.voterDistrict?.name}, `
-          : ''
-      }${
-        dataForSubmit.voterDivision?.name
-          ? `${dataForSubmit.voterDivision?.name} Division`
-          : ''
-      }`;
+      dataForSubmit = areaValuesFromState(inputValue, 'voter');
+      dataForCell = isBn
+        ? getBnAreaInfo(dataForSubmit, 'voter')
+        : getAreaInfo(dataForSubmit, 'voter');
     } else if (row.name === 'deputationPosting') {
-      dataForSubmit = deputationValueFromState(deputationFields);
-      dataForCell = `${
-        dataForSubmit.deputationPlace
-          ? `${dataForSubmit.deputationPlace}, `
-          : ''
-      }${
-        dataForSubmit.deputationUpazila?.name
-          ? `${dataForSubmit.deputationUpazila?.name}, `
-          : ''
-      }${
-        dataForSubmit.deputationDistrict?.name
-          ? dataForSubmit.deputationDistrict?.name
-          : ''
-      }`;
+      dataForSubmit = areaValuesFromState(inputValue, 'deputation');
+      dataForCell = isBn
+        ? getBnAreaInfo(dataForSubmit, 'deputation')
+        : getAreaInfo(dataForSubmit, 'deputation');
     } else {
       dataForSubmit = { [row.name]: inputValue };
       dataForCell = inputValue;
     }
 
-    // console.log('data for submit', dataForSubmit);
-    // console.log('data for cell', dataForCell);
+    console.log('data for submit', dataForSubmit);
+    console.log('data for cell', dataForCell);
 
     const res = await updatePharmacistData({
       regNumber: pharmacist.regNumber,
@@ -260,20 +273,7 @@ const useDetailsPharmacistRow = ({
 
   useEffect(() => {
     setTableData(row.td);
-    if (row.name === 'jobDepertment') {
-      const tempJobDepertment = { ...jobDepertmentField };
-      if (pharmacist.jobDepertment) {
-        tempJobDepertment.value =
-          jobDepertmentOptions.find(
-            (option) => option.name === pharmacist.jobDepertment
-          )?.id || '0';
-        setJobDepertment(tempJobDepertment);
-      } else {
-        setJobDepertment(tempJobDepertment);
-      }
-    } else if (row.name === 'mainPosting') {
-      setPostingFields(postingFieldsFromPharmacist(pharmacist));
-    } else if (row.name === 'permanentAddress') {
+    if (row.name === 'permanentAddress') {
       setPermanentFields(permanentFieldsFromPharmacist(pharmacist));
     } else if (row.name === 'deputationPosting') {
       setDeputationFields(deputationFieldsFromPharmacist(pharmacist));
@@ -287,10 +287,7 @@ const useDetailsPharmacistRow = ({
     handleChange,
     error,
     handleIsEditOpen,
-    jobDepertment,
-    setJobDepertment,
-    postingFieldsArray,
-    handlePostingChange,
+    addressFieldsArray,
     permanentFieldsArray,
     handlePermanentChange,
     voterAreaArray,

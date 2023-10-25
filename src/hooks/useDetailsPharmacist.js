@@ -217,7 +217,7 @@ const useDetailsPharmacist = () => {
             ? getBnAreaInfo(pharmacist, 'posting')
             : getAreaInfo(pharmacist, 'posting'),
           'mainPosting',
-          'select',
+          'area',
           isPermittedForEdit
         ),
         createRow(
@@ -226,7 +226,7 @@ const useDetailsPharmacist = () => {
             ? getBnAreaInfo(pharmacist, 'permanent')
             : getAreaInfo(pharmacist, 'permanent'),
           'permanentAddress',
-          'select',
+          'area',
           isPermittedForEdit
         ),
         createRow(
@@ -235,7 +235,7 @@ const useDetailsPharmacist = () => {
             ? getBnAreaInfo(pharmacist, 'voter')
             : getAreaInfo(pharmacist, 'voter'),
           'voterArea',
-          'select',
+          'area',
           isAdmin
         ),
         createRow(
@@ -257,7 +257,7 @@ const useDetailsPharmacist = () => {
               ? getBnAreaInfo(pharmacist, 'deputation')
               : getAreaInfo(pharmacist, 'deputation'),
             'deputationPosting',
-            'select',
+            'area',
             isPermittedForEdit
           )
         );
