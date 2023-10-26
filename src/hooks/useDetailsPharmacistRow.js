@@ -9,22 +9,11 @@ import {
   areaFieldsFromPharmacist,
   areaValuesFromState,
   changeHandlerForAreaGroup,
-  changeHandlerForDeputationGroup,
-  changeHandlerForPermanentGroup,
-  changeHandlerForVoterGroup,
-  deputationFieldsFromPharmacist,
   getAreaInfo,
   getBnAreaInfo,
-  permanentFieldsFromPharmacist,
-  voterFieldsFromPharmacist,
 } from '../helpers/utilities';
 
-const useDetailsPharmacistRow = ({
-  row,
-  pharmacist,
-  handleShowDeputation,
-  setSnackbar,
-}) => {
+const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
   const {
     ui: { language },
     pharmacist: { error },
@@ -36,14 +25,6 @@ const useDetailsPharmacistRow = ({
   const [tableData, setTableData] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [inputValue, setInputValue] = useState(null);
-  const [permanentFields, setPermanentFields] = useState(null);
-  const [voterFields, setVoterFields] = useState(
-    voterFieldsFromPharmacist(pharmacist)
-  );
-  const [onDeputation, setOnDeputation] = useState(
-    onDeputationOptions.find((opt) => opt.name === pharmacist.onDeputation)?.id
-  );
-  const [deputationFields, setDeputationFields] = useState(null);
 
   const isBn = language === 'BN' ? true : false;
 
@@ -58,29 +39,6 @@ const useDetailsPharmacistRow = ({
           return acc;
         }, [])
       : []);
-
-  const permanentFieldsArray =
-    permanentFields &&
-    Object.keys(permanentFields).reduce((acc, cur) => {
-      acc.push(permanentFields[cur]);
-      return acc;
-    }, []);
-
-  const voterAreaArray =
-    voterFields &&
-    Object.keys(voterFields).reduce((acc, cur) => {
-      acc.push(voterFields[cur]);
-      return acc;
-    }, []);
-
-  const deputationFieldsArray =
-    deputationFields &&
-    Object.keys(deputationFields).reduce((acc, cur) => {
-      acc.push(deputationFields[cur]);
-      return acc;
-    }, []);
-
-  // console.log('input value =>', inputValue);
 
   const handleIsEditOpen = () => {
     if (isEditOpen) {
@@ -124,6 +82,10 @@ const useDetailsPharmacistRow = ({
       setInputValue(
         jobDepertmentOptionsWithEmpty.find((item) => item.id === e.target.value)
       );
+    } else if (row.name === 'onDeputation') {
+      setInputValue(
+        onDeputationOptions.find((item) => item.id === e.target.value)
+      );
     } else if (row.name === 'mainPosting') {
       setInputValue(
         changeHandlerForAreaGroup(
@@ -165,34 +127,6 @@ const useDetailsPharmacistRow = ({
     }
   };
 
-  const handlePermanentChange = (e) => {
-    setPermanentFields((prevState) => {
-      return changeHandlerForPermanentGroup(
-        prevState,
-        e.target.name,
-        e.target.value
-      );
-    });
-  };
-  const handleDeputationChange = (e) => {
-    setDeputationFields((prevState) => {
-      return changeHandlerForDeputationGroup(
-        prevState,
-        e.target.name,
-        e.target.value
-      );
-    });
-  };
-  const handleVoterAreaChange = (e) => {
-    setVoterFields((prevState) => {
-      return changeHandlerForVoterGroup(
-        prevState,
-        e.target.name,
-        e.target.value
-      );
-    });
-  };
-
   const handleSubmit = async () => {
     let dataForSubmit = null;
     let dataForCell = '';
@@ -200,7 +134,7 @@ const useDetailsPharmacistRow = ({
     if (row.type === 'textGroup') {
       dataForSubmit = { [row.name]: inputValue };
       dataForCell = isBn ? inputValue.bn_name : inputValue.name;
-    } else if (row.tpe === 'select') {
+    } else if (row.type === 'select') {
       dataForSubmit = {
         [row.name]: inputValue.id
           ? inputValue
@@ -222,7 +156,6 @@ const useDetailsPharmacistRow = ({
         ? getBnAreaInfo(dataForSubmit, 'posting')
         : getAreaInfo(dataForSubmit, 'posting');
     } else if (row.name === 'permanentAddress') {
-      console.log('permanent called');
       dataForSubmit = areaValuesFromState(inputValue, 'permanent');
       dataForCell = isBn
         ? getBnAreaInfo(dataForSubmit, 'permanent')
@@ -242,9 +175,6 @@ const useDetailsPharmacistRow = ({
       dataForCell = inputValue;
     }
 
-    console.log('data for submit', dataForSubmit);
-    console.log('data for cell', dataForCell);
-
     const res = await updatePharmacistData({
       regNumber: pharmacist.regNumber,
       data: dataForSubmit,
@@ -253,9 +183,8 @@ const useDetailsPharmacistRow = ({
     if (res) {
       setTableData(dataForCell);
       setIsEditOpen(false);
-      if (row.name === 'onDeputation') {
-        handleShowDeputation(res['onDeputation']);
-      }
+      setInputValue(null);
+
       setSnackbar({
         open: true,
         severity: 'success',
@@ -263,6 +192,7 @@ const useDetailsPharmacistRow = ({
       });
     } else {
       setTableData(row.td);
+      setInputValue(null);
       setSnackbar({
         open: true,
         severity: 'error',
@@ -273,11 +203,6 @@ const useDetailsPharmacistRow = ({
 
   useEffect(() => {
     setTableData(row.td);
-    if (row.name === 'permanentAddress') {
-      setPermanentFields(permanentFieldsFromPharmacist(pharmacist));
-    } else if (row.name === 'deputationPosting') {
-      setDeputationFields(deputationFieldsFromPharmacist(pharmacist));
-    }
   }, []);
 
   return {
@@ -288,14 +213,6 @@ const useDetailsPharmacistRow = ({
     error,
     handleIsEditOpen,
     addressFieldsArray,
-    permanentFieldsArray,
-    handlePermanentChange,
-    voterAreaArray,
-    handleVoterAreaChange,
-    onDeputation,
-    setOnDeputation,
-    deputationFieldsArray,
-    handleDeputationChange,
     tableData,
     handleSubmit,
   };

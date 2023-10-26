@@ -16,7 +16,6 @@ const createRow = (th, value, name, type, isEdit, textGroupFields) => ({
 const useDetailsPharmacist = () => {
   let { regNumber } = useParams();
   const navigate = useNavigate();
-  const [showDeputationRow, setShowDeputationRow] = useState(null);
   const [tableRows, setTableRows] = useState([]);
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -49,11 +48,14 @@ const useDetailsPharmacist = () => {
 
   useEffect(() => {
     if (pharmacist) {
-      setShowDeputationRow(
-        pharmacist.onDeputation?.name === 'Yes' ? true : false
-      );
-
       const rows = [
+        createRow(
+          '',
+          pharmacist.imageUrl,
+          'imageUrl',
+          'text',
+          isPermittedForEdit
+        ),
         createRow(
           isBn ? 'বি-গ্রেড নিবন্ধন সংখ্যা' : 'Registration number',
           pharmacist.regNumber,
@@ -80,7 +82,7 @@ const useDetailsPharmacist = () => {
           pharmacist.email,
           'email',
           'text',
-          isPermittedForEdit
+          isAdmin
         ),
         createRow(
           isBn ? 'মোবাইল নাম্বার' : 'Mobile number',
@@ -159,7 +161,7 @@ const useDetailsPharmacist = () => {
           isPermittedForEdit
         ),
         createRow(
-          isBn ? 'ইন্সটিটিউটের নাম' : 'Institute Name',
+          isBn ? 'ইনস্টিটিউটের নাম' : 'Institute Name',
           isBn ? pharmacist.institute?.bn_name : pharmacist.institute?.name,
           'institute',
           'textGroup',
@@ -168,12 +170,12 @@ const useDetailsPharmacist = () => {
             {
               name: 'name',
               label: 'Institute Name (English)',
-              bn_label: 'ইন্সটিটিউটের নাম (English)',
+              bn_label: 'ইনস্টিটিউটের নাম (English)',
             },
             {
               name: 'bn_name',
               label: 'Institute Name (বাংলা)',
-              bn_label: 'ইন্সটিটিউটের নাম (বাংলা)',
+              bn_label: 'ইনস্টিটিউটের নাম (বাংলা)',
             },
           ]
         ),
@@ -239,7 +241,7 @@ const useDetailsPharmacist = () => {
           isAdmin
         ),
         createRow(
-          isBn ? 'প্রেষনে/সংযুক্ত আছেন?' : 'On deputation/attachment?',
+          isBn ? 'প্রেষনে/সংযুক্ত আছেন?' : 'On deputation/ attachment?',
           isBn
             ? pharmacist.onDeputation?.bn_name
             : pharmacist.onDeputation?.name,
@@ -264,26 +266,7 @@ const useDetailsPharmacist = () => {
 
       setTableRows(rows);
     } else setTableRows([]);
-  }, [pharmacist, isPermittedForEdit, isBn]);
-
-  useEffect(() => {
-    if (showDeputationRow) {
-      const row = createRow(
-        isBn ? 'প্রেষন/সংযুক্ত কর্মস্থল' : 'Deputation/attachment posting',
-        isBn
-          ? getBnAreaInfo(pharmacist, 'deputation')
-          : getAreaInfo(pharmacist, 'deputation'),
-        'deputationPosting',
-        'select',
-        true
-      );
-      setTableRows([...tableRows, row]);
-    } else {
-      setTableRows((prevState) => {
-        return prevState.filter((item) => item.name !== 'deputationPosting');
-      });
-    }
-  }, [showDeputationRow]);
+  }, [pharmacist, isPermittedForEdit, isAdmin, isBn]);
 
   const handleDelete = () => {
     if (
@@ -310,8 +293,6 @@ const useDetailsPharmacist = () => {
     isAdmin,
     pharmacist,
     tableRows,
-    showDeputationRow,
-    setShowDeputationRow,
     handleDelete,
     snackbar,
     setSnackbar,

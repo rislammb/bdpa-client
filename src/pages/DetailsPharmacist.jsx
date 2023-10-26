@@ -20,8 +20,6 @@ const DetailsPharmacist = () => {
     isAdmin,
     pharmacist,
     tableRows,
-    showDeputationRow,
-    setShowDeputationRow,
     handleDelete,
     snackbar,
     setSnackbar,
@@ -47,26 +45,11 @@ const DetailsPharmacist = () => {
           {pharmacist ? (
             tableRows.length > 0 ? (
               <>
-                <TableRow sx={{ border: 0 }}>
-                  <TableCell colSpan={3} sx={{ textAlign: 'center' }}>
-                    <img
-                      src={pharmacist.imageUrl}
-                      alt={pharmacist.name}
-                      height={'130'}
-                      style={{ border: '1px solid #ccc' }}
-                    />
-                  </TableCell>
-                </TableRow>
-
                 {tableRows.map((row) => (
                   <DetailsPharmacistRow
                     key={row.th}
                     row={row}
                     pharmacist={pharmacist}
-                    showDeputationRow={showDeputationRow}
-                    handleShowDeputation={(data) =>
-                      setShowDeputationRow(data === 'Yes' ? true : false)
-                    }
                     setSnackbar={setSnackbar}
                   />
                 ))}

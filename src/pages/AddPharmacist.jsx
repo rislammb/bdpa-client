@@ -75,7 +75,9 @@ const AddPharmacist = () => {
                 value={field.value}
                 onChange={handleChange}
                 disableFuture
-                referenceDate={new Date('1997-05-23')}
+                referenceDate={
+                  field.name === 'dateOfBirth' ? '1999-12-31' : '2013-12-31'
+                }
               />
             );
           } else

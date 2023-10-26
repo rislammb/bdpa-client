@@ -1,7 +1,15 @@
 import { MenuItem, TextField } from '@mui/material';
 import { useStoreState } from 'easy-peasy';
 
-const SelectComponent = ({ name, label, value, options, onChange, style }) => {
+const SelectComponent = ({
+  name,
+  label,
+  value,
+  options,
+  onChange,
+  style,
+  error,
+}) => {
   const { language } = useStoreState((state) => state.ui);
   const isBn = language === 'BN' ? true : false;
 
@@ -13,6 +21,8 @@ const SelectComponent = ({ name, label, value, options, onChange, style }) => {
       label={label || ''}
       value={value}
       onChange={onChange}
+      error={error ? true : false}
+      helperText={error && error}
       variant='standard'
       style={{ textAlign: 'left', ...style }}
     >

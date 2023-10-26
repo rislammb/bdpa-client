@@ -11,13 +11,7 @@ import DatePickerComp from './DatePickerComp';
 import PostingGroup from './PostingGroup';
 import SelectComponent from './SelectComponent';
 
-const DetailsPharmacistRow = ({
-  row,
-  pharmacist,
-  showDeputationRow,
-  handleShowDeputation,
-  setSnackbar,
-}) => {
+const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
   const {
     isBn,
     isEditOpen,
@@ -26,21 +20,11 @@ const DetailsPharmacistRow = ({
     error,
     handleIsEditOpen,
     addressFieldsArray,
-    handlePostingChange,
-    permanentFieldsArray,
-    handlePermanentChange,
-    voterAreaArray,
-    handleVoterAreaChange,
-    onDeputation,
-    setOnDeputation,
-    deputationFieldsArray,
-    handleDeputationChange,
     tableData,
     handleSubmit,
   } = useDetailsPharmacistRow({
     row,
     pharmacist,
-    handleShowDeputation,
     setSnackbar,
   });
 
@@ -48,29 +32,30 @@ const DetailsPharmacistRow = ({
     <TableRow
       key={row.th}
       sx={{
-        display: 'grid',
-        gridTemplateColumns: {
-          xs: row.isEdit ? '1fr 2fr 85px' : '1fr 2fr',
-          sm: row.isEdit ? '1fr 2fr 93px' : '1fr 2fr',
-        },
+        display: 'flex',
         '&:last-child td, &:last-child th': { border: 0 },
       }}
     >
+      {row.name !== 'imageUrl' && (
+        <TableCell
+          sx={{
+            flexGrow: 1,
+            padding: { xs: '8px 8px', sm: '8px 16px' },
+            alignContent: 'center',
+          }}
+          component='th'
+          scope='row'
+        >
+          {row.th}
+        </TableCell>
+      )}
       <TableCell
         sx={{
-          padding: { xs: '8px 8px', sm: '8px 16px' },
-          alignContent: 'center',
-        }}
-        component='th'
-        scope='row'
-      >
-        {row.th}
-      </TableCell>
-      <TableCell
-        sx={{
+          flexGrow: 2,
           padding: { xs: '8px 8px', sm: '8px 16px' },
           fontWeight:
             row.name === 'regNumber' || row.name === 'name' ? 'bold' : '',
+          textAlign: row.name === 'imageUrl' && 'center',
         }}
       >
         {isEditOpen ? (
@@ -78,6 +63,7 @@ const DetailsPharmacistRow = ({
             <TextField
               value={inputValue}
               onChange={handleChange}
+              label={row.name === 'imageUrl' && 'Image URL'}
               variant='standard'
               sx={{ width: '100%', fontSize: '7px' }}
               error={error && error[row.name] ? true : false}
@@ -107,11 +93,9 @@ const DetailsPharmacistRow = ({
               value={inputValue}
               onChange={handleChange}
               disableFuture
-              referenceDate={'2003-05-23'}
-              // <DatePickerComp
-              //   name={row.name}
-              //   value={inputValue}
-              //   onChange={handleChange}
+              referenceDate={
+                row.name === 'dateOfBirth' ? '1999-12-31' : '2013-12-31'
+              }
             />
           ) : row.name === 'gender' ? (
             <SelectComponent
@@ -139,37 +123,41 @@ const DetailsPharmacistRow = ({
           ) : row.name === 'onDeputation' ? (
             <SelectComponent
               name='onDeputation'
-              value={onDeputation}
-              options={[...onDeputationOptions]}
-              onChange={(e) => setOnDeputation(e.target.value)}
+              value={inputValue.id}
+              options={onDeputationOptions}
+              onChange={handleChange}
               style={{ width: '100%' }}
-            />
-          ) : row.name === 'deputationPosting' ? (
-            <PostingGroup
-              postingInfo={deputationFieldsArray}
-              onChange={handleDeputationChange}
-              error={error}
-              style={{ width: '100%' }}
+              error={
+                error &&
+                (isBn
+                  ? error[row.name]?.bn_text ?? ''
+                  : error[row.name]?.text ?? '')
+              }
             />
           ) : (
             ''
           )
-        ) : row.type === 'deputationPosting' ? (
-          showDeputationRow ? (
-            tableData
-          ) : (
-            ''
-          )
+        ) : row.name === 'imageUrl' ? (
+          <img
+            src={tableData}
+            alt={pharmacist.name}
+            height={'130'}
+            style={{ border: '1px solid #ccc' }}
+          />
         ) : (
           tableData
         )}
       </TableCell>
-      {row.isEdit && (
+
+      {(row.isEdit || row.name !== 'imageUrl') && (
         <TableCell
-          sx={{ padding: { xs: '1px 13px 1px 3px', sm: '3px 15px 3px 5px' } }}
+          sx={{
+            padding: { xs: '1px 13px 1px 3px', sm: '3px 15px 3px 5px' },
+            width: { xs: '85px', sm: '93px' },
+          }}
         >
-          {row.isEdit &&
-            (isEditOpen ? (
+          {row.isEdit ? (
+            isEditOpen ? (
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <IconButton
                   edge='end'
@@ -200,7 +188,10 @@ const DetailsPharmacistRow = ({
                   <EditOutlined />
                 </IconButton>
               </div>
-            ))}
+            )
+          ) : (
+            ''
+          )}
         </TableCell>
       )}
     </TableRow>
