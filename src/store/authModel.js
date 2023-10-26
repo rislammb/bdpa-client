@@ -30,11 +30,13 @@ const authModel = {
       const { data } = await verifyToken();
       actions.setUser(data);
     } catch (e) {
-      actions.setError(e.response?.data);
+      if (e.response?.data) {
+        actions.setError(e.response?.data);
+        actions.setUser(null);
+        actions.setToken(null);
+        setAuthToken('');
+      } else actions.setError(e.message);
       actions.setLoading(false);
-      actions.setToken(null);
-      actions.setUser(null);
-      setAuthToken(null);
     }
   }),
   getLoginData: thunk(async (actions, payload) => {
@@ -52,10 +54,9 @@ const authModel = {
     }
   }),
   logout: action((state) => {
-    console.log('start log out');
     state.token = null;
     state.user = null;
-    setAuthToken();
+    setAuthToken('');
   }),
 };
 

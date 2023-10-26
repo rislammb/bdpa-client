@@ -90,7 +90,6 @@ export default function AppProvider() {
       setAuthToken(token);
       getVerifyedData();
     } else {
-      setAuthToken('');
       setLoading(false);
     }
   }, [token, getVerifyedData]);
