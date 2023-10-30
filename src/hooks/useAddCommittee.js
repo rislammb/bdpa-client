@@ -1,31 +1,43 @@
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { initialMember } from '../helpers/member';
+import { committeeMemberFields } from '../constants/committeeMemberFields';
 import { generateId, getAreaInfo, objDeepClone } from '../helpers/utilities';
 
 const initialCommitteeInfo = {
   committeeTitle: {
-    label: 'কমিটির নাম',
+    label: 'Committee Name (English)',
+    bn_label: 'কমিটির নাম (English)',
     name: 'committeeTitle',
+    placeholder: 'Rajshahi District Committee',
+    type: 'text',
+    value: '',
+  },
+  bn_committeeTitle: {
+    label: 'Committee Name (বাংলা)',
+    bn_label: 'কমিটির নাম (বাংলা)',
+    name: 'bn_committeeTitle',
     placeholder: 'রাজশাহী জেলা কমিটি',
     type: 'text',
     value: '',
   },
   workHasStarted: {
-    label: 'কার্যক্রম শুরু',
+    label: 'Work has Started',
+    bn_label: 'কার্যক্রম শুরু',
     name: 'workHasStarted',
     type: 'date',
     value: null,
   },
   willExpire: {
-    label: 'মেয়াদ',
+    label: 'Will Expire',
+    bn_label: 'মেয়াদ',
     name: 'willExpire',
     type: 'date',
     value: null,
   },
   indexNumber: {
-    label: 'ক্রমিক ইনডেক্স',
+    label: 'Serial Index',
+    bn_label: 'ক্রমিক ইনডেক্স',
     name: 'indexNumber',
     placeholder: '07',
     type: 'text',
@@ -35,7 +47,7 @@ const initialCommitteeInfo = {
 
 const addMember = (initial = [], count = 1) => {
   for (let i = 0; i < count; i++) {
-    initial.push({ id: generateId(), ...initialMember });
+    initial.push({ id: generateId(), ...committeeMemberFields });
   }
 
   return initial;
@@ -46,6 +58,7 @@ const useAddCommittee = () => {
   const navigate = useNavigate();
 
   const {
+    ui: { language },
     committee: { submitting, error },
     pharmacist: { list },
   } = useStoreState((state) => state);
@@ -56,12 +69,13 @@ const useAddCommittee = () => {
 
   const [committeeInfo, setCommitteeInfo] = useState(initialCommitteeInfo);
   const [members, setMembers] = useState(addMember([], 7));
-
   const [snackbar, setSnackbar] = useState({
     open: false,
     severity: 'info',
     text: '',
   });
+
+  const isBn = language === 'BN' ? true : false;
 
   const handleInfoChange = (e, name) => {
     const clonedState = objDeepClone(committeeInfo);
@@ -83,7 +97,11 @@ const useAddCommittee = () => {
     const clonedState = objDeepClone(members);
     const index = clonedState.findIndex((item) => item.id === id);
 
-    clonedState[index][name].value = value;
+    if (e.target.name === 'serialNumber') {
+      clonedState[index][name].value = e.target.value.replace(/[^0-9]/g, '');
+    } else {
+      clonedState[index][name].value = value;
+    }
 
     setMembers(clonedState);
   };
@@ -145,6 +163,7 @@ const useAddCommittee = () => {
   }, []);
 
   return {
+    isBn,
     committeeInfo,
     members,
     defaultProps,
@@ -172,7 +191,7 @@ const mapStateToValue = (state) =>
 const mapMembersToValue = (members) => {
   return members.map((mem) => ({
     serialNumber: mem.serialNumber.value,
-    postName: mem.postName.value,
+    postName: { name: mem.postName.value, bn_name: mem.bn_postName.value },
     pharmacistId: mem.pharmacistId.value?._id,
   }));
 };

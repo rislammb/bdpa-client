@@ -1,7 +1,7 @@
 import Close from '@mui/icons-material/Close';
 import Done from '@mui/icons-material/Done';
 import EditOutlined from '@mui/icons-material/EditOutlined';
-import { IconButton, TableCell, TableRow, TextField } from '@mui/material';
+import { Box, IconButton, TableCell, TableRow, TextField } from '@mui/material';
 
 import { genderOptionsWithEmpty } from '../constants/gender';
 import { jobDepertmentOptionsWithEmpty } from '../constants/jobDepertment';
@@ -76,17 +76,31 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
               }
             />
           ) : row.type === 'textGroup' && row['textGroupFields'] ? (
-            row['textGroupFields'].map((item) => (
-              <TextField
-                key={item.name}
-                name={item.name}
-                label={isBn ? item.bn_label : item.label}
-                value={inputValue && inputValue[item.name]}
-                onChange={handleChange}
-                variant='standard'
-                sx={{ width: '100%', fontSize: '7px' }}
-              />
-            ))
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              {row['textGroupFields'].map((item) => (
+                <TextField
+                  key={item.name}
+                  name={item.name}
+                  label={isBn ? item.bn_label : item.label}
+                  value={inputValue && inputValue[item.name]}
+                  onChange={handleChange}
+                  variant='standard'
+                  sx={{ width: '100%', fontSize: '7px' }}
+                  error={
+                    error && error[row.name] && error[row.name][item.name]
+                      ? true
+                      : false
+                  }
+                  helperText={
+                    error &&
+                    error[row.name] &&
+                    (isBn
+                      ? error[row.name][item.name]?.bn_text ?? ''
+                      : error[row.name][item.name]?.text ?? '')
+                  }
+                />
+              ))}
+            </Box>
           ) : row.type === 'date' ? (
             <DatePickerComp
               name={row.name}
@@ -158,12 +172,13 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
         >
           {row.isEdit ? (
             isEditOpen ? (
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <IconButton
                   edge='end'
                   aria-label='edit'
                   onClick={handleIsEditOpen}
                   disabled={!row.isEdit}
+                  color='error'
                 >
                   <Close />
                 </IconButton>
@@ -172,22 +187,24 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
                   aria-label='edit'
                   onClick={handleSubmit}
                   disabled={!row.isEdit}
+                  color='info'
                 >
                   <Done />
                 </IconButton>
-              </div>
+              </Box>
             ) : (
-              <div style={{ textAlign: 'center' }}>
+              <Box sx={{ textAlign: 'center' }}>
                 <IconButton
                   sx={{ textAlign: 'center' }}
                   edge='end'
                   aria-label='edit'
                   onClick={() => handleIsEditOpen(row.name)}
                   disabled={!row.isEdit}
+                  color='info'
                 >
                   <EditOutlined />
                 </IconButton>
-              </div>
+              </Box>
             )
           ) : (
             ''

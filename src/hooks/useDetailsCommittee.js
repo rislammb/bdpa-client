@@ -1,13 +1,13 @@
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { initialMember } from '../helpers/member';
+import { committeeMemberFields } from '../constants/committeeMemberFields';
 import { getAreaInfo, getBnAreaInfo, objDeepClone } from '../helpers/utilities';
 
 const getColumns = (isBn) => [
   { id: 'serialNumber', label: isBn ? 'ক্রমিক' : 'Serial', minWidth: 35 },
   {
-    id: 'bn_name',
+    id: isBn ? 'bn_name' : 'name',
     label: isBn ? 'নাম (বাংলা)' : 'Name (Enslish)',
     minWidth: 150,
   },
@@ -18,7 +18,7 @@ const getColumns = (isBn) => [
   },
   { id: 'mobile', label: isBn ? 'মোবাইল' : 'Mobile', minWidth: 90 },
   {
-    id: 'posting',
+    id: isBn ? 'bn_posting' : 'posting',
     label: isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main posting/address',
     minWidth: 280,
   },
@@ -49,7 +49,7 @@ const useDetailsCommittee = () => {
   } = useStoreActions((actions) => actions);
 
   const [isAddMember, setIsAddMember] = useState(false);
-  const [member, setMember] = useState({ ...initialMember });
+  const [member, setMember] = useState({ ...committeeMemberFields });
 
   const toggleAddMember = () => {
     setIsAddMember(!isAddMember);
@@ -60,9 +60,11 @@ const useDetailsCommittee = () => {
     const { name, value } = e.target;
 
     const clonedState = objDeepClone(member);
-
-    clonedState[name].value = value;
-
+    if (name === 'serialNumber') {
+      clonedState[name].value = value.replace(/[^0-9]/g, '');
+    } else {
+      clonedState[name].value = value;
+    }
     setMember(clonedState);
   };
 
@@ -70,13 +72,16 @@ const useDetailsCommittee = () => {
     const data = await addMemberData({
       committeeId: committee._id,
       serialNumber: member.serialNumber.value,
-      postName: member.postName.value,
+      postName: {
+        name: member.postName.value,
+        bn_name: member.bn_postName.value,
+      },
       pharmacistId: member.pharmacistId.value?._id,
     });
 
     if (data) {
       toggleAddMember();
-      setMember({ ...initialMember });
+      setMember({ ...committeeMemberFields });
       getDetailsCommitteeData(committeePath);
     }
   };

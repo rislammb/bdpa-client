@@ -175,6 +175,7 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
       dataForCell = inputValue;
     }
 
+    // console.log('data for submit', dataForSubmit);
     const res = await updatePharmacistData({
       regNumber: pharmacist.regNumber,
       data: dataForSubmit,
@@ -183,7 +184,6 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
     if (res) {
       setTableData(dataForCell);
       setIsEditOpen(false);
-      setInputValue(null);
 
       setSnackbar({
         open: true,
@@ -192,7 +192,6 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
       });
     } else {
       setTableData(row.td);
-      setInputValue(null);
       setSnackbar({
         open: true,
         severity: 'error',

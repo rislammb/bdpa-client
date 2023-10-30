@@ -3,6 +3,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
+import { useStoreState } from 'easy-peasy';
 
 const AddMemberRow = ({
   member,
@@ -11,6 +12,9 @@ const AddMemberRow = ({
   defaultProps,
   deleteMemberRow,
 }) => {
+  const { language } = useStoreState((state) => state.ui);
+  const isBn = language === 'BN' ? true : false;
+
   const memberArray = Object.keys(member).reduce((acc, cur) => {
     if (cur === 'id') return acc;
     else {
@@ -19,12 +23,14 @@ const AddMemberRow = ({
     return acc;
   }, []);
 
+  console.log('member from add =>', member);
+
   return (
     <Box
       sx={{
         display: 'flex',
         gap: 1,
-        alignItems: 'center',
+        alignItems: 'flex-start',
         minWidth: '620px',
       }}
     >
@@ -48,10 +54,16 @@ const AddMemberRow = ({
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label={property.label}
+                  label={isBn ? property.bn_label : property.label}
                   variant='standard'
                   error={error && error[property.name] ? true : false}
-                  helperText={(error && error[property.name]) ?? ''}
+                  helperText={
+                    error &&
+                    error[property.name] &&
+                    (isBn
+                      ? error[property.name].bn_text ?? ''
+                      : error[property.name].text ?? '')
+                  }
                 />
               )}
             />
@@ -60,13 +72,19 @@ const AddMemberRow = ({
               InputLabelProps={{ color: 'info' }}
               key={property.name}
               name={property.name}
-              label={property.label}
+              label={isBn ? property.bn_label : property.label}
               sx={{ ...property.sx }}
               value={property.value}
               placeholder={property.placeholder}
               onChange={(e) => onChange(e, member.id)}
               error={error && error[property.name] ? true : false}
-              helperText={(error && error[property.name]) ?? ''}
+              helperText={
+                error &&
+                error[property.name] &&
+                (isBn
+                  ? error[property.name].bn_text ?? ''
+                  : error[property.name].text ?? '')
+              }
               variant='standard'
             />
           );

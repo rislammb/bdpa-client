@@ -1,5 +1,5 @@
 import { action, thunk } from 'easy-peasy';
-import { addMember } from '../api/member';
+import { addMember, deleteMemberById, updateMemberById } from '../api/member';
 
 const memberModel = {
   submitting: false,
@@ -24,15 +24,26 @@ const memberModel = {
       actions.setSubmitting(false);
     }
   }),
-  deleteMemberData: thunk(async (actions, payload) => {
+  updateMemberData: thunk(async (actions, payload) => {
+    // actions.setError(null);
     actions.setSubmitting(true);
-
     try {
-      // await deleteCommittee(payload);
-      // actions.setDetailsCommittee(null);
+      const { data } = await updateMemberById(payload);
+      actions.setSubmitting(false);
+      return data;
+    } catch (e) {
+      actions.setError(e.response?.data);
+      actions.setSubmitting(false);
+    }
+  }),
+  deleteCommitteeMember: thunk(async (actions, payload) => {
+    actions.setSubmitting(true);
+    try {
+      await deleteMemberById(payload);
       actions.setSubmitting(false);
     } catch (e) {
-      // actions.setError(e.response?.data);
+      console.log('delete error');
+      actions.setError(e.response?.data);
       actions.setSubmitting(false);
     }
   }),

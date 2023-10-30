@@ -71,13 +71,20 @@ export const changeHandlerForAreaGroup = (prevState, name, value, areaName) => {
   const clonedState = objDeepClone(prevState);
   if (name === areaName + 'Division') {
     clonedState[name].value = value;
-    clonedState[areaName + 'District'].options = [
-      ...selectedFields[areaName + 'District'].options,
-      ...districts.filter((district) => district.division_id === value),
-    ];
+
+    if (value) {
+      clonedState[areaName + 'District'].options = [
+        ...selectedFields[areaName + 'District'].options,
+        ...districts.filter((district) => district.division_id === value),
+      ];
+    } else {
+      clonedState[areaName + 'District'].options = [
+        ...selectedFields[areaName + 'District'].options,
+      ];
+    }
+    clonedState[areaName + 'District'].value = '';
 
     if (clonedState[areaName + 'Upazila']) {
-      clonedState[areaName + 'District'].value = '';
       clonedState[areaName + 'Upazila'].options = [
         ...selectedFields[areaName + 'Upazila'].options,
       ];
@@ -85,11 +92,18 @@ export const changeHandlerForAreaGroup = (prevState, name, value, areaName) => {
     }
   } else if (name === areaName + 'District') {
     clonedState[name].value = value;
+
     if (clonedState[areaName + 'Upazila']) {
-      clonedState[areaName + 'Upazila'].options = [
-        ...selectedFields[areaName + 'Upazila'].options,
-        ...upazilas.filter((upazila) => upazila.district_id === value),
-      ];
+      if (value) {
+        clonedState[areaName + 'Upazila'].options = [
+          ...selectedFields[areaName + 'Upazila'].options,
+          ...upazilas.filter((upazila) => upazila.district_id === value),
+        ];
+      } else {
+        clonedState[areaName + 'Upazila'].options = [
+          ...selectedFields[areaName + 'Upazila'].options,
+        ];
+      }
       clonedState[areaName + 'Upazila'].value = '';
     }
   } else {
@@ -105,17 +119,17 @@ export const areaValuesFromState = (areaFields, areaName) => {
       const division = divisions.find(
         (item) => item.id === areaFields[cur].value
       );
-      acc[cur] = division;
+      acc[cur] = division ?? { id: '', name: '', bn_name: '' };
     } else if (cur === areaName + 'District') {
       const district = districts.find(
         (item) => item.id === areaFields[cur].value
       );
-      acc[cur] = district;
+      acc[cur] = district ?? { id: '', division_id: '', name: '', bn_name: '' };
     } else if (cur === areaName + 'Upazila') {
       const upazila = upazilas.find(
         (item) => item.id === areaFields[cur].value
       );
-      acc[cur] = upazila;
+      acc[cur] = upazila ?? { id: '', district_id: '', name: '', bn_name: '' };
     } else if (cur === areaName + 'Place') {
       acc[cur] = { ...acc[cur], name: areaFields[cur].value };
     } else if (cur === 'bn_' + areaName + 'Place') {
@@ -170,16 +184,10 @@ export const pharmacistFromState = (
     return acc;
   }, {});
 
-  const postingValues = areaFieldsFromPharmacist(postingFields, 'posting');
-  const permanentValues = areaFieldsFromPharmacist(
-    permanentFields,
-    'permanent'
-  );
-  const voterAreaValues = areaFieldsFromPharmacist(voterArea, 'voter');
-  const deputationValues = areaFieldsFromPharmacist(
-    deputationFields,
-    'deputation'
-  );
+  const postingValues = areaValuesFromState(postingFields, 'posting');
+  const permanentValues = areaValuesFromState(permanentFields, 'permanent');
+  const voterAreaValues = areaValuesFromState(voterArea, 'voter');
+  const deputationValues = areaValuesFromState(deputationFields, 'deputation');
 
   return {
     ...formValues,

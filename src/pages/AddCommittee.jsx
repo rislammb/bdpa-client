@@ -6,10 +6,12 @@ import Typography from '@mui/material/Typography';
 import AddMemberRow from '../components/AddMemberRow';
 import DatePickerComp from '../components/DatePickerComp';
 import SnackbarComp from '../components/Snackbar';
+import ColorTitle from '../components/ui/ColorTitle';
 import useAddCommittee from '../hooks/useAddCommittee';
 
 const AddCommittee = () => {
   const {
+    isBn,
     committeeInfo,
     handleInfoChange,
     submitting,
@@ -36,6 +38,7 @@ const AddCommittee = () => {
         p: 2,
       }}
     >
+      <ColorTitle text={isBn ? 'কমিটি যোগ' : 'Add Committee'} variant={'h5'} />
       <Box
         sx={{
           m: 'auto',
@@ -62,11 +65,17 @@ const AddCommittee = () => {
                   <DatePickerComp
                     key={field.name}
                     name={field.name}
-                    label={field.label}
+                    label={isBn ? field.bn_label : field.label}
                     value={field.value}
                     onChange={handleInfoChange}
                     error={error && error[field.name] ? true : false}
-                    helperText={(error && error[field.name]) ?? ''}
+                    helperText={
+                      error &&
+                      error[field.name] &&
+                      (isBn
+                        ? error[field.name].bn_text ?? ''
+                        : error[field.name].text ?? '')
+                    }
                   />
                 );
               } else
@@ -75,11 +84,17 @@ const AddCommittee = () => {
                     InputLabelProps={{ color: 'info' }}
                     key={field.name}
                     name={field.name}
-                    label={field.label}
+                    label={isBn ? field.bn_label : field.label}
                     value={field.value}
                     onChange={handleInfoChange}
                     error={error && error[field.name] ? true : false}
-                    helperText={(error && error[field.name]) ?? ''}
+                    helperText={
+                      error &&
+                      error[field.name] &&
+                      (isBn
+                        ? error[field.name].bn_text ?? ''
+                        : error[field.name].text ?? '')
+                    }
                     placeholder={field.placeholder}
                     variant='standard'
                   />
@@ -87,14 +102,16 @@ const AddCommittee = () => {
             })}
         </Box>
         <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
-          <Typography variant='h6'>কমিটির সদস্যঃ</Typography>
+          <Typography variant='h6'>
+            {isBn ? 'কমিটির সদস্যঃ' : 'Committee Members:'}
+          </Typography>
           <Button
             startIcon={<AddIcon />}
             size='small'
             variant='contained'
             onClick={addMemberRow}
           >
-            সদস্য সারি
+            {isBn ? 'সদস্য সারি' : 'Member row'}
           </Button>
         </Box>
         <Box
@@ -126,7 +143,7 @@ const AddCommittee = () => {
           size='large'
           disabled={committeeInfo.committeTitle?.value.length > 5 || submitting}
         >
-          কমিটি
+          {isBn ? 'কমিটি' : 'Committee'}
         </Button>
       </Box>
       <SnackbarComp
