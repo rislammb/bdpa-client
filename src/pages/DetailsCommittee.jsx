@@ -1,6 +1,5 @@
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
 import {
   Box,
   Button,
@@ -15,6 +14,7 @@ import TableContainer from '@mui/material/TableContainer';
 import dayjs from 'dayjs';
 import AddOrEditMemberRow from '../components/AddOrEditMemberRow';
 import DetailsCommitteeRow from '../components/DetailsCommitteeRow';
+import SnackbarComp from '../components/Snackbar';
 import TableHeader from '../components/TableHeader';
 import ColorTitle from '../components/ui/ColorTitle';
 import Loading from '../components/ui/Loading';
@@ -35,6 +35,9 @@ const DetailsCommittee = () => {
     handleMemberChange,
     handleMemberSubmit,
     error,
+    snackbar,
+    setSnackbar,
+    handleSnackbarClose,
   } = useDetailsCommittee();
 
   if (loading)
@@ -89,6 +92,8 @@ const DetailsCommittee = () => {
                     key={member._id}
                     member={member}
                     columns={columns}
+                    setSnackbar={setSnackbar}
+                    disableDeleteMember={committee?.members.length < 3}
                   />
                 ))}
               {isPermittedForEdit && isAddMember && (
@@ -100,7 +105,7 @@ const DetailsCommittee = () => {
                   onSubmit={handleMemberSubmit}
                   index={0}
                   error={error}
-                  isEdit
+                  type={'ADD'}
                 />
               )}
             </TableBody>
@@ -137,22 +142,24 @@ const DetailsCommittee = () => {
               <Button
                 onClick={isAddMember ? handleMemberSubmit : toggleAddMember}
                 variant='contained'
-                startIcon={isAddMember ? <SaveIcon /> : <AddIcon />}
+                startIcon={<AddIcon />}
+                disabled={isAddMember}
                 color='primary'
                 size='small'
               >
-                {isAddMember
-                  ? isBn
-                    ? 'সদস্য'
-                    : 'member'
-                  : isBn
-                  ? 'সদস্য'
-                  : 'Member'}
+                {isBn ? 'সদস্য' : 'member'}
               </Button>
             </Box>
           </Box>
         )}
       </CardContent>
+
+      <SnackbarComp
+        open={snackbar.open}
+        severity={snackbar.severity}
+        text={snackbar.text}
+        handleClose={handleSnackbarClose}
+      />
     </Card>
   );
 };

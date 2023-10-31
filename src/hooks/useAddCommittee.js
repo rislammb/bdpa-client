@@ -150,7 +150,7 @@ const useAddCommittee = () => {
   };
 
   useEffect(() => {
-    if (typeof error?.message === 'string')
+    if (!submitting && typeof error?.message === 'string')
       setSnackbar({
         open: true,
         severity: 'error',

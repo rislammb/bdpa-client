@@ -3,7 +3,7 @@ import TableRow from '@mui/material/TableRow';
 import dayjs from 'dayjs';
 import Link from './ui/Link';
 
-const CommitteeListRow = ({ committee, columns }) => {
+const CommitteeListRow = ({ committee, columns, isBn }) => {
   return (
     <TableRow>
       {columns.map((column) => {
@@ -21,11 +21,15 @@ const CommitteeListRow = ({ committee, columns }) => {
             {column.id === 'committeeTitle' ? (
               <Link
                 to={`/committees/${committee.committeePath}`}
-                text={committee.committeeTitle}
+                text={
+                  isBn ? committee.bn_committeeTitle : committee.committeeTitle
+                }
                 sx={{ fontSize: '1rem' }}
               />
-            ) : (
+            ) : value ? (
               dayjs(value).format('DD MMM YYYY')
+            ) : (
+              ''
             )}
           </TableCell>
         );

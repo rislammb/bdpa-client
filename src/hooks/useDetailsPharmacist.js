@@ -268,7 +268,7 @@ const useDetailsPharmacist = () => {
     } else setTableRows([]);
   }, [pharmacist, isPermittedForEdit, isAdmin, isBn]);
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (
       window.confirm(
         isBn
@@ -276,8 +276,8 @@ const useDetailsPharmacist = () => {
           : `Are you sure you want to delete '${pharmacist.name} : ${pharmacist.regNumber}'?`
       )
     ) {
-      deletePharmacistData(regNumber);
-      navigate(-1);
+      const res = await deletePharmacistData(regNumber);
+      if (res) navigate(-1);
     }
   };
 

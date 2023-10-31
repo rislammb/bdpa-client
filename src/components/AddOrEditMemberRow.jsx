@@ -1,5 +1,7 @@
-import { Close, Done } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DoneIcon from '@mui/icons-material/Done';
 import { Box, TableCell, TableRow } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import IconButton from '@mui/material/IconButton';
@@ -12,7 +14,8 @@ const AddOrEditMemberRow = ({
   onChange,
   defaultProps,
   deleteMemberRow,
-  isEdit,
+  disableDeleteMemberRow,
+  type,
   cancelEdit,
   onSubmit,
 }) => {
@@ -28,12 +31,16 @@ const AddOrEditMemberRow = ({
   }, []);
 
   return (
-    <TableRow sx={{ width: '100%', alignContent: 'start' }}>
+    <TableRow sx={{ display: !type && 'flex' }}>
       {memberArray?.length > 0 &&
         memberArray.map((property) => {
           return (
             <TableCell
-              sx={{ padding: { xs: '8px 6px', sm: '12px' } }}
+              sx={{
+                padding: '8px 6px',
+                border: 'none',
+                ...property.sx,
+              }}
               colSpan={property.name === 'pharmacistId' ? 2 : 1}
               key={property.name}
             >
@@ -41,7 +48,6 @@ const AddOrEditMemberRow = ({
                 <Autocomplete
                   {...defaultProps}
                   value={property.value}
-                  sx={{ ...property.sx }}
                   onChange={(_event, newValue) => {
                     onChange(
                       { target: { name: property.name, value: newValue } },
@@ -72,8 +78,8 @@ const AddOrEditMemberRow = ({
                   InputLabelProps={{ color: 'info' }}
                   key={property.name}
                   name={property.name}
+                  sx={{ width: '100%' }}
                   label={isBn ? property.bn_label : property.label}
-                  sx={{ ...property.sx }}
                   value={property.value}
                   placeholder={property.placeholder}
                   onChange={(e) => onChange(e, member.id)}
@@ -92,20 +98,25 @@ const AddOrEditMemberRow = ({
           );
         })}
 
-      <TableCell sx={{ padding: { xs: '8px 6px', sm: '12px' } }}>
-        {isEdit ? (
+      <TableCell sx={{ padding: '8px 6px', border: 'none' }}>
+        {type === 'ADD' || type === 'EDIT' ? (
           <Box
             sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}
           >
             <IconButton onClick={cancelEdit} variant='contained' color='error'>
-              <Close fontSize='small' />
+              <CloseIcon fontSize='small' />
             </IconButton>
             <IconButton onClick={onSubmit} variant='contained' color='info'>
-              <Done fontSize='small' />
+              {type === 'ADD' ? (
+                <AddIcon fontSize='small' />
+              ) : (
+                <DoneIcon fontSize='small' />
+              )}
             </IconButton>
           </Box>
         ) : (
           <IconButton
+            disabled={disableDeleteMemberRow}
             onClick={() => deleteMemberRow(member.id)}
             variant='contained'
             color='error'

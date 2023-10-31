@@ -12,10 +12,16 @@ import { getAreaInfo, getBnAreaInfo, objDeepClone } from '../helpers/utilities';
 import AddOrEditMemberRow from './AddOrEditMemberRow';
 import Link from './ui/Link';
 
-const DetailsCommitteeRow = ({ member, columns }) => {
+const DetailsCommitteeRow = ({
+  member,
+  columns,
+  disableDeleteMember,
+  setSnackbar,
+}) => {
   const {
     ui: { language },
     pharmacist: { list },
+    member: { error },
   } = useStoreState((state) => state);
   const {
     member: { deleteCommitteeMember, updateMemberData },
@@ -73,15 +79,19 @@ const DetailsCommitteeRow = ({ member, columns }) => {
           name: memberFields.postName.value,
           bn_name: memberFields.bn_postName.value,
         },
-        pharmacistId: memberFields.pharmacistId.value?._id,
+        pharmacistId: memberFields.pharmacistId.value?._id ?? null,
       },
     });
 
     if (data) {
-      // toggleAddMember();
-      // setMember({ ...committeeMemberFields });
       getDetailsCommitteeDataById(data.committeeId);
       setMemberFields(null);
+    } else {
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        text: isBn ? 'সদস্য আপডেট ব্যর্থ!' : 'Member update failed!',
+      });
     }
   };
 
@@ -89,12 +99,20 @@ const DetailsCommitteeRow = ({ member, columns }) => {
     if (
       window.confirm(
         isBn
-          ? `আপনি কি সত্যিই '${member.postName?.bn_name} : ${member.bn_name}' মুছতে চান?`
-          : `Are you sure you want to delete '${member.postName?.name} : ${member.name}'?`
+          ? `আপনি কি সত্যিই সদস্যঃ '${member.postName?.bn_name} : ${member.bn_name}' মুছতে চান?`
+          : `Are you sure you want to delete member: '${member.postName?.name} : ${member.name}'?`
       )
     ) {
-      await deleteCommitteeMember(member._id);
-      await getDetailsCommitteeDataById(member.committeeId);
+      const res = await deleteCommitteeMember(member._id);
+      if (res) {
+        getDetailsCommitteeDataById(member.committeeId);
+      } else {
+        setSnackbar({
+          open: true,
+          severity: 'error',
+          text: isBn ? 'সদস্য মুছে ফেলতে ব্যর্থ!' : 'Member delete failed!',
+        });
+      }
     }
   };
 
@@ -119,9 +137,10 @@ const DetailsCommitteeRow = ({ member, columns }) => {
       member={memberFields}
       defaultProps={defaultProps}
       onChange={handleMemberChange}
-      isEdit
+      type={'EDIT'}
       cancelEdit={toggleIsEdit}
       onSubmit={handleMemberSubmit}
+      error={error}
     />
   ) : (
     <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -159,6 +178,7 @@ const DetailsCommitteeRow = ({ member, columns }) => {
                   size='small'
                   onClick={isEdit ? toggleIsEdit : deleteMember}
                   color='error'
+                  disabled={!isEdit && disableDeleteMember}
                 >
                   {isEdit ? (
                     <Close fontSize='small' />

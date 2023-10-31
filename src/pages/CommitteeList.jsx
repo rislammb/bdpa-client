@@ -95,6 +95,7 @@ const CommitteeList = () => {
                     key={committee._id}
                     committee={committee}
                     columns={columns}
+                    isBn={isBn}
                   />
                 ))
               ) : (

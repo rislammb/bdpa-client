@@ -5,6 +5,7 @@ import {
   getCommittees,
   getDetailsCommittee,
   getDetailsCommitteeById,
+  updateCommitteeByPath,
 } from '../api/committee';
 
 const committeeModel = {
@@ -94,6 +95,19 @@ const committeeModel = {
       actions.setSubmitting(false);
     }
   }),
+  updateCommitteeData: thunk(async (actions, payload) => {
+    // actions.setError(null);
+    actions.setSubmitting(true);
+
+    try {
+      const { data } = await updateCommitteeByPath(payload);
+      actions.setSubmitting(false);
+      return data;
+    } catch (e) {
+      actions.setError(e.response?.data);
+      actions.setSubmitting(false);
+    }
+  }),
   deleteCommitteeData: thunk(async (actions, payload) => {
     actions.setSubmitting(true);
 
@@ -101,6 +115,7 @@ const committeeModel = {
       await deleteCommittee(payload);
       actions.setDetailsCommittee(null);
       actions.setSubmitting(false);
+      return true;
     } catch (e) {
       actions.setError(e.response?.data);
       actions.setSubmitting(false);

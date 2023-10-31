@@ -10,5 +10,8 @@ export const getDetailsCommitteeById = (committeeId) =>
 
 export const addCommittee = (data) => axiosInstance.post('/committee', data);
 
+export const updateCommitteeByPath = ({ committeePath, data }) =>
+  axiosInstance.patch(`/committee/${committeePath}`, data);
+
 export const deleteCommittee = (committeePath) =>
   axiosInstance.delete(`/committee/${committeePath}`);

@@ -41,8 +41,8 @@ const memberModel = {
     try {
       await deleteMemberById(payload);
       actions.setSubmitting(false);
+      return true;
     } catch (e) {
-      console.log('delete error');
       actions.setError(e.response?.data);
       actions.setSubmitting(false);
     }

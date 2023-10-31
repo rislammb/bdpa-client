@@ -121,6 +121,7 @@ const pharmacistModel = {
       await deletePharmacist(payload);
       actions.setDetailsPharmacist(null);
       actions.setSubmitting(false);
+      return true;
     } catch (e) {
       actions.setError(e.response?.data);
       actions.setSubmitting(false);

@@ -35,6 +35,12 @@ const useDetailsCommittee = () => {
     pharmacist: { list },
     member: { error },
   } = useStoreState((state) => state);
+  const {
+    committee: { getDetailsCommitteeData, deleteCommitteeData },
+    pharmacist: { getPharmacistsData },
+    member: { setError, addMemberData },
+  } = useStoreActions((actions) => actions);
+
   const isBn = language === 'BN' ? true : false;
   const isPermittedForEdit =
     user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
@@ -42,14 +48,13 @@ const useDetailsCommittee = () => {
   const columns = getColumns(isBn);
   if (isPermittedForEdit) columns.push({ id: 'delete', minWidth: '65px' });
 
-  const {
-    committee: { getDetailsCommitteeData, deleteCommitteeData },
-    pharmacist: { getPharmacistsData },
-    member: { setError, addMemberData },
-  } = useStoreActions((actions) => actions);
-
   const [isAddMember, setIsAddMember] = useState(false);
   const [member, setMember] = useState({ ...committeeMemberFields });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    severity: 'info',
+    text: '',
+  });
 
   const toggleAddMember = () => {
     setIsAddMember(!isAddMember);
@@ -68,6 +73,13 @@ const useDetailsCommittee = () => {
     setMember(clonedState);
   };
 
+  const handleSnackbarClose = (_event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({ open: false, severity: snackbar.severity, text: '' });
+  };
+
   const handleMemberSubmit = async () => {
     const data = await addMemberData({
       committeeId: committee._id,
@@ -83,19 +95,31 @@ const useDetailsCommittee = () => {
       toggleAddMember();
       setMember({ ...committeeMemberFields });
       getDetailsCommitteeData(committeePath);
+
+      setSnackbar({
+        open: true,
+        severity: 'success',
+        text: isBn ? 'সদস্য সফলভাবে যোগ হয়েছে।' : 'Member added successfully.',
+      });
+    } else {
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        text: isBn ? 'সদস্য যোগ করতে ব্যর্থ!' : 'Add member failed!',
+      });
     }
   };
 
-  const handleCommitteeDelete = () => {
+  const handleCommitteeDelete = async () => {
     if (
       window.confirm(
         isBn
-          ? `আপনি কি সত্যিই '${committee.bn_committeeTitle}' মুছতে চান?`
-          : `Are you sure you want to delete '${committee.committeeTitle}'?`
+          ? `আপনি কি সত্যিই কমিটিঃ '${committee.bn_committeeTitle}' মুছতে চান?`
+          : `Are you sure you want to delete committee: '${committee.committeeTitle}'?`
       )
     ) {
-      deleteCommitteeData(committeePath);
-      navigate(-1);
+      const res = await deleteCommitteeData(committeePath);
+      if (res) navigate('/committees');
     }
   };
 
@@ -134,6 +158,9 @@ const useDetailsCommittee = () => {
     handleMemberChange,
     handleMemberSubmit,
     error,
+    snackbar,
+    setSnackbar,
+    handleSnackbarClose,
   };
 };
 

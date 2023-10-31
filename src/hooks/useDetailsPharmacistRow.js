@@ -175,7 +175,6 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
       dataForCell = inputValue;
     }
 
-    // console.log('data for submit', dataForSubmit);
     const res = await updatePharmacistData({
       regNumber: pharmacist.regNumber,
       data: dataForSubmit,
@@ -188,14 +187,16 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
       setSnackbar({
         open: true,
         severity: 'success',
-        text: 'Pharmacist update successfull.',
+        text: isBn
+          ? 'ফার্মাসিস্ট সফলভাবে আপডেট হয়েছে৷'
+          : 'The Pharmacist updated successfully.',
       });
     } else {
       setTableData(row.td);
       setSnackbar({
         open: true,
         severity: 'error',
-        text: 'Pharmacist update faild!.',
+        text: isBn ? 'ফার্মাসিস্ট আপডেট ব্যর্থ!' : 'Pharmacist update failed!',
       });
     }
   };

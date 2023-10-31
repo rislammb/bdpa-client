@@ -6,7 +6,7 @@ export const committeeMemberFields = {
     type: 'text',
     value: '',
     placeholder: '01',
-    sx: { width: '75px' },
+    sx: { width: '95px' },
   },
   postName: {
     name: 'postName',
