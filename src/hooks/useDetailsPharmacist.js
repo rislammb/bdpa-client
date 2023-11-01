@@ -27,7 +27,7 @@ const useDetailsPharmacist = () => {
   const {
     ui: { language },
     auth: { user },
-    pharmacist: { loading, details: pharmacist },
+    pharmacist: { loading, details: pharmacist, submitting, error },
   } = useStoreState((state) => state);
   const { getDetailsPharmacistData, deletePharmacistData } = useStoreActions(
     (actions) => actions.pharmacist
@@ -292,8 +292,19 @@ const useDetailsPharmacist = () => {
     }
   }, [regNumber]);
 
+  useEffect(() => {
+    if (!loading && !submitting && error && typeof error === 'string') {
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        text: error,
+      });
+    }
+  }, [loading, submitting, error]);
+
   return {
     loading,
+    error,
     isBn,
     isAdmin,
     pharmacist,

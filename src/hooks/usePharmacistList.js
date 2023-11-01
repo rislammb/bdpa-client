@@ -48,13 +48,18 @@ const usePharmacistList = () => {
 
   const {
     ui: { language },
-    pharmacist: { loading, list, filteredList },
+    pharmacist: { loading, error, list, filteredList },
   } = useStoreState((state) => state);
   const { getPharmacistsData } = useStoreActions(
     (actions) => actions.pharmacist
   );
-  const isBn = language === 'BN' ? true : false;
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    severity: 'info',
+    text: '',
+  });
 
+  const isBn = language === 'BN' ? true : false;
   const rowsPerPage = 50;
 
   const handleChange = (_event, value) => {
@@ -62,19 +67,36 @@ const usePharmacistList = () => {
     navigate(`/members/page/${value}`);
   };
 
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({ open: false, severity: snackbar.severity, text: '' });
+  };
+
   useEffect(() => {
     getPharmacistsData();
   }, []);
 
   useEffect(() => {
-    if (filteredList.length !== list.length) {
+    if (filteredList?.length !== list.length) {
       navigate(`/members/page/1`);
     }
-  }, [list.length, filteredList.length]);
+  }, [list.length, filteredList?.length]);
 
   useEffect(() => {
     setPage(Number(pageNumber) ?? 1);
   }, [pageNumber]);
+
+  useEffect(() => {
+    if (!loading && error && typeof error === 'string') {
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        text: error,
+      });
+    }
+  }, [loading, error]);
 
   return {
     loading,
@@ -85,6 +107,8 @@ const usePharmacistList = () => {
     rowsPerPage,
     page,
     handleChange,
+    snackbar,
+    handleSnackbarClose,
   };
 };
 

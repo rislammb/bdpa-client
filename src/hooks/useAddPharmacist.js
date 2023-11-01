@@ -277,8 +277,6 @@ const useAddPharmacist = () => {
       deputationFields
     );
 
-    console.log('new pharmacist => ', newPharmacist);
-
     const res = await addPharmacistData(newPharmacist);
     if (res) {
       navigate(`/members/${res.regNumber}`);

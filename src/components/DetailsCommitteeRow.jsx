@@ -119,13 +119,15 @@ const DetailsCommitteeRow = ({
   const defaultProps = {
     options: list,
     getOptionLabel: (option) =>
-      isBn
-        ? `${option.bn_name} - ${option.name} - ${
-            option.regNumber
-          } - ${getBnAreaInfo(option, 'posting')}`
-        : `${option.name} - ${option.bn_name} - ${
-            option.regNumber
-          } - ${getAreaInfo(option, 'posting')}`,
+      list.length > 0
+        ? isBn
+          ? `${option.bn_name} - ${option.name} - ${
+              option.regNumber
+            } - ${getBnAreaInfo(option, 'posting')}`
+          : `${option.name} - ${option.bn_name} - ${
+              option.regNumber
+            } - ${getAreaInfo(option, 'posting')}`
+        : '',
   };
 
   useEffect(() => {

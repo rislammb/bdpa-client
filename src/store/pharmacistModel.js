@@ -35,15 +35,16 @@ const pharmacistModel = {
   }),
   getPharmacistsData: thunk(async (actions) => {
     actions.setLoading(true);
-    actions.setPharmacists([]);
     actions.setError(null);
+    actions.setPharmacists([]);
 
     try {
       const { data } = await getPharmacists();
       actions.setPharmacists(data);
       actions.setLoading(false);
     } catch (e) {
-      actions.setError(e.response?.data);
+      if (e.response) actions.setError(e.response.data);
+      else actions.setError(e.message);
       actions.setLoading(false);
     }
   }),
@@ -81,7 +82,8 @@ const pharmacistModel = {
       actions.setDetailsPharmacist(data);
       actions.setLoading(false);
     } catch (e) {
-      actions.setError(e.response?.data);
+      if (e.response) actions.setError(e.response.data);
+      else actions.setError(e.message);
       actions.setLoading(false);
     }
   }),
@@ -95,7 +97,8 @@ const pharmacistModel = {
 
       return data;
     } catch (e) {
-      actions.setError(e.response?.data);
+      if (e.response) actions.setError(e.response.data);
+      else actions.setError(e.message);
       actions.setSubmitting(false);
     }
   }),
@@ -109,7 +112,8 @@ const pharmacistModel = {
       actions.setSubmitting(false);
       return data;
     } catch (e) {
-      actions.setError(e.response?.data);
+      if (e.response) actions.setError(e.response.data);
+      else actions.setError(e.message);
       actions.setSubmitting(false);
     }
   }),
@@ -123,7 +127,8 @@ const pharmacistModel = {
       actions.setSubmitting(false);
       return true;
     } catch (e) {
-      actions.setError(e.response?.data);
+      if (e.response) actions.setError(e.response.data);
+      else actions.setError(e.message);
       actions.setSubmitting(false);
     }
   }),

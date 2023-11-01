@@ -4,7 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { initialCommitteeInfo } from '../constants/InitialCommitteeInfo';
 import { committeeMemberFields } from '../constants/committeeMemberFields';
 import { changeHandlerForCommitteeInfo } from '../helpers/committee';
-import { generateId, getAreaInfo, objDeepClone } from '../helpers/utilities';
+import {
+  generateId,
+  getAreaInfo,
+  getBnAreaInfo,
+  objDeepClone,
+} from '../helpers/utilities';
 
 const addMember = (initial = [], count = 1) => {
   for (let i = 0; i < count; i++) {
@@ -96,10 +101,17 @@ const useAddCommittee = () => {
   const defaultProps = {
     options: list,
     getOptionLabel: (option) =>
-      `${option.bn_name} - ${option.name} - ${option.regNumber} - ${getAreaInfo(
-        option,
-        'posting'
-      )}`,
+      list.length > 0
+        ? isBn
+          ? `${option.bn_name} - ${option.regNumber} - ${getBnAreaInfo(
+              option,
+              'posting'
+            )}`
+          : `${option.name} - ${option.regNumber} - ${getAreaInfo(
+              option,
+              'posting'
+            )}`
+        : '',
   };
 
   useEffect(() => {

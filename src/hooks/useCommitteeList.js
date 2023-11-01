@@ -1,5 +1,5 @@
 import { useStoreActions, useStoreState } from 'easy-peasy';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const getColumns = (isBn) => [
   { id: 'committeeTitle', label: isBn ? 'কমিটি' : 'Committee', minWidth: 170 },
@@ -15,16 +15,39 @@ const useCommitteeList = () => {
   const {
     ui: { language },
     auth: { user },
-    committee: { loading, filteredList, searchTerm },
+    committee: { loading, error, filteredList, searchTerm },
   } = useStoreState((state) => state);
   const { getCommitteesData, setSearchTerm } = useStoreActions(
     (actions) => actions.committee
   );
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    severity: 'info',
+    text: '',
+  });
+
   const isBn = language === 'BN' ? true : false;
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({ open: false, severity: snackbar.severity, text: '' });
+  };
 
   useEffect(() => {
     getCommitteesData();
   }, []);
+
+  useEffect(() => {
+    if (!loading && error && typeof error === 'string') {
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        text: error,
+      });
+    }
+  }, [loading, error]);
 
   return {
     loading,
@@ -34,6 +57,8 @@ const useCommitteeList = () => {
     columns: getColumns(isBn),
     searchTerm,
     setSearchTerm,
+    snackbar,
+    handleSnackbarClose,
   };
 };
 

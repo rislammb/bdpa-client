@@ -12,6 +12,7 @@ import TableHeader from '../components/TableHeader';
 import Loading from '../components/ui/Loading';
 import usePharmacistList from '../hooks/usePharmacistList';
 
+import SnackbarComp from '../components/Snackbar';
 import { enToBnNumber } from '../helpers/number';
 
 const PharmacistList = () => {
@@ -24,6 +25,8 @@ const PharmacistList = () => {
     rowsPerPage,
     page,
     handleChange,
+    snackbar,
+    handleSnackbarClose,
   } = usePharmacistList();
 
   return (
@@ -36,7 +39,7 @@ const PharmacistList = () => {
     >
       <FilterGroup />
 
-      {loading || list.length < 1 ? (
+      {loading || !filteredList ? (
         <Box sx={{ p: 3 }}>
           <Loading />
         </Box>
@@ -117,6 +120,13 @@ const PharmacistList = () => {
           </Box>
         </Paper>
       )}
+
+      <SnackbarComp
+        open={snackbar.open}
+        severity={snackbar.severity}
+        text={snackbar.text}
+        handleClose={handleSnackbarClose}
+      />
     </Box>
   );
 };

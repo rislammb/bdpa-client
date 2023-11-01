@@ -33,7 +33,12 @@ const useDetailsCommittee = () => {
   const {
     ui: { language },
     auth: { user },
-    committee: { loading, details: committee },
+    committee: {
+      loading,
+      details: committee,
+      submitting,
+      error: committeeError,
+    },
     pharmacist: { list },
     member: { error },
   } = useStoreState((state) => state);
@@ -171,13 +176,17 @@ const useDetailsCommittee = () => {
   const defaultProps = {
     options: list,
     getOptionLabel: (option) =>
-      isBn
-        ? `${option.bn_name} - ${option.name} - ${
-            option.regNumber
-          } - ${getAreaInfo(option, 'posting')}`
-        : `${option.name} - ${option.bn_name} - ${
-            option.regNumber
-          } - ${getBnAreaInfo(option, 'posting')}`,
+      list.length > 0
+        ? isBn
+          ? `${option.bn_name} - ${option.regNumber} - ${getBnAreaInfo(
+              option,
+              'posting'
+            )}`
+          : `${option.name} - ${option.regNumber} - ${getAreaInfo(
+              option,
+              'posting'
+            )}`
+        : '',
   };
 
   useEffect(() => {
@@ -187,6 +196,21 @@ const useDetailsCommittee = () => {
   useEffect(() => {
     if (committeePath) getDetailsCommitteeData(committeePath);
   }, [committeePath]);
+
+  useEffect(() => {
+    if (
+      !loading &&
+      !submitting &&
+      committeeError &&
+      typeof committeeError === 'string'
+    ) {
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        text: committeeError,
+      });
+    }
+  }, [loading, submitting, committeeError]);
 
   return {
     loading,

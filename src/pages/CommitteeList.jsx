@@ -14,6 +14,7 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import CommitteeListRow from '../components/CommitteeListRow';
 import EmptyTableRow from '../components/EmptyTableRow';
+import SnackbarComp from '../components/Snackbar';
 import TableHeader from '../components/TableHeader';
 import Loading from '../components/ui/Loading';
 import useCommitteeList from '../hooks/useCommitteeList';
@@ -27,6 +28,8 @@ const CommitteeList = () => {
     searchTerm,
     setSearchTerm,
     columns,
+    snackbar,
+    handleSnackbarClose,
   } = useCommitteeList();
 
   if (loading)
@@ -105,6 +108,13 @@ const CommitteeList = () => {
           </Table>
         </TableContainer>
       </Paper>
+
+      <SnackbarComp
+        open={snackbar.open}
+        severity={snackbar.severity}
+        text={snackbar.text}
+        handleClose={handleSnackbarClose}
+      />
     </Box>
   );
 };

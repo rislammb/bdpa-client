@@ -59,6 +59,7 @@ const AddOrEditMemberRow = ({
                   }
                   renderInput={(params) => (
                     <TextField
+                      color='info'
                       {...params}
                       label={isBn ? property.bn_label : property.label}
                       variant='standard'

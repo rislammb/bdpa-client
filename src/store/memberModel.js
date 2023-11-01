@@ -20,7 +20,8 @@ const memberModel = {
       actions.setSubmitting(false);
       return data;
     } catch (e) {
-      actions.setError(e.response?.data);
+      if (e.response) actions.setError(e.response.data);
+      else actions.setError(e.message);
       actions.setSubmitting(false);
     }
   }),
@@ -32,7 +33,8 @@ const memberModel = {
       actions.setSubmitting(false);
       return data;
     } catch (e) {
-      actions.setError(e.response?.data);
+      if (e.response) actions.setError(e.response.data);
+      else actions.setError(e.message);
       actions.setSubmitting(false);
     }
   }),
@@ -43,7 +45,8 @@ const memberModel = {
       actions.setSubmitting(false);
       return true;
     } catch (e) {
-      actions.setError(e.response?.data);
+      if (e.response) actions.setError(e.response.data);
+      else actions.setError(e.message);
       actions.setSubmitting(false);
     }
   }),
