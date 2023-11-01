@@ -5,19 +5,23 @@ import {
   Button,
   Card,
   CardContent,
+  IconButton,
   Table,
   TableBody,
   Typography,
 } from '@mui/material';
 import TableContainer from '@mui/material/TableContainer';
 
+import { Edit } from '@mui/icons-material';
 import dayjs from 'dayjs';
+import AddOrEditCommittee from '../components/AddOrEditCommittee';
 import AddOrEditMemberRow from '../components/AddOrEditMemberRow';
 import DetailsCommitteeRow from '../components/DetailsCommitteeRow';
 import SnackbarComp from '../components/Snackbar';
 import TableHeader from '../components/TableHeader';
 import ColorTitle from '../components/ui/ColorTitle';
 import Loading from '../components/ui/Loading';
+import { getBnDate } from '../helpers/date';
 import useDetailsCommittee from '../hooks/useDetailsCommittee';
 
 const DetailsCommittee = () => {
@@ -27,11 +31,16 @@ const DetailsCommittee = () => {
     isPermittedForEdit,
     committee,
     columns,
+    isEditCommittee,
+    toggleIsEditCommitttee,
+    committeeInfo,
+    handleCommitteeInfoChange,
+    handleCommitteeSubmit,
     handleCommitteeDelete,
     isAddMember,
+    toggleIsAddMember,
     member,
     defaultProps,
-    toggleAddMember,
     handleMemberChange,
     handleMemberSubmit,
     error,
@@ -39,6 +48,14 @@ const DetailsCommittee = () => {
     setSnackbar,
     handleSnackbarClose,
   } = useDetailsCommittee();
+
+  const committeeInfoArray =
+    committeeInfo &&
+    Object.keys(committeeInfo).reduce((acc, cur) => {
+      acc.push(committeeInfo[cur]);
+
+      return acc;
+    }, []);
 
   if (loading)
     return (
@@ -56,31 +73,60 @@ const DetailsCommittee = () => {
   return (
     <Card sx={{ maxWidth: '1100px', margin: 'auto' }}>
       <CardContent sx={{ textAlign: 'left' }}>
-        <Box
-          sx={{
-            my: 1.5,
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'column',
-            gap: 1,
-          }}
-        >
-          <ColorTitle
-            variant='h5'
-            text={isBn ? committee.bn_committeeTitle : committee.committeeTitle}
-          />
+        {isEditCommittee ? (
+          <>
+            <ColorTitle
+              text={isBn ? 'কমিটি সম্পাদন' : 'Edit Committee'}
+              variant={'h5'}
+              textAlign='center'
+            />
+            <AddOrEditCommittee
+              committeeInfoArray={committeeInfoArray}
+              handleCommitteeInfoChange={handleCommitteeInfoChange}
+              type={'EDIT'}
+              toggleIsEditCommitttee={toggleIsEditCommitttee}
+              handleCommitteeSubmit={handleCommitteeSubmit}
+            />
+          </>
+        ) : (
+          <Box
+            sx={{
+              my: 1.5,
+              display: 'flex',
+              alignItems: 'center',
+              flexDirection: 'column',
+              gap: 1,
+              position: 'relative',
+            }}
+          >
+            <ColorTitle
+              variant='h5'
+              text={
+                isBn ? committee.bn_committeeTitle : committee.committeeTitle
+              }
+            />
 
-          <Typography>
-            {isBn ? 'কার্যক্রম শুরুঃ ' : 'Work has started: '}
-            {committee.workHasStarted &&
-              dayjs(committee.workHasStarted).format('DD MMM YYYY')}
-          </Typography>
-          <Typography>
-            {isBn ? 'মেয়াদঃ ' : 'Will expire: '}
-            {committee.willExpire &&
-              dayjs(committee.willExpire).format('DD MMM YYYY')}
-          </Typography>
-        </Box>
+            <Typography>
+              {isBn ? 'কার্যক্রম শুরুঃ ' : 'Work has started: '}
+              {committee.workHasStarted && isBn
+                ? getBnDate(committee.workHasStarted)
+                : dayjs(committee.workHasStarted).format('DD MMM YYYY')}
+            </Typography>
+            <Typography>
+              {isBn ? 'মেয়াদঃ ' : 'Will expire: '}
+              {committee.willExpire && isBn
+                ? getBnDate(committee.willExpire)
+                : dayjs(committee.willExpire).format('DD MMM YYYY')}
+            </Typography>
+
+            <IconButton
+              sx={{ position: 'absolute', top: '8px', right: '8px' }}
+              onClick={toggleIsEditCommitttee}
+            >
+              <Edit color='info' />
+            </IconButton>
+          </Box>
+        )}
 
         <TableContainer>
           <Table size='small' stickyHeader>
@@ -101,7 +147,7 @@ const DetailsCommittee = () => {
                   member={member}
                   onChange={handleMemberChange}
                   defaultProps={defaultProps}
-                  cancelEdit={toggleAddMember}
+                  cancelEdit={toggleIsAddMember}
                   onSubmit={handleMemberSubmit}
                   index={0}
                   error={error}
@@ -140,7 +186,7 @@ const DetailsCommittee = () => {
               }}
             >
               <Button
-                onClick={isAddMember ? handleMemberSubmit : toggleAddMember}
+                onClick={isAddMember ? handleMemberSubmit : toggleIsAddMember}
                 variant='contained'
                 startIcon={<AddIcon />}
                 disabled={isAddMember}

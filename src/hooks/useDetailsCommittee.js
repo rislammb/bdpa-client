@@ -1,7 +1,9 @@
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { initialCommitteeInfo } from '../constants/InitialCommitteeInfo';
 import { committeeMemberFields } from '../constants/committeeMemberFields';
+import { changeHandlerForCommitteeInfo } from '../helpers/committee';
 import { getAreaInfo, getBnAreaInfo, objDeepClone } from '../helpers/utilities';
 
 const getColumns = (isBn) => [
@@ -36,18 +38,17 @@ const useDetailsCommittee = () => {
     member: { error },
   } = useStoreState((state) => state);
   const {
-    committee: { getDetailsCommitteeData, deleteCommitteeData },
+    committee: {
+      getDetailsCommitteeData,
+      updateCommitteeData,
+      deleteCommitteeData,
+    },
     pharmacist: { getPharmacistsData },
     member: { setError, addMemberData },
   } = useStoreActions((actions) => actions);
 
-  const isBn = language === 'BN' ? true : false;
-  const isPermittedForEdit =
-    user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
-
-  const columns = getColumns(isBn);
-  if (isPermittedForEdit) columns.push({ id: 'delete', minWidth: '65px' });
-
+  const [isEditCommittee, setIsEditCommittee] = useState(false);
+  const [committeeInfo, setCommitteeInfo] = useState(null);
   const [isAddMember, setIsAddMember] = useState(false);
   const [member, setMember] = useState({ ...committeeMemberFields });
   const [snackbar, setSnackbar] = useState({
@@ -56,7 +57,51 @@ const useDetailsCommittee = () => {
     text: '',
   });
 
-  const toggleAddMember = () => {
+  const isBn = language === 'BN' ? true : false;
+  const isPermittedForEdit =
+    user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
+
+  const columns = getColumns(isBn);
+  if (isPermittedForEdit) columns.push({ id: 'delete', minWidth: '65px' });
+
+  const toggleIsEditCommitttee = () => {
+    if (isEditCommittee) {
+      setIsEditCommittee(false);
+      setCommitteeInfo(null);
+    } else {
+      setIsEditCommittee(true);
+      Object.keys(initialCommitteeInfo).forEach((key) => {
+        if (key === 'indexNumber') {
+          initialCommitteeInfo[key].value = committee[key]?.name;
+        } else {
+          initialCommitteeInfo[key].value = committee[key];
+        }
+      });
+
+      setCommitteeInfo(initialCommitteeInfo);
+    }
+  };
+
+  const handleCommitteeInfoChange = (e, name) => {
+    setCommitteeInfo(changeHandlerForCommitteeInfo(committeeInfo, e, name));
+  };
+
+  const handleCommitteeSubmit = async () => {
+    const res = await updateCommitteeData({
+      committeePath: committee.committeePath,
+      data: mapStateToValue(committeeInfo),
+    });
+
+    if (res) {
+      setIsEditCommittee(false);
+      navigate(`/committees/${res.committeePath}`);
+      if (res.committeePath === committeePath) {
+        getDetailsCommitteeData(res.committeePath);
+      }
+    }
+  };
+
+  const toggleIsAddMember = () => {
     setIsAddMember(!isAddMember);
     setError(null);
   };
@@ -92,7 +137,7 @@ const useDetailsCommittee = () => {
     });
 
     if (data) {
-      toggleAddMember();
+      toggleIsAddMember();
       setMember({ ...committeeMemberFields });
       getDetailsCommitteeData(committeePath);
 
@@ -150,11 +195,16 @@ const useDetailsCommittee = () => {
     isPermittedForEdit,
     committee,
     columns,
+    isEditCommittee,
+    toggleIsEditCommitttee,
+    committeeInfo,
+    handleCommitteeInfoChange,
+    handleCommitteeSubmit,
     handleCommitteeDelete,
+    isAddMember,
+    toggleIsAddMember,
     member,
     defaultProps,
-    isAddMember,
-    toggleAddMember,
     handleMemberChange,
     handleMemberSubmit,
     error,
@@ -165,3 +215,10 @@ const useDetailsCommittee = () => {
 };
 
 export default useDetailsCommittee;
+
+const mapStateToValue = (state) =>
+  Object.keys(state).reduce((acc, cur) => {
+    acc[cur] = state[cur].value;
+
+    return acc;
+  }, {});

@@ -31,7 +31,7 @@ const AddOrEditMemberRow = ({
   }, []);
 
   return (
-    <TableRow sx={{ display: !type && 'flex' }}>
+    <TableRow sx={type ? { verticalAlign: 'top' } : { display: 'flex' }}>
       {memberArray?.length > 0 &&
         memberArray.map((property) => {
           return (

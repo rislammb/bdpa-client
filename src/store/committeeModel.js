@@ -96,7 +96,7 @@ const committeeModel = {
     }
   }),
   updateCommitteeData: thunk(async (actions, payload) => {
-    // actions.setError(null);
+    actions.setError(null);
     actions.setSubmitting(true);
 
     try {

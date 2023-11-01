@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getBnDate } from '../helpers/date';
 import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
 
 const createRow = (th, value, name, type, isEdit, textGroupFields) => ({
@@ -147,7 +148,9 @@ const useDetailsPharmacist = () => {
         createRow(
           isBn ? 'জন্ম তারিখ' : 'Date of birth',
           pharmacist.dateOfBirth
-            ? dayjs(pharmacist.dateOfBirth).format('DD MMM YYYY')
+            ? isBn
+              ? getBnDate(pharmacist.dateOfBirth)
+              : dayjs(pharmacist.dateOfBirth).format('DD MMM YYYY')
             : '',
           'dateOfBirth',
           'date',
@@ -207,7 +210,9 @@ const useDetailsPharmacist = () => {
         createRow(
           isBn ? 'যোগদানের তারিখ' : 'Date of join',
           pharmacist.dateOfJoin
-            ? dayjs(pharmacist.dateOfJoin).format('DD MMM YYYY')
+            ? isBn
+              ? getBnDate(pharmacist.dateOfJoin)
+              : dayjs(pharmacist.dateOfJoin).format('DD MMM YYYY')
             : '',
           'dateOfJoin',
           'date',

@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
-const ColorTitle = ({ text, variant }) => {
+const ColorTitle = ({ text, variant, textAlign = 'inherit' }) => {
   const theme = useTheme();
 
   return (
@@ -12,6 +12,7 @@ const ColorTitle = ({ text, variant }) => {
           : theme.palette.primary.main
       }
       variant={variant}
+      textAlign={textAlign}
     >
       {text}
     </Typography>

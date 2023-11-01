@@ -8,10 +8,9 @@ import {
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import AddOrEditCommittee from '../components/AddOrEditCommittee';
 import AddOrEditMemberRow from '../components/AddOrEditMemberRow';
-import DatePickerComp from '../components/DatePickerComp';
 import SnackbarComp from '../components/Snackbar';
 import ColorTitle from '../components/ui/ColorTitle';
 import useAddCommittee from '../hooks/useAddCommittee';
@@ -20,7 +19,7 @@ const AddCommittee = () => {
   const {
     isBn,
     committeeInfo,
-    handleInfoChange,
+    handleCommitteeInfoChange,
     submitting,
     error,
     handleSubmit,
@@ -33,13 +32,13 @@ const AddCommittee = () => {
     deleteMemberRow,
   } = useAddCommittee();
 
-  const committeeInfoArray = Object.keys(committeeInfo).reduce((acc, cur) => {
-    acc.push(committeeInfo[cur]);
+  const committeeInfoArray =
+    committeeInfo &&
+    Object.keys(committeeInfo).reduce((acc, cur) => {
+      acc.push(committeeInfo[cur]);
 
-    return acc;
-  }, []);
-
-  console.log(committeeInfo.committeeTitle);
+      return acc;
+    }, []);
 
   return (
     <Card
@@ -59,59 +58,12 @@ const AddCommittee = () => {
           autoComplete='off'
           onSubmit={handleSubmit}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              maxWidth: '550px',
-              gap: 1.5,
-              m: 'auto',
-            }}
-          >
-            {committeeInfoArray.length > 0 &&
-              committeeInfoArray.map((field) => {
-                if (field.type === 'date') {
-                  return (
-                    <DatePickerComp
-                      key={field.name}
-                      name={field.name}
-                      label={isBn ? field.bn_label : field.label}
-                      value={field.value}
-                      onChange={handleInfoChange}
-                      error={error && error[field.name] ? true : false}
-                      helperText={
-                        error &&
-                        error[field.name] &&
-                        (isBn
-                          ? error[field.name].bn_text ?? ''
-                          : error[field.name].text ?? '')
-                      }
-                    />
-                  );
-                } else
-                  return (
-                    <TextField
-                      InputLabelProps={{ color: 'info' }}
-                      key={field.name}
-                      name={field.name}
-                      label={isBn ? field.bn_label : field.label}
-                      value={field.value}
-                      onChange={handleInfoChange}
-                      error={error && error[field.name] ? true : false}
-                      helperText={
-                        error &&
-                        error[field.name] &&
-                        (isBn
-                          ? error[field.name].bn_text ?? ''
-                          : error[field.name].text ?? '')
-                      }
-                      placeholder={field.placeholder}
-                      variant='standard'
-                    />
-                  );
-              })}
-          </Box>
-          <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
+          <AddOrEditCommittee
+            committeeInfoArray={committeeInfoArray}
+            handleCommitteeInfoChange={handleCommitteeInfoChange}
+          />
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant='h6'>
               {isBn ? 'কমিটির সদস্যঃ' : 'Committee Members:'}
             </Typography>

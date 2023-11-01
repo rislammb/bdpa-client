@@ -1,49 +1,10 @@
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { initialCommitteeInfo } from '../constants/InitialCommitteeInfo';
 import { committeeMemberFields } from '../constants/committeeMemberFields';
+import { changeHandlerForCommitteeInfo } from '../helpers/committee';
 import { generateId, getAreaInfo, objDeepClone } from '../helpers/utilities';
-
-const initialCommitteeInfo = {
-  committeeTitle: {
-    label: 'Committee Name (English)',
-    bn_label: 'কমিটির নাম (English)',
-    name: 'committeeTitle',
-    placeholder: 'Rajshahi District Committee',
-    type: 'text',
-    value: '',
-  },
-  bn_committeeTitle: {
-    label: 'Committee Name (বাংলা)',
-    bn_label: 'কমিটির নাম (বাংলা)',
-    name: 'bn_committeeTitle',
-    placeholder: 'রাজশাহী জেলা কমিটি',
-    type: 'text',
-    value: '',
-  },
-  workHasStarted: {
-    label: 'Work has Started',
-    bn_label: 'কার্যক্রম শুরু',
-    name: 'workHasStarted',
-    type: 'date',
-    value: null,
-  },
-  willExpire: {
-    label: 'Will Expire',
-    bn_label: 'মেয়াদ',
-    name: 'willExpire',
-    type: 'date',
-    value: null,
-  },
-  indexNumber: {
-    label: 'Serial Index',
-    bn_label: 'ক্রমিক ইনডেক্স',
-    name: 'indexNumber',
-    placeholder: '07',
-    type: 'text',
-    value: '',
-  },
-};
 
 const addMember = (initial = [], count = 1) => {
   for (let i = 0; i < count; i++) {
@@ -67,7 +28,9 @@ const useAddCommittee = () => {
     committee: { addCommitteeData },
   } = useStoreActions((actions) => actions);
 
-  const [committeeInfo, setCommitteeInfo] = useState(initialCommitteeInfo);
+  const [committeeInfo, setCommitteeInfo] = useState({
+    ...initialCommitteeInfo,
+  });
   const [members, setMembers] = useState(addMember([], 7));
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -77,18 +40,8 @@ const useAddCommittee = () => {
 
   const isBn = language === 'BN' ? true : false;
 
-  const handleInfoChange = (e, name) => {
-    const clonedState = objDeepClone(committeeInfo);
-
-    if (name === 'workHasStarted' || name === 'willExpire') {
-      clonedState[name].value = e;
-    } else if (e.target.name === 'indexNumber') {
-      clonedState[e.target.name].value = e.target.value.replace(/[^0-9]/g, '');
-    } else {
-      clonedState[e.target.name].value = e.target.value;
-    }
-
-    setCommitteeInfo(clonedState);
+  const handleCommitteeInfoChange = (e, name) => {
+    setCommitteeInfo(changeHandlerForCommitteeInfo(committeeInfo, e, name));
   };
 
   const handleMemberChange = (e, id) => {
@@ -167,7 +120,7 @@ const useAddCommittee = () => {
     committeeInfo,
     members,
     defaultProps,
-    handleInfoChange,
+    handleCommitteeInfoChange,
     handleMemberChange,
     addMemberRow,
     deleteMemberRow,

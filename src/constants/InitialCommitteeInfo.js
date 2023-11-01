@@ -1,0 +1,40 @@
+export const initialCommitteeInfo = {
+  committeeTitle: {
+    label: 'Committee Name (English)',
+    bn_label: 'কমিটির নাম (English)',
+    name: 'committeeTitle',
+    placeholder: 'Rajshahi District Committee',
+    type: 'text',
+    value: '',
+  },
+  bn_committeeTitle: {
+    label: 'Committee Name (বাংলা)',
+    bn_label: 'কমিটির নাম (বাংলা)',
+    name: 'bn_committeeTitle',
+    placeholder: 'রাজশাহী জেলা কমিটি',
+    type: 'text',
+    value: '',
+  },
+  workHasStarted: {
+    label: 'Work has Started',
+    bn_label: 'কার্যক্রম শুরু',
+    name: 'workHasStarted',
+    type: 'date',
+    value: null,
+  },
+  willExpire: {
+    label: 'Will Expire',
+    bn_label: 'মেয়াদ',
+    name: 'willExpire',
+    type: 'date',
+    value: null,
+  },
+  indexNumber: {
+    label: 'Serial Index',
+    bn_label: 'ক্রমিক ইনডেক্স',
+    name: 'indexNumber',
+    placeholder: '07',
+    type: 'text',
+    value: '',
+  },
+};

@@ -1,6 +1,7 @@
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import dayjs from 'dayjs';
+import { getBnDate } from '../helpers/date';
 import Link from './ui/Link';
 
 const CommitteeListRow = ({ committee, columns, isBn }) => {
@@ -27,7 +28,11 @@ const CommitteeListRow = ({ committee, columns, isBn }) => {
                 sx={{ fontSize: '1rem' }}
               />
             ) : value ? (
-              dayjs(value).format('DD MMM YYYY')
+              isBn ? (
+                getBnDate(value)
+              ) : (
+                dayjs(value).format('DD MMM YYYY')
+              )
             ) : (
               ''
             )}
