@@ -12,6 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import SnackbarComp from '../components/Snackbar';
 import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
 
 const initialState = { email: null, password: '', confirmPassword: '' };
@@ -29,12 +30,24 @@ const Signup = () => {
     pharmacist: { getPharmacistsData },
   } = useStoreActions((actions) => actions);
   const [state, setState] = useState({ ...initialState });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    severity: 'info',
+    text: '',
+  });
 
   const isBn = language === 'BN' ? true : false;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setState((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({ open: false, severity: snackbar.severity, text: '' });
   };
 
   const handleSubmit = async (e) => {
@@ -44,7 +57,15 @@ const Signup = () => {
       email: state.email.email,
     });
 
-    if (res) navigate(`/login`);
+    if (res) {
+      navigate(`/login`);
+    } else {
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        text: 'User registration faild!.',
+      });
+    }
   };
 
   const defaultProps = {
@@ -176,6 +197,13 @@ const Signup = () => {
           </Typography>
         </CardActions>
       </CardContent>
+
+      <SnackbarComp
+        open={snackbar.open}
+        severity={snackbar.severity}
+        text={snackbar.text}
+        handleClose={handleSnackbarClose}
+      />
     </Card>
   );
 };

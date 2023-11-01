@@ -145,12 +145,6 @@ const AddPharmacist = () => {
           />
         )}
       </div>
-      <SnackbarComp
-        open={snackbar.open}
-        severity={snackbar.severity}
-        text={snackbar.text}
-        handleClose={handleSnackbarClose}
-      />
       <Button
         disabled={
           !formFields.name.value || !formFields.regNumber.value || submitting
@@ -161,6 +155,13 @@ const AddPharmacist = () => {
       >
         {isBn ? 'ডাটাবেজে সংরক্ষণ' : 'Save to Database'}
       </Button>
+
+      <SnackbarComp
+        open={snackbar.open}
+        severity={snackbar.severity}
+        text={snackbar.text}
+        handleClose={handleSnackbarClose}
+      />
     </Box>
   );
 };
