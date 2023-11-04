@@ -58,6 +58,8 @@ const authModel = {
     actions.setSubmitting(true);
     actions.setError(null);
 
+    console.log('payload =>', payload);
+
     try {
       const { data } = await userRegistration(payload);
       actions.setSubmitting(false);
