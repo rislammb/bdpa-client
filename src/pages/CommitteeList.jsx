@@ -23,7 +23,7 @@ const CommitteeList = () => {
   const {
     loading,
     isBn,
-    user,
+    isAdmin,
     filteredList,
     searchTerm,
     setSearchTerm,
@@ -73,9 +73,9 @@ const CommitteeList = () => {
           label={isBn ? 'কমিটি অনুসন্ধান' : 'Search Committee'}
           placeholder={isBn ? 'কেন্দ্রীয় কমিটি...' : 'Central Committee'}
           variant='standard'
-          sx={{ width: '210px' }}
+          sx={{ width: '215px' }}
         />
-        {user && (
+        {isAdmin && (
           <Button
             startIcon={<AddIcon />}
             component={RouterLink}

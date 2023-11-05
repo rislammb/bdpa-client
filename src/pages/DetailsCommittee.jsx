@@ -62,7 +62,7 @@ const DetailsCommittee = () => {
       <Loading />
     </Box>
   ) : (
-    <Card sx={{ maxWidth: '1100px', margin: 'auto' }}>
+    <Card sx={{ maxWidth: '950px', margin: 'auto' }}>
       {committee ? (
         <CardContent sx={{ textAlign: 'left' }}>
           {isEditCommittee ? (
@@ -88,9 +88,18 @@ const DetailsCommittee = () => {
                 alignItems: 'center',
                 flexDirection: 'column',
                 gap: 1,
-                position: 'relative',
               }}
             >
+              {isPermittedForEdit && (
+                <IconButton
+                  sx={{
+                    alignSelf: 'end',
+                  }}
+                  onClick={toggleIsEditCommitttee}
+                >
+                  <Edit color='info' />
+                </IconButton>
+              )}
               <ColorTitle
                 variant='h5'
                 text={
@@ -110,13 +119,6 @@ const DetailsCommittee = () => {
                   ? getBnDate(committee.willExpire)
                   : dayjs(committee.willExpire).format('DD MMM YYYY')}
               </Typography>
-
-              <IconButton
-                sx={{ position: 'absolute', top: '8px', right: '8px' }}
-                onClick={toggleIsEditCommitttee}
-              >
-                <Edit color='info' />
-              </IconButton>
             </Box>
           )}
 

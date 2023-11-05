@@ -26,6 +26,8 @@ const useCommitteeList = () => {
     text: '',
   });
 
+  const isAdmin =
+    user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
   const isBn = language === 'BN' ? true : false;
 
   const handleSnackbarClose = (event, reason) => {
@@ -52,7 +54,7 @@ const useCommitteeList = () => {
   return {
     loading,
     isBn,
-    user,
+    isAdmin,
     filteredList,
     columns: getColumns(isBn),
     searchTerm,

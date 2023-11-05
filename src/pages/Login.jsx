@@ -52,14 +52,14 @@ const Login = () => {
           label={isBn ? 'পাসওয়ার্ড' : 'Password'}
           variant='standard'
         />
-        {!submitting && error?.message && (
+        {!submitting && error && (
           <Typography
             textAlign={'left'}
             fontSize={'0.9rem'}
             width={'100%'}
             color={'error'}
           >
-            {error.message}
+            {isBn ? error.bn_text : error.text}
           </Typography>
         )}
         <CardActions sx={{ flexDirection: 'column', p: 0, rowGap: 1 }}>
@@ -71,7 +71,7 @@ const Login = () => {
               ? 'আপনার কি একাউন্ট নেই? '
               : 'Don&apos;t have an account? Please '}
             <Link
-              to='/signup'
+              to='/auth/signup'
               style={{
                 color:
                   theme.palette.mode === 'dark'

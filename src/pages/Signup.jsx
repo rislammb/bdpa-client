@@ -1,4 +1,6 @@
 import {
+  Alert,
+  Box,
   Button,
   Card,
   CardActions,
@@ -17,15 +19,17 @@ import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
 
 const Signup = () => {
   const theme = useTheme();
+
   const {
     ui: { language },
     auth: { submitting, error },
     pharmacist: { list },
   } = useStoreState((state) => state);
   const {
-    auth: { getRegistrationData },
+    auth: { getRegistrationData, resendEmailData },
     pharmacist: { getPharmacistsData },
   } = useStoreActions((actions) => actions);
+
   const [state, setState] = useState(null);
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -35,7 +39,7 @@ const Signup = () => {
   const [defaultProps, setDefaultProps] = useState({
     options: [],
   });
-  const [isSendEmail, setIsSendEmail] = useState(false);
+  const [successAlert, setSuccessAlert] = useState(null);
 
   const isBn = language === 'BN' ? true : false;
 
@@ -51,23 +55,45 @@ const Signup = () => {
 
     const res = await getRegistrationData({
       email: state.email,
-      clientUrl: import.meta.resolve('/') + 'verify-email/',
+      clientUrl: import.meta.resolve('/') + 'auth/verify-email/',
     });
 
     if (res) {
-      setIsSendEmail(true);
+      setSuccessAlert(res);
       setState(null);
     } else {
       setSnackbar({
         open: true,
         severity: 'error',
-        text: 'User registration faild!.',
+        text: isBn
+          ? 'ব্যবহারকারী নিবন্ধন ব্যর্থ!'
+          : 'User registration failed!',
+      });
+    }
+  };
+
+  const handleResendEmail = async () => {
+    const res = await resendEmailData({
+      email: state.email,
+      clientUrl: import.meta.resolve('/') + 'auth/verify-email/',
+    });
+
+    if (res) {
+      setSuccessAlert(res);
+      setState(null);
+    } else {
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        text: isBn
+          ? 'ব্যবহারকারী নিবন্ধন ব্যর্থ!'
+          : 'User registration failed!',
       });
     }
   };
 
   useEffect(() => {
-    if (list) {
+    if (list.length > 0) {
       setDefaultProps({
         options: list.filter((item) => item.email),
         getOptionLabel: (option) =>
@@ -89,7 +115,7 @@ const Signup = () => {
   }, []);
 
   return (
-    <Card sx={{ maxWidth: 330, margin: '20px auto' }}>
+    <Card sx={{ maxWidth: 370, margin: '20px auto' }}>
       <CardHeader
         sx={{
           mb: 3,
@@ -130,23 +156,18 @@ const Signup = () => {
           )}
         />
 
-        {isSendEmail && (
-          <Typography
-            sx={{
-              fontSize: '14px',
-              borderLeft: '3px solid dodgerblue',
-              pl: 1,
-              textAlign: 'left',
-              color:
-                theme.palette.mode === 'dark'
-                  ? theme.palette.primary.light
-                  : theme.palette.primary.main,
-            }}
-          >
-            {isBn
-              ? 'আপনাকে একটি যাচাইকরণ ইমেইল পাঠানো হয়েছে।'
-              : 'A verification email has been sent to you.'}
-          </Typography>
+        {successAlert && (
+          <Alert onClose={() => setSuccessAlert(null)} severity='success'>
+            {isBn ? successAlert.bn_text : successAlert.text}
+          </Alert>
+        )}
+
+        {error?.alreadySendEmail && (
+          <Box textAlign={'right'}>
+            <Button onClick={handleResendEmail} color='info' size='small'>
+              Resend Email
+            </Button>
+          </Box>
         )}
 
         <CardActions sx={{ flexDirection: 'column', rowGap: 1 }}>
@@ -162,7 +183,7 @@ const Signup = () => {
               ? 'ইতোমধ্যে আপনার একাউন্ট আছে? '
               : 'Already have an account? Please '}
             <Link
-              to='/login'
+              to='/auth/login'
               style={{
                 color:
                   theme.palette.mode === 'dark'

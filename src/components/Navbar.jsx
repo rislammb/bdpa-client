@@ -24,7 +24,9 @@ import DetailsPharmacist from '../pages/DetailsPharmacist';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import PharmacistList from '../pages/PharmacistList';
+import SetPassword from '../pages/SetPassword';
 import Signup from '../pages/Signup';
+import VerifyEmail from '../pages/VerifyEmail';
 
 const drawerWidth = 240;
 
@@ -44,13 +46,16 @@ const Navbar = (props) => {
     { path: '/committees', text: 'Committees', bn_text: 'কমিটি' },
     { path: '/about', text: 'About BDPA', bn_text: 'বিডিপিএ সম্পর্কে' },
     {
-      path: '/login',
+      path: '/auth/login',
       text: user ? 'Logout' : 'Login',
       bn_text: user ? 'লগ আউট' : 'লগ ইন',
     },
   ];
 
-  if (user)
+  const isAdmin =
+    user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
+
+  if (isAdmin)
     navItems.unshift({
       path: '/members/add',
       text: 'Add Member',
@@ -184,12 +189,15 @@ const Navbar = (props) => {
           {drawer}
         </Drawer>
       </Box>
+
       <Box component='main' sx={{ p: 1, textAlign: 'center', width: '100%' }}>
         <Toolbar />
         <Routes>
           <Route
             path='/members/add'
-            element={user ? <AddPharmacist /> : <Navigate to={`/login`} />}
+            element={
+              isAdmin ? <AddPharmacist /> : <Navigate to={`/auth/login`} />
+            }
           />
           <Route
             path='/members/page/:pageNumber'
@@ -203,22 +211,44 @@ const Navbar = (props) => {
           />
           <Route
             path='/committees/add'
-            element={user ? <AddCommittee /> : <Navigate to={`/login`} />}
+            element={
+              isAdmin ? <AddCommittee /> : <Navigate to={`/auth/login`} />
+            }
           />
           <Route path='/about' element={<About />} />
           <Route
-            path='/login'
+            path='/auth/login'
             element={
               user ? <Navigate to={`/members/${user.regNumber}`} /> : <Login />
             }
           />
           <Route
-            path='/signup'
+            path='/auth/signup'
             element={
               user?.regNumber ? (
                 <Navigate to={`/members/${user.regNumber}`} />
               ) : (
                 <Signup />
+              )
+            }
+          />
+          <Route
+            path='/auth/verify-email/:emailToken'
+            element={
+              user?.regNumber ? (
+                <Navigate to={`/members/${user.regNumber}`} />
+              ) : (
+                <VerifyEmail />
+              )
+            }
+          />
+          <Route
+            path='/auth/set-password'
+            element={
+              user?.regNumber ? (
+                <Navigate to={`/members/${user.regNumber}`} />
+              ) : (
+                <SetPassword />
               )
             }
           />

@@ -38,6 +38,7 @@ const useDetailsPharmacist = () => {
     user?.roles?.includes('SUPER_ADMIN') ||
     user?.roles?.includes('ADMIN') ||
     user?.regNumber === regNumber;
+
   const isAdmin = user?.roles?.includes('SUPER_ADMIN');
 
   const handleSnackbarClose = (event, reason) => {

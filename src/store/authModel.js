@@ -1,5 +1,12 @@
 import { action, thunk } from 'easy-peasy';
-import { userLogin, userRegistration, verifyToken } from '../api/auth';
+import {
+  resendEmail,
+  setPassword,
+  userLogin,
+  userRegistration,
+  verifyEmail,
+  verifyToken,
+} from '../api/auth';
 import { setAuthToken } from '../api/config';
 
 const authModel = {
@@ -58,10 +65,50 @@ const authModel = {
     actions.setSubmitting(true);
     actions.setError(null);
 
-    console.log('payload =>', payload);
-
     try {
       const { data } = await userRegistration(payload);
+      actions.setSubmitting(false);
+      return data;
+    } catch (e) {
+      if (e.response) actions.setError(e.response.data);
+      else actions.setError(e.message);
+      actions.setSubmitting(false);
+    }
+  }),
+  resendEmailData: thunk(async (actions, payload) => {
+    actions.setSubmitting(true);
+    actions.setError(null);
+
+    try {
+      const { data } = await resendEmail(payload);
+      actions.setSubmitting(false);
+      return data;
+    } catch (e) {
+      if (e.response) actions.setError(e.response.data);
+      else actions.setError(e.message);
+      actions.setSubmitting(false);
+    }
+  }),
+  emailVerification: thunk(async (actions, payload) => {
+    actions.setSubmitting(true);
+    actions.setError(null);
+
+    try {
+      const { data } = await verifyEmail(payload);
+      actions.setSubmitting(false);
+      return data;
+    } catch (e) {
+      if (e.response) actions.setError(e.response.data);
+      else actions.setError(e.message);
+      actions.setSubmitting(false);
+    }
+  }),
+  setPasswordData: thunk(async (actions, payload) => {
+    actions.setSubmitting(true);
+    actions.setError(null);
+
+    try {
+      const { data } = await setPassword(payload);
       actions.setSubmitting(false);
       return data;
     } catch (e) {
