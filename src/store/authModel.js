@@ -109,8 +109,10 @@ const authModel = {
 
     try {
       const { data } = await setPassword(payload);
+
+      actions.setToken(data?.token);
+      setAuthToken(data?.token);
       actions.setSubmitting(false);
-      return data;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);

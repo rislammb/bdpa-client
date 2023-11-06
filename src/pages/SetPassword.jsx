@@ -38,17 +38,12 @@ const SetPassword = () => {
 
   const isBn = language === 'BN' ? true : false;
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const res = await setPasswordData({
+    setPasswordData({
       email,
       ...state,
     });
-
-    if (res) {
-      setToken(res.token);
-      setState({ ...initialState });
-    }
   };
 
   return (
