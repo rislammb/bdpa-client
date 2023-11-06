@@ -4,6 +4,7 @@ import committeeModel from './committeeModel';
 import memberModel from './memberModel';
 import pharmacistModel from './pharmacistModel';
 import uiModel from './uiModel';
+import userModel from './userModel';
 
 const store = createStore({
   ui: persist(uiModel, {
@@ -14,6 +15,7 @@ const store = createStore({
   pharmacist: persist(pharmacistModel, { allow: ['list', 'details'] }),
   committee: persist(committeeModel, { allow: ['list', 'details'] }),
   member: memberModel,
+  user: persist(userModel, { allow: ['list'] }),
 });
 
 export default store;

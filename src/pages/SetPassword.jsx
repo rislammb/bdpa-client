@@ -45,8 +45,10 @@ const SetPassword = () => {
       ...state,
     });
 
-    if (res) setToken(res.token);
-    setState({ ...initialState });
+    if (res) {
+      setToken(res.token);
+      setState({ ...initialState });
+    }
   };
 
   return (

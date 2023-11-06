@@ -13,12 +13,13 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { useTheme } from '@mui/material/styles';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SnackbarComp from '../components/Snackbar';
 import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
 
 const Signup = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const {
     ui: { language },
@@ -90,6 +91,12 @@ const Signup = () => {
           : 'User registration failed!',
       });
     }
+  };
+
+  const handleSetPassword = async () => {
+    return navigate('/auth/set-password', {
+      state: { email: state.email },
+    });
   };
 
   useEffect(() => {
@@ -166,6 +173,14 @@ const Signup = () => {
           <Box textAlign={'right'}>
             <Button onClick={handleResendEmail} color='info' size='small'>
               Resend Email
+            </Button>
+          </Box>
+        )}
+
+        {error?.passwordNotSet && (
+          <Box textAlign={'right'}>
+            <Button onClick={handleSetPassword} color='info' size='small'>
+              Set Password
             </Button>
           </Box>
         )}

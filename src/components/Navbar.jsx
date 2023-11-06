@@ -26,6 +26,7 @@ import Login from '../pages/Login';
 import PharmacistList from '../pages/PharmacistList';
 import SetPassword from '../pages/SetPassword';
 import Signup from '../pages/Signup';
+import Users from '../pages/Users';
 import VerifyEmail from '../pages/VerifyEmail';
 
 const drawerWidth = 240;
@@ -55,12 +56,18 @@ const Navbar = (props) => {
   const isAdmin =
     user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
 
-  if (isAdmin)
+  if (isAdmin) {
     navItems.unshift({
       path: '/members/add',
       text: 'Add Member',
       bn_text: 'সদস্য যোগ',
     });
+    navItems.push({
+      path: '/users',
+      text: 'Users',
+      bn_text: 'ব্যবহারকারীগণ',
+    });
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -252,7 +259,10 @@ const Navbar = (props) => {
               )
             }
           />
-
+          <Route
+            path='/users'
+            element={isAdmin ? <Users /> : <Navigate to={`/auth/login`} />}
+          />
           <Route index element={<Home />} />
         </Routes>
       </Box>
