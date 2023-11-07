@@ -196,7 +196,14 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
       setSnackbar({
         open: true,
         severity: 'error',
-        text: isBn ? 'ফার্মাসিস্ট আপডেট ব্যর্থ!' : 'Pharmacist update failed!',
+        text:
+          typeof error === 'object'
+            ? isBn
+              ? error.bn_text
+              : error.text
+            : isBn
+            ? 'ফার্মাসিস্ট আপডেট ব্যর্থ!'
+            : 'Pharmacist update failed!',
       });
     }
   };

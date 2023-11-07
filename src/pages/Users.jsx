@@ -37,8 +37,16 @@ const Users = () => {
 
   const isBn = language === 'BN' ? true : false;
 
-  const handleDelete = (id) => {
-    deleteUserData(id);
+  const handleDelete = ({ id, email, regNumber }) => {
+    if (
+      window.confirm(
+        isBn
+          ? `আপনি কি সত্যিই মুছে ফেলতে চান '${email} : ${regNumber}'?`
+          : `Are you sure you want to delete '${email} : ${regNumber}'?`
+      )
+    ) {
+      deleteUserData(id);
+    }
   };
 
   useEffect(() => {
@@ -107,7 +115,7 @@ const Users = () => {
                       <IconButton
                         color='error'
                         disabled={submitting}
-                        onClick={() => handleDelete(row.id)}
+                        onClick={() => handleDelete(row)}
                       >
                         <Delete fontSize='small' />
                       </IconButton>

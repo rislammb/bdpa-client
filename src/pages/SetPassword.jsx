@@ -8,12 +8,72 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
+import { deepClone } from '@mui/x-data-grid/utils/utils';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import ColorLink from '../components/ui/ColorLink';
 
-const initialState = { password: '', confirmPassword: '' };
+const initialState = {
+  password: {
+    name: 'password',
+    type: 'password',
+    label: {
+      name: 'Password',
+      bn_name: 'পাসওয়ার্ড',
+    },
+    value: '',
+    error: null,
+    tounched: false,
+  },
+  confirmPassword: {
+    name: 'confirmPassword',
+    type: 'password',
+    label: {
+      name: 'Confirm Password',
+      bn_name: 'পাসওয়ার্ড নিশ্চিত করুন',
+    },
+    value: '',
+    error: null,
+    touched: false,
+  },
+};
+
+const validatePassword = ({ password, confirmPassword }) => {
+  const error = {};
+  let response = '';
+
+  if (typeof password !== 'string' || password.length < 7) {
+    error.password = {
+      text: 'Password type must be string and minimum 7 characters long!',
+      bn_text: 'পাসওয়ার্ড টাইপ স্ট্রিং এবং ন্যূনতম ৭ অক্ষর দীর্ঘ হতে হবে!',
+    };
+  } else if (
+    !password.match(/\d/g) ||
+    !password.match(/[A-Z]/g) ||
+    !password.match(/[a-z]/g)
+  ) {
+    error.password = {
+      text: 'Password must contain at least 1 lowercase letter, uppercase letter, and number!',
+      bn_text:
+        'পাসওয়ার্ডে কমপক্ষে ১ টি করে ছোটহাতের অক্ষর, বড় হাতের অক্ষর ও সংখ্যা থাকতে হবে!',
+    };
+  } else {
+    if (confirmPassword !== undefined && password !== confirmPassword) {
+      error.confirmPassword = {
+        text: 'Password and confirm password does not match!',
+        bn_text: 'পাসওয়ার্ড ও কনফার্ম পাসওয়ার্ড মিলছে না!',
+      };
+    } else {
+      response = password;
+    }
+  }
+
+  return {
+    valid: Object.keys(error).length < 1,
+    data: Object.keys(error).length < 1 ? response : error,
+  };
+};
 
 const SetPassword = () => {
   const {
@@ -25,26 +85,50 @@ const SetPassword = () => {
     ui: { language },
     auth: { submitting, error },
   } = useStoreState((state) => state);
-  const { setPasswordData, setToken } = useStoreActions(
-    (actions) => actions.auth
-  );
+  const { setPasswordData } = useStoreActions((actions) => actions.auth);
 
   const [state, setState] = useState({ ...initialState });
 
+  const isBn = language === 'BN' ? true : false;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setState((prev) => ({ ...prev, [name]: value }));
-  };
+    const clonedState = deepClone(state);
+    clonedState[name].value = value;
 
-  const isBn = language === 'BN' ? true : false;
+    const values = Object.keys(clonedState).reduce((acc, cur) => {
+      acc[cur] = clonedState[cur].value;
+      return acc;
+    }, {});
+    const { valid, data } = validatePassword(values);
+
+    if (!valid) {
+      Object.keys(clonedState).forEach((key) => {
+        clonedState[key].error = data[key] ?? null;
+      });
+    }
+
+    setState(clonedState);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const values = Object.keys(state).reduce((acc, cur) => {
+      acc[cur] = state[cur].value;
+      return acc;
+    }, {});
+
     setPasswordData({
       email,
-      ...state,
+      ...values,
     });
   };
+
+  const stateArray = Object.keys(state).reduce((acc, cur) => {
+    acc.push(state[cur]);
+    return acc;
+  }, []);
 
   return (
     <Card sx={{ maxWidth: 330, margin: '20px auto' }}>
@@ -62,39 +146,31 @@ const SetPassword = () => {
         onSubmit={handleSubmit}
         sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
       >
-        <TextField
-          InputLabelProps={{ color: 'info' }}
-          type='password'
-          name='password'
-          value={state.password}
-          onChange={handleChange}
-          placeholder='********'
-          label={isBn ? 'পাসওয়ার্ড' : 'Password'}
-          variant='standard'
-          error={error?.password}
-          helperText={
-            error &&
-            error.password &&
-            (isBn ? error.password.bn_text : error.password.text)
-          }
-        />
-        <TextField
-          InputLabelProps={{ color: 'info' }}
-          type='password'
-          name='confirmPassword'
-          value={state.confirmPassword}
-          onChange={handleChange}
-          placeholder='********'
-          label={isBn ? 'পাসওয়ার্ড নিশ্চিত করুন' : 'Confirm Password'}
-          variant='standard'
-          error={error?.confirmPassword}
-          helperText={
-            error &&
-            error.confirmPassword &&
-            (isBn ? error.confirmPassword.bn_text : error.confirmPassword.text)
-          }
-        />
-        {!submitting && error && (
+        {stateArray?.length > 0 &&
+          stateArray.map((field) => {
+            console.log('field =>', field.error?.text);
+            return (
+              <TextField
+                key={field.name}
+                InputLabelProps={{ color: 'info' }}
+                type={field.type}
+                name={field.name}
+                value={field.value}
+                onChange={handleChange}
+                placeholder='********'
+                label={isBn ? field.label.bn_name : field.label.name}
+                variant='standard'
+                error={error?.password}
+                helperText={
+                  field.error?.text ||
+                  (error &&
+                    error.password &&
+                    (isBn ? error.password.bn_text : error.password.text))
+                }
+              />
+            );
+          })}
+        {!submitting && error?.text && (
           <Typography
             textAlign={'left'}
             fontSize={'0.9rem'}
@@ -109,8 +185,8 @@ const SetPassword = () => {
           <Button
             disabled={
               !email ||
-              !state.password ||
-              state.password !== state.confirmPassword ||
+              !state.password.value ||
+              state.password.value !== state.confirmPassword.value ||
               submitting
             }
             type='submit'

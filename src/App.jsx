@@ -92,7 +92,7 @@ export default function AppProvider() {
     } else {
       setLoading(false);
     }
-  }, [token, getVerifyedData]);
+  }, [token]);
 
   useEffect(() => {
     if (language === 'BN') {

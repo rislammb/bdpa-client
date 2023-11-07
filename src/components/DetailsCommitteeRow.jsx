@@ -90,7 +90,14 @@ const DetailsCommitteeRow = ({
       setSnackbar({
         open: true,
         severity: 'error',
-        text: isBn ? 'সদস্য আপডেট ব্যর্থ!' : 'Member update failed!',
+        text:
+          typeof error === 'object'
+            ? isBn
+              ? error.bn_text
+              : error.text
+            : isBn
+            ? 'সদস্য আপডেট ব্যর্থ!'
+            : 'Member update failed!',
       });
     }
   };

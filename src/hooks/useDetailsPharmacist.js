@@ -35,11 +35,13 @@ const useDetailsPharmacist = () => {
   const isBn = language === 'BN' ? true : false;
 
   const isPermittedForEdit =
-    user?.roles?.includes('SUPER_ADMIN') ||
-    user?.roles?.includes('ADMIN') ||
-    user?.regNumber === regNumber;
+    user?.accountStatus === 'ACTIVE' &&
+    (user.roles?.includes('SUPER_ADMIN') ||
+      user.roles?.includes('ADMIN') ||
+      user.regNumber === regNumber);
 
-  const isAdmin = user?.roles?.includes('SUPER_ADMIN');
+  const isAdmin =
+    user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {

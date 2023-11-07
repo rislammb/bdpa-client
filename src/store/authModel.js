@@ -51,9 +51,7 @@ const authModel = {
     actions.setError(null);
     try {
       const { data } = await userLogin(payload);
-
       actions.setToken(data?.token);
-      setAuthToken(data?.token);
       actions.setSubmitting(false);
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
@@ -111,7 +109,6 @@ const authModel = {
       const { data } = await setPassword(payload);
 
       actions.setToken(data?.token);
-      setAuthToken(data?.token);
       actions.setSubmitting(false);
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
