@@ -8,11 +8,11 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { deepClone } from '@mui/x-data-grid/utils/utils';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import ColorLink from '../components/ui/ColorLink';
+import { objDeepClone } from '../helpers/utilities';
 
 const initialState = {
   password: {
@@ -93,7 +93,7 @@ const SetPassword = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const clonedState = deepClone(state);
+    const clonedState = objDeepClone(state);
     clonedState[name].value = value;
 
     const values = Object.keys(clonedState).reduce((acc, cur) => {
