@@ -106,7 +106,7 @@ const SetPassword = () => {
       Object.keys(clonedState).forEach((key) => {
         clonedState[key].error = data[key] ?? null;
       });
-    }
+    } else clonedState[name].error = null;
 
     setState(clonedState);
   };

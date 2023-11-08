@@ -1,7 +1,5 @@
-import { Delete } from '@mui/icons-material';
 import {
   Box,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -12,6 +10,7 @@ import {
 import Paper from '@mui/material/Paper';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
+import UserRow from '../components/UserRow';
 import ColorTitle from '../components/ui/ColorTitle';
 import Loading from '../components/ui/Loading';
 
@@ -28,26 +27,12 @@ function createData(id, regNumber, email, accountStatus, roles) {
 const Users = () => {
   const {
     ui: { language },
-    user: { loading, submitting, error, list },
+    user: { loading, list },
   } = useStoreState((state) => state);
-  const { getUsersData, deleteUserData } = useStoreActions(
-    (actions) => actions.user
-  );
+  const { getUsersData } = useStoreActions((actions) => actions.user);
   const [rows, setRows] = useState([]);
 
   const isBn = language === 'BN' ? true : false;
-
-  const handleDelete = ({ id, email, regNumber }) => {
-    if (
-      window.confirm(
-        isBn
-          ? `আপনি কি সত্যিই মুছে ফেলতে চান '${email} : ${regNumber}'?`
-          : `Are you sure you want to delete '${email} : ${regNumber}'?`
-      )
-    ) {
-      deleteUserData(id);
-    }
-  };
 
   useEffect(() => {
     if (list.length > 0) {
@@ -100,28 +85,11 @@ const Users = () => {
             </TableHead>
             <TableBody>
               {rows.map((row) => (
-                <TableRow
+                <UserRow
                   key={row.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component='th' scope='row'>
-                    {row.regNumber}
-                  </TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{row.accountStatus}</TableCell>
-                  <TableCell>{row.roles}</TableCell>
-                  <TableCell align='right'>
-                    {!row.roles.includes('SUPER_ADMIN') && (
-                      <IconButton
-                        color='error'
-                        disabled={submitting}
-                        onClick={() => handleDelete(row)}
-                      >
-                        <Delete fontSize='small' />
-                      </IconButton>
-                    )}
-                  </TableCell>
-                </TableRow>
+                  row={row}
+                  user={list.find((u) => u._id === row.id)}
+                />
               ))}
             </TableBody>
           </Table>

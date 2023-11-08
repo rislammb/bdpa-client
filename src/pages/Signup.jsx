@@ -83,13 +83,21 @@ const Signup = () => {
       setSuccessAlert(res);
       setState(null);
     } else {
-      setSnackbar({
-        open: true,
-        severity: 'error',
-        text: isBn
-          ? 'ব্যবহারকারী নিবন্ধন ব্যর্থ!'
-          : 'User registration failed!',
-      });
+      if (!submitting && error) {
+        if (typeof error === 'object') {
+          setSnackbar({
+            open: true,
+            severity: 'error',
+            text: isBn ? error.bn_text : error.text,
+          });
+        } else if (typeof error === 'string') {
+          setSnackbar({
+            open: true,
+            severity: 'error',
+            text: error,
+          });
+        }
+      }
     }
   };
 

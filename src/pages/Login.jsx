@@ -52,7 +52,7 @@ const Login = () => {
           label={isBn ? 'পাসওয়ার্ড' : 'Password'}
           variant='standard'
         />
-        {!submitting && error && (
+        {!submitting && error && typeof error === 'object' ? (
           <Typography
             textAlign={'left'}
             fontSize={'0.9rem'}
@@ -61,6 +61,17 @@ const Login = () => {
           >
             {isBn ? error.bn_text : error.text}
           </Typography>
+        ) : (
+          typeof error === 'string' && (
+            <Typography
+              textAlign={'left'}
+              fontSize={'0.9rem'}
+              width={'100%'}
+              color={'error'}
+            >
+              {error}
+            </Typography>
+          )
         )}
         <CardActions sx={{ flexDirection: 'column', p: 0, rowGap: 1 }}>
           <Button disabled={submitting} type='submit' variant='contained'>
