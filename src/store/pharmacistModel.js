@@ -58,7 +58,7 @@ const pharmacistModel = {
     state.jobDepertmentInfo = { ...payload };
   }),
   setSearchTerm: action((state, payload) => {
-    state.searchTerm = payload.toLowerCase();
+    state.searchTerm = payload;
   }),
   filteredList: computed((state) => {
     const { list, locationInfo, jobDepertmentInfo, searchTerm } = state;
@@ -66,7 +66,7 @@ const pharmacistModel = {
       list,
       locationInfo,
       jobDepertmentInfo,
-      searchTerm
+      searchTerm.toLowerCase()
     );
   }),
   setDetailsPharmacist: action((state, payload) => {

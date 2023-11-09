@@ -56,6 +56,9 @@ const useDetailsCommittee = () => {
   const [committeeInfo, setCommitteeInfo] = useState(null);
   const [isAddMember, setIsAddMember] = useState(false);
   const [member, setMember] = useState({ ...committeeMemberFields });
+  const [defaultProps, setDefaultProps] = useState({
+    options: [],
+  });
   const [snackbar, setSnackbar] = useState({
     open: false,
     severity: 'info',
@@ -75,15 +78,17 @@ const useDetailsCommittee = () => {
       setCommitteeInfo(null);
     } else {
       setIsEditCommittee(true);
-      Object.keys(initialCommitteeInfo).forEach((key) => {
+      const clonedCommitteeInfo = objDeepClone(initialCommitteeInfo);
+
+      Object.keys(clonedCommitteeInfo).forEach((key) => {
         if (key === 'indexNumber') {
-          initialCommitteeInfo[key].value = committee[key]?.name;
+          clonedCommitteeInfo[key].value = committee[key]?.name;
         } else {
-          initialCommitteeInfo[key].value = committee[key];
+          clonedCommitteeInfo[key].value = committee[key];
         }
       });
 
-      setCommitteeInfo(initialCommitteeInfo);
+      setCommitteeInfo(clonedCommitteeInfo);
     }
   };
 
@@ -173,21 +178,25 @@ const useDetailsCommittee = () => {
     }
   };
 
-  const defaultProps = {
-    options: list,
-    getOptionLabel: (option) =>
-      list.length > 0
-        ? isBn
-          ? `${option.bn_name} - ${option.regNumber} - ${getBnAreaInfo(
-              option,
-              'posting'
-            )}`
-          : `${option.name} - ${option.regNumber} - ${getAreaInfo(
-              option,
-              'posting'
-            )}`
-        : '',
-  };
+  useEffect(() => {
+    if (list.length > 0) {
+      setDefaultProps({
+        options: list,
+        getOptionLabel: (option) =>
+          list.length > 0
+            ? isBn
+              ? `${option.bn_name} - ${option.regNumber} - ${getBnAreaInfo(
+                  option,
+                  'posting'
+                )}`
+              : `${option.name} - ${option.regNumber} - ${getAreaInfo(
+                  option,
+                  'posting'
+                )}`
+            : '',
+      });
+    }
+  }, [list, isBn]);
 
   useEffect(() => {
     if (list.length < 1) getPharmacistsData();

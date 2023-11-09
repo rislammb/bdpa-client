@@ -61,7 +61,11 @@ const CommitteeList = () => {
           InputProps={{
             endAdornment: (
               <InputAdornment position='end'>
-                <IconButton onClick={() => setSearchTerm('')} size='small'>
+                <IconButton
+                  disabled={!searchTerm}
+                  onClick={() => setSearchTerm('')}
+                  size='small'
+                >
                   <ClearIcon fontSize='small' />
                 </IconButton>
               </InputAdornment>

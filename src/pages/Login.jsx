@@ -78,9 +78,7 @@ const Login = () => {
             {isBn ? 'লগ ইন' : 'Login'}
           </Button>
           <Typography variant='body2' component='span'>
-            {isBn
-              ? 'আপনার কি একাউন্ট নেই? '
-              : 'Don&apos;t have an account? Please '}
+            {isBn ? 'আপনার কি একাউন্ট নেই? ' : "Don't have an account? Please "}
             <Link
               to='/auth/signup'
               style={{

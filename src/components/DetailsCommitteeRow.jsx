@@ -171,9 +171,9 @@ const DetailsCommitteeRow = ({
               column.id === 'postName' ||
               column.id === 'mobile' ? (
               isBn ? (
-                value.bn_name
+                value?.bn_name
               ) : (
-                value.name
+                value?.name
               )
             ) : column.id === 'delete' ? (
               <Box

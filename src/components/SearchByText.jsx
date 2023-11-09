@@ -24,7 +24,11 @@ const SearchByText = () => {
           style: { fontSize: 14, paddingLeft: '5px' },
           endAdornment: (
             <InputAdornment position='end'>
-              <IconButton onClick={() => setSearchTerm('')} size='small'>
+              <IconButton
+                disabled={!searchTerm}
+                onClick={() => setSearchTerm('')}
+                size='small'
+              >
                 <ClearIcon fontSize='small' />
               </IconButton>
             </InputAdornment>

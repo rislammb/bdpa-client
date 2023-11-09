@@ -2,9 +2,14 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 
 import { useTheme } from '@mui/material/styles';
+import { useStoreState } from 'easy-peasy';
 
 const EmptyTableRow = ({ colSpan }) => {
   const theme = useTheme();
+
+  const { language } = useStoreState((state) => state.ui);
+
+  const isBn = language === 'BN' ? true : false;
 
   return (
     <TableRow>
@@ -16,7 +21,7 @@ const EmptyTableRow = ({ colSpan }) => {
           color: theme.palette.warning.main,
         }}
       >
-        There is nothing to show!
+        {isBn ? 'এখানে দেখানোর কিছু নেই!' : 'Nothing to show here!'}
       </TableCell>
     </TableRow>
   );

@@ -1,13 +1,17 @@
 import { Close, Delete, Done, Edit } from '@mui/icons-material';
-import { IconButton, TableCell, TableRow } from '@mui/material';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
+import {
+  FormControlLabel,
+  IconButton,
+  TableCell,
+  TableRow,
+  TextField,
+} from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import Select from '@mui/material/Select';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useState } from 'react';
+
 import { objDeepClone } from '../helpers/utilities';
+import ColorLink from './ui/ColorLink';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -20,26 +24,25 @@ const MenuProps = {
   },
 };
 
-const UserRow = ({ row, user }) => {
+const UserRow = ({ user }) => {
   const {
     ui: { language },
     user: { submitting },
+    auth: { user: authUser },
   } = useStoreState((state) => state);
   const { updateUserData, deleteUserData } = useStoreActions(
     (actions) => actions.user
   );
+  const [dataForEdit, setDataForEdit] = useState(user);
   const [isRowEdit, setIsRowEdit] = useState(false);
-  const [dataForEdit, setDataForEdit] = useState(null);
 
   const isBn = language === 'BN' ? true : false;
 
   const handleToggleEdit = () => {
     if (isRowEdit) {
       setIsRowEdit(false);
-      setDataForEdit(null);
     } else {
       setIsRowEdit(true);
-      setDataForEdit(user);
     }
   };
 
@@ -47,11 +50,8 @@ const UserRow = ({ row, user }) => {
     const { name, value } = e.target;
     const clonedData = objDeepClone(dataForEdit);
 
-    if (name === 'roles') {
-      clonedData[name] = typeof value === 'string' ? value.split(',') : value;
-    } else {
-      clonedData[name] = value;
-    }
+    clonedData[name] = value;
+
     setDataForEdit(clonedData);
   };
 
@@ -65,7 +65,6 @@ const UserRow = ({ row, user }) => {
     });
     if (res) {
       setIsRowEdit(false);
-      setDataForEdit(null);
     }
   };
 
@@ -73,68 +72,83 @@ const UserRow = ({ row, user }) => {
     if (
       window.confirm(
         isBn
-          ? `আপনি কি সত্যিই মুছে ফেলতে চান '${row.email} : ${row.regNumber}'?`
-          : `Are you sure you want to delete '${row.email} : ${row.regNumber}'?`
+          ? `আপনি কি সত্যিই মুছে ফেলতে চান '${user.email} : ${user.regNumber}'?`
+          : `Are you sure you want to delete '${user.email} : ${user.regNumber}'?`
       )
     ) {
-      deleteUserData(row.id);
+      deleteUserData(user._id);
     }
   };
 
   return (
-    <TableRow
-      key={row.id}
-      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-    >
+    <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
       <TableCell component='th' scope='row'>
-        {row.regNumber}
+        <ColorLink text={user?.regNumber} to={`/members/${user?.regNumber}`} />
       </TableCell>
-      <TableCell>{row.email}</TableCell>
+      <TableCell>{user?.email}</TableCell>
       <TableCell>
-        {isRowEdit && dataForEdit ? (
-          <FormControl sx={{ minWidth: 110 }}>
-            <InputLabel color='info'>Account Status</InputLabel>
-            <Select
-              name={'accountStatus'}
-              value={dataForEdit.accountStatus}
-              onChange={handleChange}
-              variant='standard'
-            >
-              <MenuItem value={'PEDNING'}>PEDNING</MenuItem>
-              <MenuItem value={'ACTIVE'}>ACTIVE</MenuItem>
-              <MenuItem value={'SUSPEND'}>SUSPEND</MenuItem>
-            </Select>
-          </FormControl>
+        {isRowEdit ? (
+          <FormControlLabel
+            sx={{ minWidth: 105, ml: 0 }}
+            control={
+              <TextField
+                InputLabelProps={{ color: 'info' }}
+                select
+                name={'accountStatus'}
+                label={'Account Status'}
+                value={dataForEdit.accountStatus}
+                onChange={handleChange}
+                variant='standard'
+                sx={{
+                  width: '100%',
+                }}
+              >
+                <MenuItem value={'PEDNING'}>PEDNING</MenuItem>
+                <MenuItem value={'ACTIVE'}>ACTIVE</MenuItem>
+                <MenuItem value={'SUSPEND'}>SUSPEND</MenuItem>
+              </TextField>
+            }
+          />
         ) : (
-          row.accountStatus
+          dataForEdit?.accountStatus
         )}
       </TableCell>
       <TableCell>
-        {isRowEdit && dataForEdit ? (
-          <FormControl sx={{ minWidth: 170 }}>
-            <InputLabel color='info'>Roles</InputLabel>
-            <Select
-              name={'roles'}
-              multiple
-              value={dataForEdit.roles}
-              onChange={handleChange}
-              input={<OutlinedInput label='Roles' />}
-              MenuProps={MenuProps}
-              variant='standard'
-            >
-              <MenuItem disabled value={'USER'}>
-                USER
-              </MenuItem>
-              <MenuItem value={'ADMIN'}>ADMIN</MenuItem>
-              <MenuItem value={'DISTRICT_ADMIN'}>DISTRICT_ADMIN</MenuItem>
-            </Select>
-          </FormControl>
+        {isRowEdit ? (
+          <FormControlLabel
+            sx={{ minWidth: 125, ml: 0 }}
+            control={
+              <TextField
+                InputLabelProps={{ color: 'info' }}
+                select
+                name='roles'
+                variant='standard'
+                label='Roles'
+                SelectProps={{
+                  multiple: true,
+                  value: dataForEdit?.roles,
+                  onChange: handleChange,
+                }}
+                sx={{
+                  width: '100%',
+                }}
+              >
+                <MenuItem disabled value={'USER'}>
+                  USER
+                </MenuItem>
+                <MenuItem value={'ADMIN'}>ADMIN</MenuItem>
+                <MenuItem value={'DISTRICT_ADMIN'}>DISTRICT_ADMIN</MenuItem>
+              </TextField>
+            }
+          />
         ) : (
-          row.roles
+          dataForEdit?.roles?.join(', ')
         )}
       </TableCell>
-      <TableCell align='right'>
-        {!row.roles.includes('SUPER_ADMIN') &&
+
+      <TableCell sx={{ minWidth: 105 }} align='right'>
+        {!user.roles.includes('SUPER_ADMIN') &&
+          authUser.regNumber !== user.regNumber &&
           (isRowEdit ? (
             <>
               <IconButton

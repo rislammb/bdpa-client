@@ -54,7 +54,8 @@ const Navbar = (props) => {
   ];
 
   const isAdmin =
-    user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
+    user?.accountStatus === 'ACTIVE' &&
+    (user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN'));
 
   if (isAdmin) {
     navItems.unshift({

@@ -9,20 +9,12 @@ import {
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useStoreActions, useStoreState } from 'easy-peasy';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+
+import EmptyTableRow from '../components/EmptyTableRow';
 import UserRow from '../components/UserRow';
 import ColorTitle from '../components/ui/ColorTitle';
 import Loading from '../components/ui/Loading';
-
-function createData(id, regNumber, email, accountStatus, roles) {
-  return {
-    id,
-    regNumber,
-    email,
-    accountStatus,
-    roles,
-  };
-}
 
 const Users = () => {
   const {
@@ -30,25 +22,8 @@ const Users = () => {
     user: { loading, list },
   } = useStoreState((state) => state);
   const { getUsersData } = useStoreActions((actions) => actions.user);
-  const [rows, setRows] = useState([]);
 
   const isBn = language === 'BN' ? true : false;
-
-  useEffect(() => {
-    if (list.length > 0) {
-      setRows(
-        list.map((item) =>
-          createData(
-            item._id,
-            item.regNumber,
-            item.email,
-            item.accountStatus,
-            item.roles.join(', ')
-          )
-        )
-      );
-    }
-  }, [list]);
 
   useEffect(() => {
     getUsersData();
@@ -84,13 +59,11 @@ const Users = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <UserRow
-                  key={row.id}
-                  row={row}
-                  user={list.find((u) => u._id === row.id)}
-                />
-              ))}
+              {list?.length > 0 ? (
+                list.map((user) => <UserRow key={user._id} user={user} />)
+              ) : (
+                <EmptyTableRow colSpan={5} />
+              )}
             </TableBody>
           </Table>
         </TableContainer>

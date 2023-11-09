@@ -33,10 +33,13 @@ const useAddCommittee = () => {
     committee: { addCommitteeData },
   } = useStoreActions((actions) => actions);
 
-  const [committeeInfo, setCommitteeInfo] = useState({
-    ...initialCommitteeInfo,
-  });
+  const [committeeInfo, setCommitteeInfo] = useState(
+    objDeepClone(initialCommitteeInfo)
+  );
   const [members, setMembers] = useState(addMember([], 7));
+  const [defaultProps, setDefaultProps] = useState({
+    options: [],
+  });
   const [snackbar, setSnackbar] = useState({
     open: false,
     severity: 'info',
@@ -98,22 +101,6 @@ const useAddCommittee = () => {
     }
   };
 
-  const defaultProps = {
-    options: list,
-    getOptionLabel: (option) =>
-      list.length > 0
-        ? isBn
-          ? `${option.bn_name} - ${option.regNumber} - ${getBnAreaInfo(
-              option,
-              'posting'
-            )}`
-          : `${option.name} - ${option.regNumber} - ${getAreaInfo(
-              option,
-              'posting'
-            )}`
-        : '',
-  };
-
   useEffect(() => {
     if (!submitting && typeof error?.message === 'string')
       setSnackbar({
@@ -122,6 +109,26 @@ const useAddCommittee = () => {
         text: error.message,
       });
   }, [submitting, error?.message]);
+
+  useEffect(() => {
+    if (list.length > 0) {
+      setDefaultProps({
+        options: list,
+        getOptionLabel: (option) =>
+          list.length > 0
+            ? isBn
+              ? `${option.bn_name} - ${option.regNumber} - ${getBnAreaInfo(
+                  option,
+                  'posting'
+                )}`
+              : `${option.name} - ${option.regNumber} - ${getAreaInfo(
+                  option,
+                  'posting'
+                )}`
+            : '',
+      });
+    }
+  }, [list, isBn]);
 
   useEffect(() => {
     if (list.length < 1) getPharmacistsData();

@@ -26,7 +26,7 @@ const memberModel = {
     }
   }),
   updateMemberData: thunk(async (actions, payload) => {
-    // actions.setError(null);
+    actions.setError(null);
     actions.setSubmitting(true);
     try {
       const { data } = await updateMemberById(payload);
@@ -39,6 +39,7 @@ const memberModel = {
     }
   }),
   deleteCommitteeMember: thunk(async (actions, payload) => {
+    actions.setError(null);
     actions.setSubmitting(true);
     try {
       await deleteMemberById(payload);
