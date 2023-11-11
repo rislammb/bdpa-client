@@ -8,10 +8,9 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const UserMenu = () => {
-  const navigate = useNavigate();
   const theme = useTheme();
 
   const {

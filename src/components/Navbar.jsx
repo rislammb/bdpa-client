@@ -12,7 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useStoreActions, useStoreState } from 'easy-peasy';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Navigate, NavLink, Route, Routes } from 'react-router-dom';
 
 import { ListItemText } from '@mui/material';
@@ -70,6 +70,11 @@ const Navbar = (props) => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  useEffect(() => {
+    document.body.style.overflow = 'auto';
+    document.body.style.paddingRight = '0';
+  }, [mobileOpen]);
 
   const handleLogout = () => logout();
 
@@ -208,11 +213,12 @@ const Navbar = (props) => {
             onClick={handleDrawerToggle}
             sx={{
               mr: 0,
-              display: { md: 'none' },
+              display: { xs: 'block', md: 'none' },
             }}
           >
             {user ? <UserMenu /> : <MenuIcon />}
           </IconButton>
+
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {navItems.map((item) => (
               <Button key={item.text} sx={{ color: '#f1f1f1' }}>
@@ -240,6 +246,7 @@ const Navbar = (props) => {
           </Box>
         </Toolbar>
       </AppBar>
+
       <Box component='nav'>
         <Drawer
           container={container}
@@ -262,7 +269,14 @@ const Navbar = (props) => {
         </Drawer>
       </Box>
 
-      <Box component='main' sx={{ p: 1, textAlign: 'center', width: '100%' }}>
+      <Box
+        component='main'
+        sx={{
+          p: 1,
+          textAlign: 'center',
+          width: '100%',
+        }}
+      >
         <Toolbar />
         <Routes>
           <Route
