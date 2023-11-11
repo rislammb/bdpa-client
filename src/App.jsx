@@ -1,6 +1,6 @@
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { Paper, Typography } from '@mui/material';
+import { Paper, Tooltip, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
@@ -19,17 +19,19 @@ function ThemeButton() {
   const colorMode = useContext(ColorModeContext);
 
   return (
-    <IconButton
-      sx={{ ml: 1 }}
-      onClick={colorMode.toggleColorMode}
-      color='inherit'
-    >
-      {theme.palette.mode === 'dark' ? (
-        <Brightness7Icon />
-      ) : (
-        <Brightness4Icon />
-      )}
-    </IconButton>
+    <Tooltip title={'Color mode'}>
+      <IconButton
+        sx={{ ml: 1 }}
+        onClick={colorMode.toggleColorMode}
+        color='inherit'
+      >
+        {theme.palette.mode === 'dark' ? (
+          <Brightness7Icon />
+        ) : (
+          <Brightness4Icon />
+        )}
+      </IconButton>
+    </Tooltip>
   );
 }
 
@@ -38,9 +40,11 @@ const LanguageButton = () => {
   const { toggleLanguage } = useStoreActions((actions) => actions.ui);
 
   return (
-    <IconButton color='inherit' onClick={toggleLanguage}>
-      <Typography>{language === 'BN' ? 'EN' : 'BN'}</Typography>
-    </IconButton>
+    <Tooltip title={'Language mode'}>
+      <IconButton color='inherit' onClick={toggleLanguage}>
+        <Typography>{language === 'BN' ? 'EN' : 'BN'}</Typography>
+      </IconButton>
+    </Tooltip>
   );
 };
 

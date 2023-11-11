@@ -15,6 +15,7 @@ import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useState } from 'react';
 import { Link, Navigate, NavLink, Route, Routes } from 'react-router-dom';
 
+import { ListItemText } from '@mui/material';
 import About from '../pages/About';
 import AddCommittee from '../pages/AddCommittee';
 import AddPharmacist from '../pages/AddPharmacist';
@@ -28,6 +29,7 @@ import SetPassword from '../pages/SetPassword';
 import Signup from '../pages/Signup';
 import Users from '../pages/Users';
 import VerifyEmail from '../pages/VerifyEmail';
+import UserMenu from './UserMenu';
 
 const drawerWidth = 240;
 
@@ -46,11 +48,6 @@ const Navbar = (props) => {
     { path: '/members/page/1', text: 'Members', bn_text: 'সদস্য' },
     { path: '/committees', text: 'Committees', bn_text: 'কমিটি' },
     { path: '/about', text: 'About BDPA', bn_text: 'বিডিপিএ সম্পর্কে' },
-    {
-      path: '/auth/login',
-      text: user ? 'Logout' : 'Login',
-      bn_text: user ? 'লগ আউট' : 'লগ ইন',
-    },
   ];
 
   const isAdmin =
@@ -91,10 +88,20 @@ const Navbar = (props) => {
       }}
       onClick={handleDrawerToggle}
     >
-      <Typography variant='h5' sx={{ my: 1.5, textAlign: 'center' }}>
+      <Typography
+        variant='h5'
+        sx={{
+          mt: 2,
+          textAlign: 'center',
+          color:
+            theme.palette.mode === 'light' ? theme.palette.primary.light : '',
+        }}
+      >
         {isBn ? 'বিডিপিএ' : 'BDPA'}
       </Typography>
-      <Divider />
+
+      <Divider sx={{ my: { xs: 1, sm: 2 } }} />
+
       <List>
         <ListItem disablePadding>
           <ListItemButton>
@@ -109,15 +116,62 @@ const Navbar = (props) => {
               <NavLink
                 style={({ isActive }) => linkStyle(isActive)}
                 to={item.path}
-                onClick={() => {
-                  if (item.text === 'Logout') handleLogout();
-                }}
               >
                 {isBn ? item.bn_text : item.text}
               </NavLink>
             </ListItemButton>
           </ListItem>
         ))}
+
+        <Divider sx={{ my: 2 }} />
+
+        {user ? (
+          <>
+            {user?.regNumber && (
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <NavLink
+                    style={({ isActive }) => linkStyle(isActive)}
+                    to={`/members/${user?.regNumber}`}
+                  >
+                    {isBn ? 'প্রোফাইল' : 'Profile'}
+                  </NavLink>
+                </ListItemButton>
+              </ListItem>
+            )}
+
+            <ListItem
+              sx={{
+                width: 'fit-content',
+                mx: 'auto',
+              }}
+              disablePadding
+            >
+              <ListItemButton
+                sx={{
+                  textAlign: 'center',
+                  color: theme.palette.warning.light,
+                }}
+              >
+                <ListItemText
+                  onClick={handleLogout}
+                  primary={isBn ? 'লগ আউট' : 'Logout'}
+                />
+              </ListItemButton>
+            </ListItem>
+          </>
+        ) : (
+          <ListItem disablePadding>
+            <ListItemButton>
+              <NavLink
+                style={({ isActive }) => linkStyle(isActive)}
+                to={'/auth/login'}
+              >
+                {isBn ? 'লগ ইন' : 'Login'}
+              </NavLink>
+            </ListItemButton>
+          </ListItem>
+        )}
       </List>
     </Box>
   );
@@ -157,22 +211,32 @@ const Navbar = (props) => {
               display: { md: 'none' },
             }}
           >
-            <MenuIcon />
+            {user ? <UserMenu /> : <MenuIcon />}
           </IconButton>
-          <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {navItems.map((item) => (
               <Button key={item.text} sx={{ color: '#f1f1f1' }}>
                 <NavLink
                   style={({ isActive }) => linkStyle(isActive)}
                   to={item.path}
-                  onClick={() => {
-                    if (item.text === 'Logout') handleLogout();
-                  }}
                 >
                   {isBn ? item.bn_text : item.text}
                 </NavLink>
               </Button>
             ))}
+
+            {user ? (
+              <UserMenu />
+            ) : (
+              <Button sx={{ color: '#f1f1f1' }}>
+                <NavLink
+                  style={({ isActive }) => linkStyle(isActive)}
+                  to={'/auth/login'}
+                >
+                  {isBn ? 'লগ ইন' : 'Login'}
+                </NavLink>
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
@@ -227,14 +291,26 @@ const Navbar = (props) => {
           <Route
             path='/auth/login'
             element={
-              user ? <Navigate to={`/members/${user.regNumber}`} /> : <Login />
+              user ? (
+                user?.regNumber ? (
+                  <Navigate to={`/members/${user.regNumber}`} />
+                ) : (
+                  <Navigate to={'/'} />
+                )
+              ) : (
+                <Login />
+              )
             }
           />
           <Route
             path='/auth/signup'
             element={
-              user?.regNumber ? (
-                <Navigate to={`/members/${user.regNumber}`} />
+              user ? (
+                user?.regNumber ? (
+                  <Navigate to={`/members/${user.regNumber}`} />
+                ) : (
+                  <Navigate to={'/'} />
+                )
               ) : (
                 <Signup />
               )
@@ -243,8 +319,12 @@ const Navbar = (props) => {
           <Route
             path='/auth/verify-email/:emailToken'
             element={
-              user?.regNumber ? (
-                <Navigate to={`/members/${user.regNumber}`} />
+              user ? (
+                user?.regNumber ? (
+                  <Navigate to={`/members/${user.regNumber}`} />
+                ) : (
+                  <Navigate to={'/'} />
+                )
               ) : (
                 <VerifyEmail />
               )
@@ -253,8 +333,12 @@ const Navbar = (props) => {
           <Route
             path='/auth/set-password'
             element={
-              user?.regNumber ? (
-                <Navigate to={`/members/${user.regNumber}`} />
+              user ? (
+                user?.regNumber ? (
+                  <Navigate to={`/members/${user.regNumber}`} />
+                ) : (
+                  <Navigate to={'/'} />
+                )
               ) : (
                 <SetPassword />
               )
