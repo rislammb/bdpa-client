@@ -83,7 +83,10 @@ const UserRow = ({ user }) => {
   return (
     <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
       <TableCell component='th' scope='row'>
-        <ColorLink text={user?.regNumber} to={`/members/${user?.regNumber}`} />
+        <ColorLink
+          text={user?.regNumber ?? user.email?.split('@')[0]}
+          to={user?.regNumber ? `/members/${user?.regNumber}` : ''}
+        />
       </TableCell>
       <TableCell>{user?.email}</TableCell>
       <TableCell>

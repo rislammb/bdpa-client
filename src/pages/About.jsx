@@ -1,6 +1,8 @@
 import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useStoreState } from 'easy-peasy';
+import ColorTitle from '../components/ui/ColorTitle';
+
 const About = () => {
   const theme = useTheme();
   const { language } = useStoreState((state) => state.ui);
@@ -18,13 +20,20 @@ const About = () => {
         width='150px'
         height='150px'
       />
-      <Typography variant='h5'>
-        {isBn
-          ? 'বাংলাদেশ ডিপ্লোমা ফার্মাসিস্ট এসোসিয়েশন (বিডিপিএ)'
-          : 'Bangladesh Diploma Pharmacist Association (BDPA)'}
-      </Typography>
-      <Typography variant='h5'>
-        {isBn ? 'রাজশাহী জেলা' : 'Rajshahi District'}
+      <ColorTitle
+        text={
+          isBn
+            ? 'বাংলাদেশ ডিপ্লোমা ফার্মাসিস্ট এসোসিয়েশন (বিডিপিএ)'
+            : 'Bangladesh Diploma Pharmacist Association (BDPA)'
+        }
+        variant={'h5'}
+      />
+
+      <br />
+
+      <Typography variant='h6'>
+        বাংলাদেশ ডিপ্লোমা ফার্মাসিস্ট এসেসিয়েশনের স্মারক (১৯৪৯ সালে স্থাপিত)
+        ১৮৬০ সালের ২১ নং আইনে নিবন্ধিত নং- ৩৮৪
       </Typography>
     </Box>
   );

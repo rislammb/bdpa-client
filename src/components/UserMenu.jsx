@@ -1,7 +1,6 @@
 import { useTheme } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
@@ -18,10 +17,9 @@ const UserMenu = () => {
     ui: { language },
   } = useStoreState((state) => state);
   const { logout } = useStoreActions((actions) => actions.auth);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const isBn = language === 'BN' ? true : false;
-
-  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -37,23 +35,27 @@ const UserMenu = () => {
   };
 
   const linkStyle = (isActive = false) => ({
-    color: isActive ? theme.palette.primary.light : '#f1f1f1',
+    color: isActive
+      ? theme.palette.mode === 'dark'
+        ? theme.palette.primary.light
+        : theme.palette.primary.main
+      : theme.palette.mode === 'dark'
+      ? '#f1f1f1'
+      : '#2a2a2a',
     width: '100%',
     textAlign: 'center',
   });
 
   return (
-    <Box sx={{ textAlign: 'center' }}>
-      <Tooltip title='Open Menu'>
-        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          {user?.imageUrl ? (
-            <Avatar alt={'profile'} src={user?.imageUrl} />
-          ) : user?.email.includes('admin') ? (
-            <Avatar>Ad</Avatar>
-          ) : (
-            <Avatar alt={'profile'} />
-          )}
-        </IconButton>
+    <Box sx={{ cursor: 'pointer' }}>
+      <Tooltip onClick={handleOpenUserMenu} title='Open Menu'>
+        {user?.imageUrl ? (
+          <Avatar alt={'profile'} src={user?.imageUrl} />
+        ) : user?.email.includes('admin') ? (
+          <Avatar>Ad</Avatar>
+        ) : (
+          <Avatar alt={'profile'} />
+        )}
       </Tooltip>
 
       <Menu
@@ -80,7 +82,9 @@ const UserMenu = () => {
               style={({ isActive }) => linkStyle(isActive)}
               to={`/members/${user?.regNumber}`}
             >
-              {isBn ? 'প্রোফাইল' : 'Profile'}
+              {isBn
+                ? user.bn_name ?? user.email?.split('@')[0]
+                : user.name ?? user.email?.split('@')[0]}
             </NavLink>
           </MenuItem>
         )}
