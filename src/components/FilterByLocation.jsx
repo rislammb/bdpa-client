@@ -13,8 +13,9 @@ import { upazilas } from '../constants/upazilas';
 
 const FilterByLocation = () => {
   const {
-    pharmacist: { locationInfo },
     ui: { language },
+    auth: { user },
+    pharmacist: { locationInfo },
   } = useStoreState((state) => state);
   const { setLocationInfo } = useStoreActions((actions) => actions.pharmacist);
   const isBn = language === 'BN' ? true : false;
@@ -49,11 +50,6 @@ const FilterByLocation = () => {
       setLocationInfo(locationInfo);
     }
   };
-
-  // useEffect(() => {
-  //   onChange(pharmacists);
-  //   setLocationInfo({ ...INITIAL_LOCATION_INFO });
-  // }, [pharmacists]);
 
   const locationInfoArray = Object.keys(locationInfo).reduce((acc, cur) => {
     acc.push(locationInfo[cur]);
@@ -99,6 +95,7 @@ const FilterByLocation = () => {
                         {field.options.length > 0 ? (
                           field.options.map((option) => (
                             <MenuItem
+                              disabled={!user}
                               key={field.name + option.id}
                               value={option.id}
                               sx={{ fontSize: 14 }}
@@ -141,6 +138,11 @@ const FilterByLocation = () => {
                             key={field.name + option.id}
                             value={option.id}
                             sx={{ fontSize: 14 }}
+                            disabled={
+                              !user &&
+                              field.name === 'locationType' &&
+                              (option.id === '3' || option.id === '4')
+                            }
                           >
                             {isBn ? option.bn_name : option.name}
                           </MenuItem>

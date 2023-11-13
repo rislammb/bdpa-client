@@ -3,43 +3,78 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useStoreActions, useStoreState } from 'easy-peasy';
 
-const getColumns = (isBn) => [
-  {
-    id: 'regNumber',
-    label: isBn ? 'নিবন্ধন সংখ্যা' : 'Reg Number',
-    minWidth: 105,
-  },
-  {
-    id: 'name',
-    label: isBn ? 'নাম (English)' : 'Name (English)',
-    minWidth: 130,
-  },
-  {
-    id: 'bn_name',
-    label: isBn ? 'নাম (বাংলা)' : 'Name (বাংলা)',
-    minWidth: 130,
-  },
-  {
-    id: 'memberId',
-    label: isBn ? 'সদস্য সনাক্তকারী' : 'Member ID',
-    minWidth: 90,
-  },
-  {
-    id: 'dateOfBirth',
-    label: isBn ? 'জন্ম তারিখ' : 'Date of Birth',
-    minWidth: 145,
-  },
-  {
-    id: 'mainPosting',
-    label: isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main postiong/Address',
-    minWidth: 230,
-  },
-  {
-    id: 'voterDistrict',
-    label: isBn ? 'ভোটার জেলা' : 'Voter District',
-    minWidth: 95,
-  },
-];
+const getColumns = (isBn, user) => {
+  return user
+    ? [
+        {
+          id: 'regNumber',
+          label: isBn ? 'নিবন্ধন সংখ্যা' : 'Reg Number',
+          minWidth: 105,
+        },
+        {
+          id: 'name',
+          label: isBn ? 'নাম (English)' : 'Name (English)',
+          minWidth: 130,
+        },
+        {
+          id: 'bn_name',
+          label: isBn ? 'নাম (বাংলা)' : 'Name (বাংলা)',
+          minWidth: 130,
+        },
+        {
+          id: 'memberId',
+          label: isBn ? 'সদস্য সনাক্তকারী' : 'Member ID',
+          minWidth: 90,
+        },
+        {
+          id: 'dateOfBirth',
+          label: isBn ? 'জন্ম তারিখ' : 'Date of Birth',
+          minWidth: 145,
+        },
+        {
+          id: 'mainPosting',
+          label: isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main postiong/Address',
+          minWidth: 230,
+        },
+        {
+          id: 'voterDistrict',
+          label: isBn ? 'ভোটার জেলা' : 'Voter District',
+          minWidth: 95,
+        },
+      ]
+    : [
+        {
+          id: 'regNumber',
+          label: isBn ? 'নিবন্ধন সংখ্যা' : 'Reg Number',
+          minWidth: 105,
+        },
+        {
+          id: 'name',
+          label: isBn ? 'নাম (English)' : 'Name (English)',
+          minWidth: 130,
+        },
+        {
+          id: 'bn_name',
+          label: isBn ? 'নাম (বাংলা)' : 'Name (বাংলা)',
+          minWidth: 130,
+        },
+        {
+          id: 'memberId',
+          label: isBn ? 'সদস্য সনাক্তকারী' : 'Member ID',
+          minWidth: 90,
+        },
+        {
+          id: 'mainPosting',
+          label: isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main postiong/Address',
+          minWidth: 130,
+        },
+        {
+          id: 'voterDistrict',
+          label: isBn ? 'ভোটার জেলা' : 'Voter District',
+          minWidth: 95,
+        },
+      ];
+};
 
 const usePharmacistList = () => {
   let { pageNumber } = useParams();
@@ -48,6 +83,7 @@ const usePharmacistList = () => {
 
   const {
     ui: { language },
+    auth: { user },
     pharmacist: { loading, error, list, filteredList },
   } = useStoreState((state) => state);
   const { getPharmacistsData } = useStoreActions(
@@ -103,7 +139,7 @@ const usePharmacistList = () => {
     isBn,
     list,
     filteredList,
-    columns: getColumns(isBn),
+    columns: getColumns(isBn, user),
     rowsPerPage,
     page,
     handleChange,
