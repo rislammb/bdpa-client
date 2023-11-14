@@ -5,12 +5,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getBnDate } from '../helpers/date';
 import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
 
-const createRow = (th, value, name, type, isEdit, textGroupFields) => ({
+const createRow = (th, value, name, type, isEditable, textGroupFields) => ({
   th,
   td: value,
   name,
   type,
-  isEdit,
+  isEditable,
   textGroupFields,
 });
 

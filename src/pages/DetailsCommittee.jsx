@@ -1,3 +1,4 @@
+import { Edit } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
@@ -11,14 +12,14 @@ import {
   Typography,
 } from '@mui/material';
 import TableContainer from '@mui/material/TableContainer';
-
-import { Edit } from '@mui/icons-material';
 import dayjs from 'dayjs';
+
 import AddOrEditCommittee from '../components/AddOrEditCommittee';
 import AddOrEditMemberRow from '../components/AddOrEditMemberRow';
 import DetailsCommitteeRow from '../components/DetailsCommitteeRow';
 import SnackbarComp from '../components/Snackbar';
 import TableHeader from '../components/TableHeader';
+import SocialShare from '../components/shared/SocialShare';
 import ColorTitle from '../components/ui/ColorTitle';
 import Loading from '../components/ui/Loading';
 import { getBnDate } from '../helpers/date';
@@ -119,6 +120,15 @@ const DetailsCommittee = () => {
                   ? getBnDate(committee.willExpire)
                   : dayjs(committee.willExpire).format('DD MMM YYYY')}
               </Typography>
+
+              <SocialShare
+                url={window?.location?.href}
+                title={
+                  isBn ? committee.bn_committeeTitle : committee.committeeTitle
+                }
+                hastag={'#bdpa, #bdpa_commitee'}
+                hastags={['bdpa', 'bdpa_commitee']}
+              />
             </Box>
           )}
 

@@ -14,10 +14,12 @@ import SelectComponent from './SelectComponent';
 const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
   const {
     isBn,
+    isPermittedForEdit,
     isEditOpen,
     inputValue,
     handleChange,
     error,
+    submitting,
     handleIsEditOpen,
     addressFieldsArray,
     tableData,
@@ -36,22 +38,21 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
         '&:last-child td, &:last-child th': { border: 0 },
       }}
     >
-      {row.name !== 'imageUrl' && (
-        <TableCell
-          sx={{
-            flexGrow: 1,
-            padding: { xs: '8px 8px', sm: '8px 16px' },
-            alignContent: 'center',
-          }}
-          component='th'
-          scope='row'
-        >
-          {row.th}
-        </TableCell>
-      )}
       <TableCell
         sx={{
-          flexGrow: 2,
+          flex: 1,
+          padding: { xs: '8px 8px', sm: '8px 16px' },
+          alignContent: 'center',
+        }}
+        component='th'
+        scope='row'
+      >
+        {row.th}
+      </TableCell>
+
+      <TableCell
+        sx={{
+          flex: 2,
           padding: { xs: '8px 8px', sm: '8px 16px' },
           fontWeight:
             row.name === 'regNumber' || row.name === 'name' ? 'bold' : '',
@@ -163,21 +164,21 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
         )}
       </TableCell>
 
-      {(row.isEdit || row.name !== 'imageUrl') && (
+      {isPermittedForEdit && (
         <TableCell
           sx={{
+            flexBasis: { xs: '85px', sm: '93px' },
             padding: { xs: '1px 13px 1px 3px', sm: '3px 15px 3px 5px' },
-            width: { xs: '85px', sm: '93px' },
           }}
         >
-          {row.isEdit ? (
+          {row.isEditable ? (
             isEditOpen ? (
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <IconButton
                   edge='end'
                   aria-label='edit'
                   onClick={handleIsEditOpen}
-                  disabled={!row.isEdit}
+                  disabled={!row.isEditable || submitting}
                   color='error'
                 >
                   <Close />
@@ -186,7 +187,7 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
                   edge='end'
                   aria-label='edit'
                   onClick={handleSubmit}
-                  disabled={!row.isEdit}
+                  disabled={!row.isEditable || submitting}
                   color='info'
                 >
                   <Done />
@@ -199,7 +200,7 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
                   edge='end'
                   aria-label='edit'
                   onClick={() => handleIsEditOpen(row.name)}
-                  disabled={!row.isEdit}
+                  disabled={!row.isEditable}
                   color='info'
                 >
                   <EditOutlined />

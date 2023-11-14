@@ -16,7 +16,8 @@ import {
 const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
   const {
     ui: { language },
-    pharmacist: { error },
+    auth: { user },
+    pharmacist: { error, submitting },
   } = useStoreState((actions) => actions);
   const { updatePharmacistData } = useStoreActions(
     (actions) => actions.pharmacist
@@ -27,6 +28,12 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
   const [inputValue, setInputValue] = useState(null);
 
   const isBn = language === 'BN' ? true : false;
+
+  const isPermittedForEdit =
+    user?.accountStatus === 'ACTIVE' &&
+    (user.roles?.includes('SUPER_ADMIN') ||
+      user.roles?.includes('ADMIN') ||
+      user.regNumber === pharmacist?.regNumber);
 
   const addressFieldsArray =
     inputValue &&
@@ -214,10 +221,12 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
 
   return {
     isBn,
+    isPermittedForEdit,
     isEditOpen,
     inputValue,
     handleChange,
     error,
+    submitting,
     handleIsEditOpen,
     addressFieldsArray,
     tableData,
