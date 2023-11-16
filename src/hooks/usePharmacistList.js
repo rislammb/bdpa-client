@@ -125,6 +125,10 @@ const usePharmacistList = () => {
   }, [pageNumber]);
 
   useEffect(() => {
+    document.title = isBn ? 'বিডিপিএ | সদস্য' : 'BDPA | Members';
+  }, [isBn]);
+
+  useEffect(() => {
     if (!loading && error && typeof error === 'string') {
       setSnackbar({
         open: true,

@@ -131,6 +131,10 @@ const useAddCommittee = () => {
   }, [list, isBn]);
 
   useEffect(() => {
+    document.title = isBn ? 'বিডিপিএ | কমিটি যোগ' : 'BDPA | Add Committee';
+  }, [isBn]);
+
+  useEffect(() => {
     if (list.length < 1) getPharmacistsData();
   }, []);
 

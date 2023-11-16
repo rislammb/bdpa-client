@@ -38,6 +38,10 @@ const useCommitteeList = () => {
   };
 
   useEffect(() => {
+    document.title = isBn ? 'বিডিপিএ | কমিটি' : 'BDPA | Committees';
+  }, [isBn]);
+
+  useEffect(() => {
     getCommitteesData();
   }, []);
 

@@ -98,14 +98,6 @@ export default function AppProvider() {
     }
   }, [token]);
 
-  useEffect(() => {
-    if (language === 'BN') {
-      document.title = 'বিডিপিএ - বাংলাদেশ ডিপ্লোমা ফার্মাসিস্ট এসোসিয়েশন';
-    } else {
-      document.title = 'BDPA - Bangladesh Diploma Pharmacist Association';
-    }
-  }, [language]);
-
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>

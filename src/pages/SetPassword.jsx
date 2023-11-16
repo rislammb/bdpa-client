@@ -9,7 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { useStoreActions, useStoreState } from 'easy-peasy';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import ColorLink from '../components/ui/ColorLink';
 import { objDeepClone } from '../helpers/utilities';
@@ -124,6 +124,12 @@ const SetPassword = () => {
       ...values,
     });
   };
+
+  useEffect(() => {
+    document.title = isBn
+      ? 'বিডিপিএ | পাসওয়ার্ড সেট করুন'
+      : 'BDPA | Set Password';
+  }, [isBn]);
 
   const stateArray = Object.keys(state).reduce((acc, cur) => {
     acc.push(state[cur]);

@@ -26,8 +26,12 @@ const Users = () => {
   const isBn = language === 'BN' ? true : false;
 
   useEffect(() => {
+    document.title = isBn ? 'বিডিপিএ | ব্যবহারকারীগণ' : 'BDPA | Users';
+  }, [isBn]);
+
+  useEffect(() => {
     getUsersData();
-  }, []);
+  }, [getUsersData]);
 
   return (
     <Box

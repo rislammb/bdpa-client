@@ -24,8 +24,12 @@ const useLogin = () => {
   };
 
   useEffect(() => {
+    document.title = isBn ? 'বিডিপিএ | লগ ইন' : 'BDPA | Login';
+  }, [isBn]);
+
+  useEffect(() => {
     setError(null);
-  }, []);
+  }, [setError]);
 
   return {
     isBn,

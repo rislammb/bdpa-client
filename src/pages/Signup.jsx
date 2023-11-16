@@ -126,6 +126,10 @@ const Signup = () => {
   }, [list, isBn]);
 
   useEffect(() => {
+    document.title = isBn ? 'বিডিপিএ | সাইন আপ' : 'BDPA | Signup';
+  }, [isBn]);
+
+  useEffect(() => {
     if (list.length < 1) getPharmacistsData();
   }, []);
 

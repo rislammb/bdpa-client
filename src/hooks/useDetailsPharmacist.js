@@ -367,10 +367,14 @@ const useDetailsPharmacist = () => {
   };
 
   useEffect(() => {
+    document.title = isBn ? `বিডিপিএ | ${regNumber}` : `BDPA | ${regNumber}`;
+  }, [isBn, regNumber]);
+
+  useEffect(() => {
     if (regNumber) {
       getDetailsPharmacistData(regNumber);
     }
-  }, [regNumber]);
+  }, [regNumber, getDetailsPharmacistData]);
 
   useEffect(() => {
     if (!loading && !submitting && error && typeof error === 'string') {

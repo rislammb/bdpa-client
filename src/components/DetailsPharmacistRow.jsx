@@ -14,6 +14,7 @@ import SelectComponent from './SelectComponent';
 const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
   const {
     isBn,
+    user,
     isPermittedForEdit,
     isEditOpen,
     inputValue,
@@ -41,7 +42,7 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
       <TableCell
         sx={{
           flex: 1,
-          padding: { xs: '8px 8px', sm: '8px 16px' },
+          padding: user ? { xs: '8px 8px', sm: '8px 16px' } : '16px',
           alignContent: 'center',
         }}
         component='th'
@@ -53,10 +54,9 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
       <TableCell
         sx={{
           flex: 2,
-          padding: { xs: '8px 8px', sm: '8px 16px' },
+          padding: user ? { xs: '8px 8px', sm: '8px 16px' } : '16px',
           fontWeight:
             row.name === 'regNumber' || row.name === 'name' ? 'bold' : '',
-          textAlign: row.name === 'imageUrl' && 'center',
         }}
       >
         {isEditOpen ? (
@@ -168,7 +168,7 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
         <TableCell
           sx={{
             flexBasis: { xs: '85px', sm: '93px' },
-            padding: { xs: '1px 13px 1px 3px', sm: '3px 15px 3px 5px' },
+            padding: { xs: '2px 15px 2px 3px', sm: '4px 18px 4px 5px' },
           }}
         >
           {row.isEditable ? (
@@ -194,9 +194,8 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
                 </IconButton>
               </Box>
             ) : (
-              <Box sx={{ textAlign: 'center' }}>
+              <Box sx={{ textAlign: 'right' }}>
                 <IconButton
-                  sx={{ textAlign: 'center' }}
                   edge='end'
                   aria-label='edit'
                   onClick={() => handleIsEditOpen(row.name)}

@@ -221,6 +221,7 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
 
   return {
     isBn,
+    user,
     isPermittedForEdit,
     isEditOpen,
     inputValue,

@@ -1,11 +1,18 @@
 import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useStoreState } from 'easy-peasy';
+import { useEffect } from 'react';
 
 const Home = () => {
   const theme = useTheme();
   const { language } = useStoreState((state) => state.ui);
   const isBn = language === 'BN' ? true : false;
+
+  useEffect(() => {
+    document.title = isBn
+      ? 'বিডিপিএ | বাংলাদেশ ডিপ্লোমা ফার্মাসিস্ট এসোসিয়েশন'
+      : 'BDPA | Bangladesh Diploma Pharmacist Association';
+  }, [isBn]);
 
   return (
     <Box sx={{ my: 3, mx: 1 }}>

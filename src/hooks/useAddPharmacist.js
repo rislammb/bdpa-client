@@ -289,6 +289,10 @@ const useAddPharmacist = () => {
     }
   };
 
+  useEffect(() => {
+    document.title = isBn ? 'বিডিপিএ | সদস্য যোগ' : 'BDPA | Add Member';
+  }, [isBn]);
+
   return {
     isBn,
     formFields,

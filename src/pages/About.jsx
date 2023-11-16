@@ -1,12 +1,17 @@
 import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useStoreState } from 'easy-peasy';
+import { useEffect } from 'react';
 import ColorTitle from '../components/ui/ColorTitle';
 
 const About = () => {
   const theme = useTheme();
   const { language } = useStoreState((state) => state.ui);
   const isBn = language === 'BN' ? true : false;
+
+  useEffect(() => {
+    document.title = isBn ? 'বিডিপিএ | বিডিপিএ সম্পর্কে' : 'BDPA | About BDPA';
+  }, [isBn]);
 
   return (
     <Box sx={{ m: 3 }}>
@@ -31,7 +36,7 @@ const About = () => {
 
       <br />
 
-      <Typography variant='h6'>
+      <Typography>
         বাংলাদেশ ডিপ্লোমা ফার্মাসিস্ট এসেসিয়েশনের স্মারক (১৯৪৯ সালে স্থাপিত)
         ১৮৬০ সালের ২১ নং আইনে নিবন্ধিত নং- ৩৮৪
       </Typography>

@@ -28,13 +28,19 @@ const VerifyEmail = () => {
             return navigate('/auth/set-password', {
               state: { email: res.email },
             });
-          }, 3000);
+          }, 2500);
         }
       };
 
       verifyEmail();
     }
-  }, [emailToken]);
+  }, [emailToken, emailVerification, navigate]);
+
+  useEffect(() => {
+    document.title = isBn
+      ? 'বিডিপিএ | ইমেল যাচাই'
+      : 'BDPA | Email Verification';
+  }, [isBn]);
 
   return (
     <Box
