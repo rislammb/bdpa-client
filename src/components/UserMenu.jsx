@@ -76,7 +76,7 @@ const UserMenu = () => {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
-        {user?.regNumber && (
+        {user?.regNumber ? (
           <MenuItem onClick={handleCloseUserMenu}>
             <NavLink
               style={({ isActive }) => linkStyle(isActive)}
@@ -87,6 +87,12 @@ const UserMenu = () => {
                 : user.name ?? user.email?.split('@')[0]}
             </NavLink>
           </MenuItem>
+        ) : (
+          <Typography textAlign='center'>
+            {isBn
+              ? user.bn_name ?? user.email?.split('@')[0]
+              : user.name ?? user.email?.split('@')[0]}
+          </Typography>
         )}
         <MenuItem onClick={handleLogout}>
           <Typography textAlign='center' color={theme.palette.warning.light}>

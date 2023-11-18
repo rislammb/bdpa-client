@@ -77,7 +77,7 @@ const DrawerComp = ({ handleDrawerToggle, navItems }) => {
 
         {user ? (
           <>
-            {user?.regNumber && (
+            {user?.regNumber ? (
               <ListItem disablePadding>
                 <ListItemButton>
                   <NavLink
@@ -90,6 +90,12 @@ const DrawerComp = ({ handleDrawerToggle, navItems }) => {
                   </NavLink>
                 </ListItemButton>
               </ListItem>
+            ) : (
+              <Typography textAlign='center'>
+                {isBn
+                  ? user.bn_name ?? user.email?.split('@')[0]
+                  : user.name ?? user.email?.split('@')[0]}
+              </Typography>
             )}
 
             <ListItem
