@@ -204,8 +204,8 @@ const useDetailsCommittee = () => {
 
   useEffect(() => {
     document.title = isBn
-      ? `বিডিপিএ | ${committee.bn_committeeTitle}`
-      : `BDPA | ${committee.committeeTitle}`;
+      ? `বিডিপিএ | ${committee?.bn_committeeTitle}`
+      : `BDPA | ${committee?.committeeTitle}`;
   }, [isBn]);
 
   useEffect(() => {
