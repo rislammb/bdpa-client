@@ -229,6 +229,7 @@ const useDetailsCommittee = () => {
 
   return {
     loading,
+    submitting,
     isBn,
     user,
     isPermittedForEdit,

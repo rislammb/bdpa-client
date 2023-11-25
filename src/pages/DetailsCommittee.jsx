@@ -28,6 +28,7 @@ import useDetailsCommittee from '../hooks/useDetailsCommittee';
 const DetailsCommittee = () => {
   const {
     loading,
+    submitting,
     isBn,
     isPermittedForEdit,
     committee,
@@ -110,15 +111,19 @@ const DetailsCommittee = () => {
 
               <Typography>
                 {isBn ? 'কার্যক্রম শুরুঃ ' : 'Work has started: '}
-                {committee.workHasStarted && isBn
-                  ? getBnDate(committee.workHasStarted)
-                  : dayjs(committee.workHasStarted).format('DD MMM YYYY')}
+                {committee.workHasStarted
+                  ? isBn
+                    ? getBnDate(committee.workHasStarted)
+                    : dayjs(committee.workHasStarted).format('DD MMM YYYY')
+                  : ''}
               </Typography>
               <Typography>
                 {isBn ? 'মেয়াদঃ ' : 'Will expire: '}
-                {committee.willExpire && isBn
-                  ? getBnDate(committee.willExpire)
-                  : dayjs(committee.willExpire).format('DD MMM YYYY')}
+                {committee.willExpire
+                  ? isBn
+                    ? getBnDate(committee.willExpire)
+                    : dayjs(committee.willExpire).format('DD MMM YYYY')
+                  : ''}
               </Typography>
 
               <SocialShare
@@ -173,6 +178,7 @@ const DetailsCommittee = () => {
               }}
             >
               <Button
+                disabled={submitting}
                 onClick={handleCommitteeDelete}
                 variant='contained'
                 startIcon={<DeleteIcon />}

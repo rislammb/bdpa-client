@@ -21,8 +21,9 @@ const DetailsCommitteeRow = ({
   const {
     ui: { language },
     pharmacist: { list },
-    member: { error },
+    member: { error, submitting },
   } = useStoreState((state) => state);
+
   const {
     member: { deleteCommitteeMember, updateMemberData },
     committee: { getDetailsCommitteeDataById },
@@ -187,7 +188,7 @@ const DetailsCommitteeRow = ({
                   size='small'
                   onClick={isEdit ? toggleIsEdit : deleteMember}
                   color='error'
-                  disabled={!isEdit && disableDeleteMember}
+                  disabled={(!isEdit && disableDeleteMember) || submitting}
                 >
                   {isEdit ? (
                     <Close fontSize='small' />
@@ -197,10 +198,9 @@ const DetailsCommitteeRow = ({
                 </IconButton>
                 <IconButton
                   size='small'
-                  onClick={
-                    isEdit ? () => handleSubmit(member._id) : toggleIsEdit
-                  }
+                  onClick={toggleIsEdit}
                   color='info'
+                  disabled={submitting}
                 >
                   {isEdit ? (
                     <Done fontSize='small' />

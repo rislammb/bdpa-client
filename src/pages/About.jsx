@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useStoreState } from 'easy-peasy';
 import { useEffect } from 'react';
@@ -39,6 +39,16 @@ const About = () => {
       <Typography>
         বাংলাদেশ ডিপ্লোমা ফার্মাসিস্ট এসেসিয়েশনের স্মারক (১৯৪৯ সালে স্থাপিত)
         ১৮৬০ সালের ২১ নং আইনে নিবন্ধিত নং- ৩৮৪
+      </Typography>
+
+      <Divider sx={{ my: 3 }} />
+
+      <Typography variant={'h6'}>
+        {isBn
+          ? 'এই ওয়েবসাইট সম্পর্কে আরও তথ্যের জন্য অনুগ্রহ করে '
+          : 'For more information about this website please mail to '}
+        <a href='mailto:rislammb@gmail.com'>rislammb@gmail.com</a>
+        {isBn && ' এ মেইল ​​করুন'}
       </Typography>
     </Box>
   );

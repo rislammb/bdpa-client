@@ -16,6 +16,7 @@ import useDetailsPharmacist from '../hooks/useDetailsPharmacist';
 const DetailsPharmacist = () => {
   const {
     loading,
+    submitting,
     isBn,
     isAdmin,
     pharmacist,
@@ -62,6 +63,7 @@ const DetailsPharmacist = () => {
                       sx={{ padding: 1.5, textAlign: 'center' }}
                     >
                       <Button
+                        disabled={submitting}
                         onClick={handleDelete}
                         variant='contained'
                         startIcon={<DeleteIcon />}

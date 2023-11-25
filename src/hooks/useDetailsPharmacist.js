@@ -205,7 +205,7 @@ const useDetailsPharmacist = () => {
             pharmacist.memberId || '',
             'memberId',
             'text',
-            isPermittedForEdit
+            isAdmin
           ),
           createRow(
             isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment',
@@ -388,6 +388,7 @@ const useDetailsPharmacist = () => {
 
   return {
     loading,
+    submitting,
     error,
     isBn,
     isAdmin,

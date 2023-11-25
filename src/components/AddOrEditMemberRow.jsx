@@ -19,7 +19,10 @@ const AddOrEditMemberRow = ({
   cancelEdit,
   onSubmit,
 }) => {
-  const { language } = useStoreState((state) => state.ui);
+  const {
+    ui: { language },
+    member: { submitting },
+  } = useStoreState((state) => state);
   const isBn = language === 'BN' ? true : false;
 
   const memberArray = Object.keys(member).reduce((acc, cur) => {
@@ -104,10 +107,20 @@ const AddOrEditMemberRow = ({
           <Box
             sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}
           >
-            <IconButton onClick={cancelEdit} variant='contained' color='error'>
+            <IconButton
+              disabled={submitting}
+              onClick={cancelEdit}
+              variant='contained'
+              color='error'
+            >
               <CloseIcon fontSize='small' />
             </IconButton>
-            <IconButton onClick={onSubmit} variant='contained' color='info'>
+            <IconButton
+              disabled={submitting}
+              onClick={onSubmit}
+              variant='contained'
+              color='info'
+            >
               {type === 'ADD' ? (
                 <AddIcon fontSize='small' />
               ) : (
