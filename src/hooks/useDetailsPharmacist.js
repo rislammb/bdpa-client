@@ -230,7 +230,7 @@ const useDetailsPharmacist = () => {
             isPermittedForEdit
           ),
           createRow(
-            isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main posting/Address',
+            isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Present Postiong/Address',
             isBn
               ? getBnAreaInfo(pharmacist, 'posting')
               : getAreaInfo(pharmacist, 'posting'),
@@ -330,7 +330,7 @@ const useDetailsPharmacist = () => {
             isPermittedForEdit
           ),
           createRow(
-            isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main posting/Address',
+            isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Present Postiong/Address',
             isBn
               ? getBnAreaInfo(pharmacist, 'posting')
               : getAreaInfo(pharmacist, 'posting'),

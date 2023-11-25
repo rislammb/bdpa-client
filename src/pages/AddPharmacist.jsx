@@ -108,7 +108,7 @@ const AddPharmacist = () => {
           error={error}
         />
         <PostingGroup
-          label={isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main Posting/Address'}
+          label={isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Present Posting/Address'}
           postingInfo={postingFieldsArray}
           onChange={handlePostingChange}
           error={error}

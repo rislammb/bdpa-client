@@ -19,7 +19,9 @@ const PostingGroup = ({ postingInfo, onChange, label, error, style }) => {
       component='fieldset'
       variant='standard'
     >
-      <FormLabel component='legend'>{label || ''}</FormLabel>
+      <FormLabel align={'center'} component='legend'>
+        {label || ''}
+      </FormLabel>
       <FormGroup>
         {postingInfo?.length > 0 &&
           postingInfo.map((field) => {

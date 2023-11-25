@@ -33,7 +33,7 @@ const getColumns = (isBn, user) => {
         },
         {
           id: 'mainPosting',
-          label: isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main postiong/Address',
+          label: isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Present Postiong/Address',
           minWidth: 230,
         },
         {
@@ -65,7 +65,7 @@ const getColumns = (isBn, user) => {
         },
         {
           id: 'mainPosting',
-          label: isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main postiong/Address',
+          label: isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Present Postiong/Address',
           minWidth: 130,
         },
         {

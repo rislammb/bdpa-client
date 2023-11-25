@@ -21,7 +21,7 @@ const getColumns = (isBn) => [
   { id: 'mobile', label: isBn ? 'মোবাইল' : 'Mobile', minWidth: 90 },
   {
     id: isBn ? 'bn_posting' : 'posting',
-    label: isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Main posting/address',
+    label: isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Present Postiong/Address',
     minWidth: 280,
   },
 ];

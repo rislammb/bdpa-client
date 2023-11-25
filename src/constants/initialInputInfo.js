@@ -15,8 +15,8 @@ export const INITIAL_LOCATION_INFO = {
       },
       {
         id: '1',
-        name: 'Main Posting/Address',
-        bn_name: 'মূল কর্মস্থল/ঠিকানা',
+        name: 'Present Posting/Address',
+        bn_name: 'বর্তমান কর্মস্থল/ঠিকানা',
       },
       {
         id: '2',
@@ -40,21 +40,21 @@ export const INITIAL_LOCATION_INFO = {
     label: 'Division',
     bn_label: 'বিভাগ',
     value: 'all',
-    options: [{ id: 'all', name: 'All', bn_name: 'সব', }, ...divisions],
+    options: [{ id: 'all', name: 'All', bn_name: 'সব' }, ...divisions],
   },
   district: {
     name: 'district',
     label: 'District',
     bn_label: 'জেলা',
     value: 'all',
-    options: [{ id: 'all', name: 'All', bn_name: 'সব', }],
+    options: [{ id: 'all', name: 'All', bn_name: 'সব' }],
   },
   upazila: {
     name: 'upazila',
     label: 'Upazila',
     bn_label: 'উপজেলা',
     value: 'all',
-    options: [{ id: 'all', name: 'All', bn_name: 'সব', }],
+    options: [{ id: 'all', name: 'All', bn_name: 'সব' }],
   },
 };
 
