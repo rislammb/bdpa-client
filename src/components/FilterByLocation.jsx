@@ -17,7 +17,9 @@ const FilterByLocation = () => {
     auth: { user },
     pharmacist: { locationInfo },
   } = useStoreState((state) => state);
+
   const { setLocationInfo } = useStoreActions((actions) => actions.pharmacist);
+
   const isBn = language === 'BN' ? true : false;
 
   const handleLocationChange = (e) => {
@@ -69,7 +71,7 @@ const FilterByLocation = () => {
         {locationInfoArray.length > 0 &&
           locationInfoArray.map((field) => {
             if (field.name === 'upazila') {
-              if (locationInfo.locationType.value === '2') {
+              if (locationInfo.locationType.value === 'voterArea') {
                 return '';
               } else {
                 return (
@@ -141,7 +143,8 @@ const FilterByLocation = () => {
                             disabled={
                               !user &&
                               field.name === 'locationType' &&
-                              (option.id === '3' || option.id === '4')
+                              (option.id === 'deputationPosting' ||
+                                option.id === 'permanentAddress')
                             }
                           >
                             {isBn ? option.bn_name : option.name}

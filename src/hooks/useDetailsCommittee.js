@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { initialCommitteeInfo } from '../constants/InitialCommitteeInfo';
 import { committeeMemberFields } from '../constants/committeeMemberFields';
 import { changeHandlerForCommitteeInfo } from '../helpers/committee';
-import { getAreaInfo, getBnAreaInfo, objDeepClone } from '../helpers/utilities';
+import { objDeepClone } from '../helpers/utilities';
 
 const getColumns = (isBn) => [
   { id: 'serialNumber', label: isBn ? 'ক্রমিক' : 'Serial', minWidth: 35 },
@@ -21,7 +21,7 @@ const getColumns = (isBn) => [
   { id: 'mobile', label: isBn ? 'মোবাইল' : 'Mobile', minWidth: 90 },
   {
     id: isBn ? 'bn_posting' : 'posting',
-    label: isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Present Postiong/Address',
+    label: isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Current Postiong/Address',
     minWidth: 280,
   },
 ];
@@ -39,7 +39,6 @@ const useDetailsCommittee = () => {
       submitting,
       error: committeeError,
     },
-    pharmacist: { list },
     member: { error },
   } = useStoreState((state) => state);
   const {
@@ -48,7 +47,6 @@ const useDetailsCommittee = () => {
       updateCommitteeData,
       deleteCommitteeData,
     },
-    pharmacist: { getPharmacistsData },
     member: { setError, addMemberData },
   } = useStoreActions((actions) => actions);
 
@@ -56,9 +54,6 @@ const useDetailsCommittee = () => {
   const [committeeInfo, setCommitteeInfo] = useState(null);
   const [isAddMember, setIsAddMember] = useState(false);
   const [member, setMember] = useState({ ...committeeMemberFields });
-  const [defaultProps, setDefaultProps] = useState({
-    options: [],
-  });
   const [snackbar, setSnackbar] = useState({
     open: false,
     severity: 'info',
@@ -125,6 +120,7 @@ const useDetailsCommittee = () => {
     } else {
       clonedState[name].value = value;
     }
+
     setMember(clonedState);
   };
 
@@ -179,30 +175,6 @@ const useDetailsCommittee = () => {
   };
 
   useEffect(() => {
-    if (list.length > 0) {
-      setDefaultProps({
-        options: list,
-        getOptionLabel: (option) =>
-          list.length > 0
-            ? isBn
-              ? `${option.bn_name} - ${option.regNumber} - ${getBnAreaInfo(
-                  option,
-                  'posting'
-                )}`
-              : `${option.name} - ${option.regNumber} - ${getAreaInfo(
-                  option,
-                  'posting'
-                )}`
-            : '',
-      });
-    }
-  }, [list, isBn]);
-
-  useEffect(() => {
-    if (list.length < 1) getPharmacistsData();
-  }, []);
-
-  useEffect(() => {
     document.title = isBn
       ? `বিডিপিএ | ${committee?.bn_committeeTitle}`
       : `BDPA | ${committee?.committeeTitle}`;
@@ -244,7 +216,6 @@ const useDetailsCommittee = () => {
     isAddMember,
     toggleIsAddMember,
     member,
-    defaultProps,
     handleMemberChange,
     handleMemberSubmit,
     error,

@@ -20,7 +20,8 @@ const PharmacistList = () => {
     loading,
     isBn,
     list,
-    filteredList,
+    pharmacistsCount,
+    totalPharmacistsCount,
     columns,
     rowsPerPage,
     page,
@@ -39,7 +40,7 @@ const PharmacistList = () => {
     >
       <FilterGroup />
 
-      {loading || !filteredList ? (
+      {loading ? (
         <Box sx={{ p: 3 }}>
           <Loading />
         </Box>
@@ -49,17 +50,14 @@ const PharmacistList = () => {
             <Table stickyHeader size='small' aria-label='sticky table'>
               <TableHeader columns={columns} />
               <TableBody>
-                {filteredList.length > 0 ? (
-                  filteredList
-                    .slice((page - 1) * rowsPerPage, page * rowsPerPage)
+                {list?.length > 0 ? (
+                  list
+                    // .slice((page - 1) * rowsPerPage, page * rowsPerPage)
                     .map((pharmacist) => (
                       <PharmacistListItem
                         key={pharmacist._id}
                         pharmacist={pharmacist}
                         columns={columns}
-                        isTargetBlank={
-                          list.length > filteredList.length ? true : false
-                        }
                       />
                     ))
                 ) : (
@@ -68,56 +66,57 @@ const PharmacistList = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          <Box
-            sx={{
-              display: 'flex',
-              p: 2,
-              justifyContent: 'space-between',
-              flexDirection: { xs: 'column', md: 'row' },
-              gap: 1.5,
-              alignItems: 'center',
-            }}
-          >
-            <Typography>
-              {isBn
-                ? `${enToBnNumber(
-                    filteredList.length
-                  )} টির মধ্যে ${enToBnNumber(
-                    filteredList.length > 0 ? (page - 1) * rowsPerPage + 1 : 0
-                  )} থেকে ${enToBnNumber(
-                    page * rowsPerPage < filteredList.length
-                      ? page * rowsPerPage
-                      : filteredList.length
-                  )} টি দেখাচ্ছে `
-                : `Showing ${
-                    filteredList.length > 0 ? (page - 1) * rowsPerPage + 1 : 0
-                  } to ${
-                    page * rowsPerPage < filteredList.length
-                      ? page * rowsPerPage
-                      : filteredList.length
-                  } of ${filteredList.length} entries `}
-              {filteredList.length < list.length && (
-                <Typography component={'span'}>
-                  {isBn
-                    ? `( বাছাই করা হয়েছে মোট ${enToBnNumber(
-                        list.length
-                      )} টি থেকে )`
-                    : `( filtered from ${list.length} total entries )`}
-                </Typography>
-              )}
-            </Typography>
-            <Pagination
-              count={Math.ceil(filteredList.length / rowsPerPage)}
-              color='primary'
-              page={page}
-              onChange={handleChange}
+          {list?.length > 0 && pharmacistsCount && (
+            <Box
               sx={{
-                '.MuiPagination-ul': {
-                  justifyContent: 'center',
-                },
+                display: 'flex',
+                p: 2,
+                justifyContent: 'space-between',
+                flexDirection: { xs: 'column', md: 'row' },
+                gap: 1.5,
+                alignItems: 'center',
               }}
-            />
-          </Box>
+            >
+              <Typography>
+                {isBn
+                  ? `${enToBnNumber(pharmacistsCount)} টির মধ্যে ${enToBnNumber(
+                      pharmacistsCount > 0 ? (page - 1) * rowsPerPage + 1 : 0
+                    )} থেকে ${enToBnNumber(
+                      page * rowsPerPage < pharmacistsCount
+                        ? page * rowsPerPage
+                        : pharmacistsCount
+                    )} টি দেখাচ্ছে `
+                  : `Showing ${
+                      pharmacistsCount > 0 ? (page - 1) * rowsPerPage + 1 : 0
+                    } to ${
+                      page * rowsPerPage < pharmacistsCount
+                        ? page * rowsPerPage
+                        : pharmacistsCount
+                    } of ${pharmacistsCount} entries `}
+                {pharmacistsCount < totalPharmacistsCount && (
+                  <Typography component={'span'}>
+                    {isBn
+                      ? `( বাছাই করা হয়েছে মোট ${enToBnNumber(
+                          totalPharmacistsCount
+                        )} টি থেকে )`
+                      : `( filtered from ${totalPharmacistsCount} total entries )`}
+                  </Typography>
+                )}
+              </Typography>
+
+              <Pagination
+                count={Math.ceil(pharmacistsCount / rowsPerPage)}
+                color='primary'
+                page={page}
+                onChange={handleChange}
+                sx={{
+                  '.MuiPagination-ul': {
+                    justifyContent: 'center',
+                  },
+                }}
+              />
+            </Box>
+          )}
         </Paper>
       )}
 

@@ -14,22 +14,22 @@ export const INITIAL_LOCATION_INFO = {
         bn_name: 'সব',
       },
       {
-        id: '1',
-        name: 'Present Posting/Address',
+        id: 'currentAddress',
+        name: 'Current Posting/Address',
         bn_name: 'বর্তমান কর্মস্থল/ঠিকানা',
       },
       {
-        id: '2',
+        id: 'voterArea',
         name: 'Voter Area',
         bn_name: 'ভোটার এলাকা',
       },
       {
-        id: '3',
+        id: 'deputationPosting',
         name: 'Deputation Posting',
         bn_name: 'প্রেষন/সংযুক্ত কর্মস্থল',
       },
       {
-        id: '4',
+        id: 'permanentAddress',
         name: 'Permanent Address',
         bn_name: 'স্থায়ী ঠিকানা',
       },

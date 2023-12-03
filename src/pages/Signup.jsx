@@ -14,6 +14,7 @@ import { useTheme } from '@mui/material/styles';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { getPharmacists } from '../api/pharmacist';
 import SnackbarComp from '../components/Snackbar';
 import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
 
@@ -24,11 +25,9 @@ const Signup = () => {
   const {
     ui: { language },
     auth: { submitting, error },
-    pharmacist: { list },
   } = useStoreState((state) => state);
   const {
     auth: { getRegistrationData, resendEmailData },
-    pharmacist: { getPharmacistsData },
   } = useStoreActions((actions) => actions);
 
   const [state, setState] = useState(null);
@@ -37,9 +36,9 @@ const Signup = () => {
     severity: 'info',
     text: '',
   });
-  const [defaultProps, setDefaultProps] = useState({
-    options: [],
-  });
+  const [options, setOptions] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
   const [successAlert, setSuccessAlert] = useState(null);
 
   const isBn = language === 'BN' ? true : false;
@@ -108,30 +107,22 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    if (list.length > 0) {
-      setDefaultProps({
-        options: list.filter((item) => item.email),
-        getOptionLabel: (option) =>
-          list?.length > 0
-            ? isBn
-              ? `${option.email} - ${option.bn_name} - ${
-                  option.regNumber
-                } - ${getBnAreaInfo(option, 'posting')}`
-              : `${option.email} - ${option.name} - ${
-                  option.regNumber
-                } - ${getAreaInfo(option, 'posting')}`
-            : '',
-      });
-    }
-  }, [list, isBn]);
+    setOptions([]);
+
+    (async () => {
+      const {
+        data: { pharmacists },
+      } = await getPharmacists({ searchTerm });
+
+      if (pharmacists?.length > 0) {
+        setOptions(pharmacists);
+      }
+    })();
+  }, [searchTerm]);
 
   useEffect(() => {
     document.title = isBn ? 'বিডিপিএ | সাইন আপ' : 'BDPA | Signup';
   }, [isBn]);
-
-  useEffect(() => {
-    if (list.length < 1) getPharmacistsData();
-  }, []);
 
   return (
     <Card sx={{ maxWidth: 370, margin: '20px auto' }}>
@@ -151,18 +142,37 @@ const Signup = () => {
         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
       >
         <Autocomplete
-          {...defaultProps}
+          options={options}
+          filterOptions={(x) => x}
+          getOptionLabel={(option) =>
+            `${option.email} - ${isBn ? option.bn_name : option.name} - ${
+              option.regNumber
+            } - ${
+              isBn
+                ? getBnAreaInfo(option, 'posting')
+                : getAreaInfo(option, 'posting')
+            }`
+          }
           value={state}
           onChange={(_event, newValue) => {
             setState(newValue);
           }}
-          isOptionEqualToValue={(option, value) => option?._id === value?._id}
+          isOptionEqualToValue={(option, value) =>
+            option.regNumber === value?.regNumber
+          }
           renderInput={(params) => (
             <TextField
-              color='info'
               {...params}
               label={isBn ? 'ফার্মাসিস্ট ইমেইল' : 'Pharmacist Email'}
+              placeholder='Email, Name, Reg Number or Member Id'
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: params.InputProps.endAdornment,
+              }}
               variant='standard'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              color='info'
               error={error && error['email'] ? true : false}
               helperText={
                 error &&

@@ -1,6 +1,7 @@
 import { axiosInstance } from './config';
 
-export const getPharmacists = () => axiosInstance.get('/pharmacist');
+export const getPharmacists = (payload) =>
+  axiosInstance.get('/pharmacist', { params: payload });
 
 export const getDetailsPharmacist = (regNumber) =>
   axiosInstance.get(`/pharmacist/reg/${regNumber}`);

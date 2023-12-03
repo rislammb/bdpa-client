@@ -42,7 +42,6 @@ const DetailsCommittee = () => {
     isAddMember,
     toggleIsAddMember,
     member,
-    defaultProps,
     handleMemberChange,
     handleMemberSubmit,
     error,
@@ -155,7 +154,6 @@ const DetailsCommittee = () => {
                   <AddOrEditMemberRow
                     member={member}
                     onChange={handleMemberChange}
-                    defaultProps={defaultProps}
                     cancelEdit={toggleIsAddMember}
                     onSubmit={handleMemberSubmit}
                     index={0}

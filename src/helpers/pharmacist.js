@@ -123,7 +123,7 @@ const depertmentFilter = (list, depertmentInfo) => {
   if (depertmentInfo.value === 'all') {
     return list;
   } else {
-    return list.filter(
+    return list?.filter(
       (item) => item.jobDepertment?.id === depertmentInfo.value
     );
   }

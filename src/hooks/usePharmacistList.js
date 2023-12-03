@@ -33,7 +33,7 @@ const getColumns = (isBn, user) => {
         },
         {
           id: 'mainPosting',
-          label: isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Present Postiong/Address',
+          label: isBn ? 'মূল কর্মস্থল/ঠিকানা' : 'Current Postiong/Address',
           minWidth: 230,
         },
         {
@@ -65,7 +65,7 @@ const getColumns = (isBn, user) => {
         },
         {
           id: 'mainPosting',
-          label: isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Present Postiong/Address',
+          label: isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Current Postiong/Address',
           minWidth: 130,
         },
         {
@@ -84,8 +84,18 @@ const usePharmacistList = () => {
   const {
     ui: { language },
     auth: { user },
-    pharmacist: { loading, error, list, filteredList },
+    pharmacist: {
+      loading,
+      error,
+      searchTerm,
+      locationInfo,
+      jobDepertmentInfo,
+      list,
+      pharmacistsCount,
+      totalPharmacistsCount,
+    },
   } = useStoreState((state) => state);
+
   const { getPharmacistsData } = useStoreActions(
     (actions) => actions.pharmacist
   );
@@ -111,14 +121,22 @@ const usePharmacistList = () => {
   };
 
   useEffect(() => {
-    getPharmacistsData();
-  }, []);
+    navigate(`/members/page/1`);
+  }, [searchTerm]);
 
   useEffect(() => {
-    if (filteredList?.length !== list.length) {
-      navigate(`/members/page/1`);
-    }
-  }, [list.length, filteredList?.length]);
+    const locationFilter = Object.keys(locationInfo).reduce((acc, cur) => {
+      acc[cur] = locationInfo[cur]?.value;
+      return acc;
+    }, {});
+
+    getPharmacistsData({
+      locationFilter,
+      depertmentFilter: jobDepertmentInfo.value,
+      searchTerm,
+      pageNumber,
+    });
+  }, [pageNumber, searchTerm, locationInfo, jobDepertmentInfo]);
 
   useEffect(() => {
     setPage(Number(pageNumber) ?? 1);
@@ -142,7 +160,8 @@ const usePharmacistList = () => {
     loading,
     isBn,
     list,
-    filteredList,
+    pharmacistsCount,
+    totalPharmacistsCount,
     columns: getColumns(isBn, user),
     rowsPerPage,
     page,

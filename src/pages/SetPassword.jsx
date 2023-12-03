@@ -154,7 +154,6 @@ const SetPassword = () => {
       >
         {stateArray?.length > 0 &&
           stateArray.map((field) => {
-            console.log('field =>', field.error?.text);
             return (
               <TextField
                 key={field.name}

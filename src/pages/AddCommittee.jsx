@@ -28,7 +28,6 @@ const AddCommittee = () => {
     addMemberRow,
     members,
     handleMemberChange,
-    defaultProps,
     deleteMemberRow,
   } = useAddCommittee();
 
@@ -86,7 +85,6 @@ const AddCommittee = () => {
                       member={member}
                       error={error?.members && error.members[index]}
                       onChange={handleMemberChange}
-                      defaultProps={defaultProps}
                       deleteMemberRow={deleteMemberRow}
                       disableDeleteMemberRow={members.length < 3}
                     />

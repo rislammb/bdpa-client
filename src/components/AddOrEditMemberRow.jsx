@@ -7,12 +7,14 @@ import Autocomplete from '@mui/material/Autocomplete';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import { useStoreState } from 'easy-peasy';
+import { useEffect, useState } from 'react';
+import { getPharmacists } from '../api/pharmacist';
+import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
 
 const AddOrEditMemberRow = ({
   member,
   error,
   onChange,
-  defaultProps,
   deleteMemberRow,
   disableDeleteMemberRow,
   type,
@@ -23,6 +25,12 @@ const AddOrEditMemberRow = ({
     ui: { language },
     member: { submitting },
   } = useStoreState((state) => state);
+
+  const [options, setOptions] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(
+    type === 'EDIT' ? member.pharmacistId.value?.regNumber : ''
+  );
+
   const isBn = language === 'BN' ? true : false;
 
   const memberArray = Object.keys(member).reduce((acc, cur) => {
@@ -32,6 +40,20 @@ const AddOrEditMemberRow = ({
     }
     return acc;
   }, []);
+
+  useEffect(() => {
+    setOptions([]);
+
+    (async () => {
+      const {
+        data: { pharmacists },
+      } = await getPharmacists({ searchTerm });
+
+      if (pharmacists?.length > 0) {
+        setOptions(pharmacists);
+      }
+    })();
+  }, [searchTerm]);
 
   return (
     <TableRow sx={type ? { verticalAlign: 'top' } : { display: 'flex' }}>
@@ -49,7 +71,17 @@ const AddOrEditMemberRow = ({
             >
               {property.type === 'autocomplete' ? (
                 <Autocomplete
-                  {...defaultProps}
+                  options={options}
+                  filterOptions={(x) => x}
+                  getOptionLabel={(option) =>
+                    isBn
+                      ? `${option.bn_name} - ${option.regNumber} - ${
+                          option.bn_posting ?? getBnAreaInfo(option, 'posting')
+                        }`
+                      : `${option.name} - ${option.regNumber} - ${
+                          option.posting ?? getAreaInfo(option, 'posting')
+                        }`
+                  }
                   value={property.value}
                   onChange={(_event, newValue) => {
                     onChange(
@@ -58,28 +90,35 @@ const AddOrEditMemberRow = ({
                     );
                   }}
                   isOptionEqualToValue={(option, value) =>
-                    option?._id === value?._id
+                    option.regNumber === value?.regNumber
                   }
                   renderInput={(params) => (
                     <TextField
-                      color='info'
                       {...params}
-                      label={isBn ? property.bn_label : property.label}
+                      label={isBn ? 'ফার্মাসিস আইডি' : 'Pharmacist Id'}
+                      placeholder='Name, Reg Number, Member Id or Email'
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: params.InputProps.endAdornment,
+                      }}
                       variant='standard'
-                      error={error && error[property.name] ? true : false}
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      color='info'
+                      error={error && error['email'] ? true : false}
                       helperText={
                         error &&
-                        error[property.name] &&
+                        error['email'] &&
                         (isBn
-                          ? error[property.name].bn_text ?? ''
-                          : error[property.name].text ?? '')
+                          ? error['email'].bn_text ?? ''
+                          : error['email'].text ?? '')
                       }
                     />
                   )}
                 />
               ) : (
                 <TextField
-                  InputLabelProps={{ color: 'info' }}
+                  color='info'
                   key={property.name}
                   name={property.name}
                   sx={{ width: '100%' }}

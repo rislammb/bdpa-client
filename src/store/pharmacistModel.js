@@ -1,4 +1,4 @@
-import { action, computed, thunk } from 'easy-peasy';
+import { action, thunk } from 'easy-peasy';
 import {
   addPharmacist,
   deletePharmacist,
@@ -6,17 +6,19 @@ import {
   getPharmacists,
   updatePharmacist,
 } from '../api/pharmacist';
+
 import {
   INITIAL_DEPERTMENT_INFO,
   INITIAL_LOCATION_INFO,
 } from '../constants/initialInputInfo';
-import { getFilteredPharmacists } from '../helpers/pharmacist';
 
 const pharmacistModel = {
   loading: false,
   submitting: false,
   error: null,
   list: [],
+  pharmacistsCount: 0,
+  totalPharmacistsCount: 0,
   locationInfo: { ...INITIAL_LOCATION_INFO },
   jobDepertmentInfo: { ...INITIAL_DEPERTMENT_INFO },
   searchTerm: '',
@@ -31,15 +33,21 @@ const pharmacistModel = {
     state.error = payload;
   }),
   setPharmacists: action((state, payload) => {
-    state.list = payload;
+    state.list = payload.pharmacists;
+    state.pharmacistsCount = payload.pharmacistsCount;
+    state.totalPharmacistsCount = payload.totalPharmacistsCount;
   }),
-  getPharmacistsData: thunk(async (actions) => {
+  getPharmacistsData: thunk(async (actions, payload) => {
     actions.setLoading(true);
     actions.setError(null);
-    actions.setPharmacists([]);
+    actions.setPharmacists({
+      pharmacists: [],
+      pharmacistsCount: 0,
+      totalPharmacistsCount: 0,
+    });
 
     try {
-      const { data } = await getPharmacists();
+      const { data } = await getPharmacists(payload);
       actions.setPharmacists(data);
       actions.setLoading(false);
     } catch (e) {
@@ -59,15 +67,6 @@ const pharmacistModel = {
   }),
   setSearchTerm: action((state, payload) => {
     state.searchTerm = payload;
-  }),
-  filteredList: computed((state) => {
-    const { list, locationInfo, jobDepertmentInfo, searchTerm } = state;
-    return getFilteredPharmacists(
-      list,
-      locationInfo,
-      jobDepertmentInfo,
-      searchTerm.toLowerCase()
-    );
   }),
   setDetailsPharmacist: action((state, payload) => {
     state.details = payload;

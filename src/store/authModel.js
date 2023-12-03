@@ -50,6 +50,7 @@ const authModel = {
   getLoginData: thunk(async (actions, payload) => {
     actions.setSubmitting(true);
     actions.setError(null);
+
     try {
       const { data } = await userLogin(payload);
       actions.setToken(data?.token);

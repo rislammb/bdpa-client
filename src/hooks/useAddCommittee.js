@@ -4,12 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { initialCommitteeInfo } from '../constants/InitialCommitteeInfo';
 import { committeeMemberFields } from '../constants/committeeMemberFields';
 import { changeHandlerForCommitteeInfo } from '../helpers/committee';
-import {
-  generateId,
-  getAreaInfo,
-  getBnAreaInfo,
-  objDeepClone,
-} from '../helpers/utilities';
+import { generateId, objDeepClone } from '../helpers/utilities';
 
 const addMember = (initial = [], count = 1) => {
   for (let i = 0; i < count; i++) {
@@ -26,10 +21,8 @@ const useAddCommittee = () => {
   const {
     ui: { language },
     committee: { submitting, error },
-    pharmacist: { list },
   } = useStoreState((state) => state);
   const {
-    pharmacist: { getPharmacistsData },
     committee: { addCommitteeData },
   } = useStoreActions((actions) => actions);
 
@@ -37,9 +30,7 @@ const useAddCommittee = () => {
     objDeepClone(initialCommitteeInfo)
   );
   const [members, setMembers] = useState(addMember([], 7));
-  const [defaultProps, setDefaultProps] = useState({
-    options: [],
-  });
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     severity: 'info',
@@ -111,38 +102,13 @@ const useAddCommittee = () => {
   }, [submitting, error?.message]);
 
   useEffect(() => {
-    if (list.length > 0) {
-      setDefaultProps({
-        options: list,
-        getOptionLabel: (option) =>
-          list.length > 0
-            ? isBn
-              ? `${option.bn_name} - ${option.regNumber} - ${getBnAreaInfo(
-                  option,
-                  'posting'
-                )}`
-              : `${option.name} - ${option.regNumber} - ${getAreaInfo(
-                  option,
-                  'posting'
-                )}`
-            : '',
-      });
-    }
-  }, [list, isBn]);
-
-  useEffect(() => {
     document.title = isBn ? 'বিডিপিএ | কমিটি যোগ' : 'BDPA | Add Committee';
   }, [isBn]);
-
-  useEffect(() => {
-    if (list.length < 1) getPharmacistsData();
-  }, []);
 
   return {
     isBn,
     committeeInfo,
     members,
-    defaultProps,
     handleCommitteeInfoChange,
     handleMemberChange,
     addMemberRow,

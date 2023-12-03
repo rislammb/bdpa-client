@@ -6,9 +6,9 @@ import { Box, IconButton } from '@mui/material';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import { useStoreActions, useStoreState } from 'easy-peasy';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { committeeMemberFields } from '../constants/committeeMemberFields';
-import { getAreaInfo, getBnAreaInfo, objDeepClone } from '../helpers/utilities';
+import { objDeepClone } from '../helpers/utilities';
 import AddOrEditMemberRow from './AddOrEditMemberRow';
 import Link from './ui/Link';
 
@@ -20,14 +20,12 @@ const DetailsCommitteeRow = ({
 }) => {
   const {
     ui: { language },
-    pharmacist: { list },
     member: { error, submitting },
   } = useStoreState((state) => state);
 
   const {
     member: { deleteCommitteeMember, updateMemberData },
     committee: { getDetailsCommitteeDataById },
-    pharmacist: { getPharmacistsData },
   } = useStoreActions((actions) => actions);
 
   const [isEdit, setIsEdit] = useState(false);
@@ -48,12 +46,11 @@ const DetailsCommitteeRow = ({
           } else if (key === 'bn_postName') {
             fields[key].value = member.postName?.bn_name;
           } else if (key === 'pharmacistId') {
-            fields[key].value = defaultProps.options.find(
-              (item) => item.regNumber === member.regNumber
-            );
+            fields[key].value = member;
           }
         });
       }
+
       setMemberFields(fields);
       setIsEdit(true);
     }
@@ -124,28 +121,9 @@ const DetailsCommitteeRow = ({
     }
   };
 
-  const defaultProps = {
-    options: list,
-    getOptionLabel: (option) =>
-      list.length > 0
-        ? isBn
-          ? `${option.bn_name} - ${option.name} - ${
-              option.regNumber
-            } - ${getBnAreaInfo(option, 'posting')}`
-          : `${option.name} - ${option.bn_name} - ${
-              option.regNumber
-            } - ${getAreaInfo(option, 'posting')}`
-        : '',
-  };
-
-  useEffect(() => {
-    if (list.length < 1) getPharmacistsData();
-  }, []);
-
   return isEdit ? (
     <AddOrEditMemberRow
       member={memberFields}
-      defaultProps={defaultProps}
       onChange={handleMemberChange}
       type={'EDIT'}
       cancelEdit={toggleIsEdit}
