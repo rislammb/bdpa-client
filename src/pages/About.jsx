@@ -2,6 +2,7 @@ import { Box, Divider, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useStoreState } from 'easy-peasy';
 import { useEffect } from 'react';
+import ColorLink from '../components/ui/ColorLink';
 import ColorTitle from '../components/ui/ColorTitle';
 
 const About = () => {
@@ -43,11 +44,14 @@ const About = () => {
 
       <Divider sx={{ my: 3 }} />
 
-      <Typography variant={'h6'}>
+      <Typography>
         {isBn
           ? 'এই ওয়েবসাইট সম্পর্কে আরও তথ্যের জন্য অনুগ্রহ করে '
           : 'For more information about this website please mail to '}
-        <a href='mailto:rislammb@gmail.com'>rislammb@gmail.com</a>
+        <ColorLink
+          to={'mailto:rislammb@gmail.com'}
+          text={'rislammb@gmail.com'}
+        />
         {isBn && ' এ মেইল ​​করুন'}
       </Typography>
     </Box>

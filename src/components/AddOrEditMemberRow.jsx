@@ -74,13 +74,13 @@ const AddOrEditMemberRow = ({
                   options={options}
                   filterOptions={(x) => x}
                   getOptionLabel={(option) =>
-                    isBn
-                      ? `${option.bn_name} - ${option.regNumber} - ${
-                          option.bn_posting ?? getBnAreaInfo(option, 'posting')
-                        }`
-                      : `${option.name} - ${option.regNumber} - ${
-                          option.posting ?? getAreaInfo(option, 'posting')
-                        }`
+                    `${isBn ? option.bn_name : option.name} | ${
+                      option.regNumber
+                    } | ${
+                      isBn
+                        ? option.bn_posting ?? getBnAreaInfo(option, 'posting')
+                        : option.posting ?? getAreaInfo(option, 'posting')
+                    }`
                   }
                   value={property.value}
                   onChange={(_event, newValue) => {
@@ -95,8 +95,12 @@ const AddOrEditMemberRow = ({
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label={isBn ? 'ফার্মাসিস আইডি' : 'Pharmacist Id'}
-                      placeholder='Name, Reg Number, Member Id or Email'
+                      label={isBn ? 'ফার্মাসিস্ট আইডি' : 'Pharmacist Id'}
+                      placeholder={
+                        isBn
+                          ? 'নাম, নিবন্ধন, সদস্য পরিচিতি বা ইমেইল'
+                          : 'Name, Registration, Member ID or Email'
+                      }
                       InputProps={{
                         ...params.InputProps,
                         endAdornment: params.InputProps.endAdornment,

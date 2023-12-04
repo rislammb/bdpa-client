@@ -39,8 +39,8 @@ const SearchByText = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder={
           isBn
-            ? 'নাম, নিবন্ধন বা সদস্য পরিচিতি'
-            : 'Name, Registration or Member ID'
+            ? 'নাম, নিবন্ধন, সদস্য পরিচিতি বা ইমেইল'
+            : 'Name, Registration, Member ID or Email'
         }
         variant='standard'
         sx={{

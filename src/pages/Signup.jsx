@@ -143,11 +143,11 @@ const Signup = () => {
       >
         <Autocomplete
           options={options}
-          filterOptions={(x) => x}
+          filterOptions={(options) => options.filter((option) => option.email)}
           getOptionLabel={(option) =>
-            `${option.email} - ${isBn ? option.bn_name : option.name} - ${
+            `${option.email} | ${isBn ? option.bn_name : option.name} | ${
               option.regNumber
-            } - ${
+            } | ${
               isBn
                 ? getBnAreaInfo(option, 'posting')
                 : getAreaInfo(option, 'posting')
@@ -164,7 +164,11 @@ const Signup = () => {
             <TextField
               {...params}
               label={isBn ? 'ফার্মাসিস্ট ইমেইল' : 'Pharmacist Email'}
-              placeholder='Email, Name, Reg Number or Member Id'
+              placeholder={
+                isBn
+                  ? 'ইমেইল, নাম, নিবন্ধন বা সদস্য পরিচিতি'
+                  : 'Email, Name, Registration or Member ID'
+              }
               InputProps={{
                 ...params.InputProps,
                 endAdornment: params.InputProps.endAdornment,
