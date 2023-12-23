@@ -1,6 +1,7 @@
 import { action, thunk } from 'easy-peasy';
 import {
   resendEmail,
+  resetPassword,
   setPassword,
   userLogin,
   userRegistration,
@@ -80,6 +81,20 @@ const authModel = {
 
     try {
       const { data } = await resendEmail(payload);
+      actions.setSubmitting(false);
+      return data;
+    } catch (e) {
+      if (e.response) actions.setError(e.response.data);
+      else actions.setError(e.message);
+      actions.setSubmitting(false);
+    }
+  }),
+  resetPasswordData: thunk(async (actions, payload) => {
+    actions.setSubmitting(true);
+    actions.setError(null);
+
+    try {
+      const { data } = await resetPassword(payload);
       actions.setSubmitting(false);
       return data;
     } catch (e) {

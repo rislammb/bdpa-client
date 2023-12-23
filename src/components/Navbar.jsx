@@ -19,6 +19,7 @@ import DetailsPharmacist from '../pages/DetailsPharmacist';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import PharmacistList from '../pages/PharmacistList';
+import ResetPassword from '../pages/ResetPassword';
 import SetPassword from '../pages/SetPassword';
 import Signup from '../pages/Signup';
 import Users from '../pages/Users';
@@ -232,6 +233,20 @@ const Navbar = (props) => {
                 )
               ) : (
                 <Signup />
+              )
+            }
+          />
+          <Route
+            path='/auth/reset-password'
+            element={
+              user ? (
+                user?.regNumber ? (
+                  <Navigate to={`/members/${user.regNumber}`} />
+                ) : (
+                  <Navigate to={'/'} />
+                )
+              ) : (
+                <ResetPassword />
               )
             }
           />

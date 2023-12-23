@@ -77,7 +77,24 @@ const Login = () => {
           <Button disabled={submitting} type='submit' variant='contained'>
             {isBn ? 'লগ ইন' : 'Login'}
           </Button>
-          <Typography variant='body2' component='span'>
+          <Typography align='left' width={'100%'} variant='body2'>
+            <Link
+              to='/auth/reset-password'
+              style={{
+                color:
+                  theme.palette.mode === 'dark'
+                    ? theme.palette.primary.light
+                    : theme.palette.primary.main,
+              }}
+            >
+              {isBn ? 'পাসওয়ার্ড ভুলে গেছেন? ' : 'Forgot password?'}
+            </Link>
+          </Typography>
+          <Typography
+            sx={{ mt: 2, width: '100%' }}
+            align='right'
+            variant='body2'
+          >
             {isBn ? 'আপনার কি একাউন্ট নেই? ' : "Don't have an account? Please "}
             <Link
               to='/auth/signup'

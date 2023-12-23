@@ -9,6 +9,9 @@ export const userRegistration = (data) =>
 export const resendEmail = (data) =>
   axiosInstance.post('/auth/resend-email', data);
 
+export const resetPassword = (data) =>
+  axiosInstance.post('/auth/reset-password', data);
+
 export const verifyEmail = (data) =>
   axiosInstance.post('/auth/verify-email', data);
 

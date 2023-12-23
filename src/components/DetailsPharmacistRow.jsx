@@ -48,7 +48,16 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
         component='th'
         scope='row'
       >
-        {row.th}
+        {row.name === 'imageUrl' ? (
+          <img
+            src={pharmacist.mainImageUrl}
+            alt={pharmacist.name}
+            height={'45'}
+            style={{ border: '1px solid #ccc' }}
+          />
+        ) : (
+          row.th
+        )}
       </TableCell>
 
       <TableCell
