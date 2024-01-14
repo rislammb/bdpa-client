@@ -46,8 +46,10 @@ const committeeModel = {
     state.searchTerm = payload.toLowerCase();
   }),
   filteredList: computed((state) =>
-    state.list.filter((item) =>
-      item.committeeTitle.toLowerCase().includes(state.searchTerm)
+    state.list.filter(
+      (item) =>
+        item.committeeTitle.toLowerCase().includes(state.searchTerm) ||
+        item.bn_committeeTitle.toLowerCase().includes(state.searchTerm)
     )
   ),
   setDetailsCommittee: action((state, payload) => {

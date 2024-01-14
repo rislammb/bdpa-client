@@ -16,8 +16,8 @@ import CommitteeListRow from '../components/CommitteeListRow';
 import EmptyTableRow from '../components/EmptyTableRow';
 import SnackbarComp from '../components/Snackbar';
 import TableHeader from '../components/TableHeader';
-import Loading from '../components/ui/Loading';
 import useCommitteeList from '../hooks/useCommitteeList';
+import CommitteeListSkeleton from '../skeleton/CommitteeListSkeleton';
 
 const CommitteeList = () => {
   const {
@@ -27,17 +27,11 @@ const CommitteeList = () => {
     filteredList,
     searchTerm,
     setSearchTerm,
+    debounced,
     columns,
     snackbar,
     handleSnackbarClose,
   } = useCommitteeList();
-
-  if (loading)
-    return (
-      <Box sx={{ p: 3 }}>
-        <Loading />
-      </Box>
-    );
 
   return (
     <Box
@@ -72,8 +66,8 @@ const CommitteeList = () => {
             ),
           }}
           name='search'
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          defaultValue={searchTerm}
+          onChange={(e) => debounced(e.target.value)}
           label={isBn ? 'কমিটি অনুসন্ধান' : 'Search Committee'}
           placeholder={isBn ? 'কেন্দ্রীয় কমিটি...' : 'Central Committee'}
           variant='standard'
@@ -96,7 +90,9 @@ const CommitteeList = () => {
           <Table stickyHeader size='' aria-label='sticky table'>
             <TableHeader columns={columns} />
             <TableBody>
-              {filteredList?.length > 0 ? (
+              {loading ? (
+                <CommitteeListSkeleton columns={columns} />
+              ) : filteredList?.length > 0 ? (
                 filteredList.map((committee) => (
                   <CommitteeListRow
                     key={committee._id}

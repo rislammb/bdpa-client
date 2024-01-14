@@ -1,5 +1,4 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -10,8 +9,8 @@ import TableRow from '@mui/material/TableRow';
 
 import DetailsPharmacistRow from '../components/DetailsPharmacistRow';
 import SnackbarComp from '../components/Snackbar';
-import Loading from '../components/ui/Loading';
 import useDetailsPharmacist from '../hooks/useDetailsPharmacist';
+import DetailsPharmacistSkeleton from '../skeleton/DetailsPharmacistSkeleton';
 
 const DetailsPharmacist = () => {
   const {
@@ -27,11 +26,7 @@ const DetailsPharmacist = () => {
     handleSnackbarClose,
   } = useDetailsPharmacist();
 
-  return loading ? (
-    <Box sx={{ p: 5 }}>
-      <Loading />
-    </Box>
-  ) : (
+  return (
     <TableContainer
       sx={{
         overflow: 'auto',
@@ -43,7 +38,9 @@ const DetailsPharmacist = () => {
     >
       <Table size='small'>
         <TableBody>
-          {pharmacist ? (
+          {loading ? (
+            <DetailsPharmacistSkeleton rows={tableRows} />
+          ) : pharmacist ? (
             tableRows?.length > 0 && (
               <>
                 {tableRows.map((row) => (

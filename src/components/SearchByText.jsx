@@ -1,3 +1,5 @@
+import { useDebouncedCallback } from 'use-debounce';
+
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, IconButton, InputAdornment, TextField } from '@mui/material';
 import { useStoreActions, useStoreState } from 'easy-peasy';
@@ -9,6 +11,8 @@ const SearchByText = () => {
   } = useStoreState((state) => state);
   const { setSearchTerm } = useStoreActions((actions) => actions.pharmacist);
   const isBn = language === 'BN' ? true : false;
+
+  const debounced = useDebouncedCallback((value) => setSearchTerm(value), 300);
 
   return (
     <Box
@@ -35,8 +39,8 @@ const SearchByText = () => {
           ),
         }}
         label={isBn ? 'অনুসন্ধান' : 'Search'}
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        defaultValue={searchTerm}
+        onChange={(e) => debounced(e.target.value)}
         placeholder={
           isBn
             ? 'নাম, নিবন্ধন, সদস্য পরিচিতি বা ইমেইল'

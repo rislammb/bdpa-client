@@ -1,3 +1,5 @@
+import { useDebouncedCallback } from 'use-debounce';
+
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 
@@ -29,6 +31,8 @@ const useCommitteeList = () => {
   const isAdmin =
     user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
   const isBn = language === 'BN' ? true : false;
+
+  const debounced = useDebouncedCallback((value) => setSearchTerm(value), 300);
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -63,6 +67,7 @@ const useCommitteeList = () => {
     columns: getColumns(isBn),
     searchTerm,
     setSearchTerm,
+    debounced,
     snackbar,
     handleSnackbarClose,
   };
