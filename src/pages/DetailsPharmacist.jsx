@@ -36,12 +36,12 @@ const DetailsPharmacist = () => {
       }}
       component={Paper}
     >
-      <Table size='small'>
-        <TableBody>
-          {loading ? (
-            <DetailsPharmacistSkeleton rows={tableRows} />
-          ) : pharmacist ? (
-            tableRows?.length > 0 && (
+      {loading || (pharmacist && tableRows[tableRows.length - 1]?.td === '') ? (
+        <DetailsPharmacistSkeleton rows={tableRows} />
+      ) : (
+        <Table size='small'>
+          <TableBody>
+            {pharmacist ? (
               <>
                 {tableRows.map((row) => (
                   <DetailsPharmacistRow
@@ -72,27 +72,27 @@ const DetailsPharmacist = () => {
                   </TableRow>
                 )}
               </>
-            )
-          ) : (
-            <TableRow
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell
-                sx={{
-                  p: 5,
-                  textAlign: 'center',
-                  color: '#de6176',
-                  fontSize: 17,
-                }}
+            ) : (
+              <TableRow
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                {isBn
-                  ? 'ফার্মাসিস্ট খুঁজে পাওয়া যায় নি!'
-                  : 'Pharmacist not found!'}
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+                <TableCell
+                  sx={{
+                    p: 5,
+                    textAlign: 'center',
+                    color: '#de6176',
+                    fontSize: 17,
+                  }}
+                >
+                  {isBn
+                    ? 'ফার্মাসিস্ট খুঁজে পাওয়া যায় নি!'
+                    : 'Pharmacist not found!'}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      )}
 
       <SnackbarComp
         open={snackbar.open}
@@ -103,4 +103,5 @@ const DetailsPharmacist = () => {
     </TableContainer>
   );
 };
+
 export default DetailsPharmacist;

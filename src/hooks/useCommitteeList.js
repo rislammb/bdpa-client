@@ -10,7 +10,7 @@ const getColumns = (isBn) => [
     label: isBn ? 'কার্যক্রম শুরু' : 'Work has started',
     minWidth: 120,
   },
-  { id: 'willExpire', label: isBn ? 'মেয়াদ' : 'Will expire', minWidth: 90 },
+  { id: 'willExpire', label: isBn ? 'মেয়াদ' : 'Will expire', minWidth: 120 },
 ];
 
 const useCommitteeList = () => {

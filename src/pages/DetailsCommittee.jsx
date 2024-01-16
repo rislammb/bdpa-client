@@ -4,13 +4,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Box,
   Button,
-  Card,
-  CardContent,
   IconButton,
   Table,
   TableBody,
   Typography,
 } from '@mui/material';
+import Paper from '@mui/material/Paper';
 import TableContainer from '@mui/material/TableContainer';
 import dayjs from 'dayjs';
 
@@ -21,9 +20,9 @@ import SnackbarComp from '../components/Snackbar';
 import TableHeader from '../components/TableHeader';
 import SocialShare from '../components/shared/SocialShare';
 import ColorTitle from '../components/ui/ColorTitle';
-import Loading from '../components/ui/Loading';
 import { getBnDate } from '../helpers/date';
 import useDetailsCommittee from '../hooks/useDetailsCommittee';
+import DtetailsCommitteeSkeleton from '../skeleton/DtetailsCommitteeSkeleton';
 
 const DetailsCommittee = () => {
   const {
@@ -59,13 +58,14 @@ const DetailsCommittee = () => {
     }, []);
 
   return loading ? (
-    <Box sx={{ p: 3 }}>
-      <Loading />
-    </Box>
+    <DtetailsCommitteeSkeleton
+      columns={columns}
+      isPermittedForEdit={isPermittedForEdit}
+    />
   ) : (
-    <Card sx={{ maxWidth: '950px', margin: 'auto' }}>
+    <Box sx={{ maxWidth: '950px', margin: 'auto' }}>
       {committee ? (
-        <CardContent sx={{ textAlign: 'left' }}>
+        <Box sx={{ textAlign: 'left' }}>
           {isEditCommittee ? (
             <>
               <ColorTitle
@@ -136,7 +136,7 @@ const DetailsCommittee = () => {
             </Box>
           )}
 
-          <TableContainer>
+          <TableContainer component={Paper}>
             <Table size='small' stickyHeader>
               <TableHeader columns={columns} />
               <TableBody>
@@ -206,9 +206,9 @@ const DetailsCommittee = () => {
               </Box>
             </Box>
           )}
-        </CardContent>
+        </Box>
       ) : (
-        <CardContent>
+        <Box>
           <Typography
             sx={{
               p: 5,
@@ -219,7 +219,7 @@ const DetailsCommittee = () => {
           >
             {isBn ? 'কমিটি খুঁজে পাওয়া যায় নি!' : 'Committee not found!'}
           </Typography>
-        </CardContent>
+        </Box>
       )}
 
       <SnackbarComp
@@ -228,7 +228,7 @@ const DetailsCommittee = () => {
         text={snackbar.text}
         handleClose={handleSnackbarClose}
       />
-    </Card>
+    </Box>
   );
 };
 

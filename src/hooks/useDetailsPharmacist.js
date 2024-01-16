@@ -14,25 +14,99 @@ const createRow = (th, value, name, type, isEditable, textGroupFields) => ({
   textGroupFields,
 });
 
+const getInitialRows = (user, isBn) => {
+  if (user) {
+    return [
+      createRow('', '', 'imageUrl'),
+      createRow(
+        isBn ? 'বি-গ্রেড নিবন্ধন সংখ্যা' : 'Registration number',
+        '',
+        'regNumber'
+      ),
+      createRow(isBn ? 'নাম (English)' : 'Name (English)', '', 'name'),
+      createRow(isBn ? 'নাম (বাংলা)' : 'Name (বাংলা)', '', 'bn_name'),
+      createRow(isBn ? 'ইমেইল' : 'Email', '', 'email'),
+      createRow(isBn ? 'মোবাইল নাম্বার' : 'Mobile number', '', 'mobile'),
+      createRow(isBn ? 'পিতার নাম' : 'Fathers Name', '', 'fathersName'),
+      createRow(isBn ? 'মাতার নাম' : 'Mothers Name', '', 'mothersName'),
+      createRow(isBn ? 'লিঙ্গ' : 'Gender', '', 'gender'),
+      createRow(isBn ? 'জন্ম তারিখ' : 'Date of birth', '', 'dateOfBirth'),
+      createRow(
+        isBn ? 'জাতীয় পরিচয়পত্র নাম্বার' : 'National ID',
+        '',
+        'nationalId'
+      ),
+      createRow(isBn ? 'ইনস্টিটিউটের নাম' : 'Institute Name', '', 'institute'),
+      createRow(isBn ? 'পাশের বছর' : 'Passing year', '', 'passingYear'),
+      createRow(
+        isBn ? 'সদস্য সনাক্তকারী সংখ্যা' : 'BDPA member ID',
+        '',
+        'memberId'
+      ),
+      createRow(isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment', '', 'jobDepertment'),
+      createRow(isBn ? 'যোগদানের তারিখ' : 'Date of join', '', 'dateOfJoin'),
+      createRow(
+        isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Current Postiong/Address',
+        '',
+        'mainPosting'
+      ),
+      createRow(
+        isBn ? 'স্থায়ী ঠিকানা' : 'Permanent Address',
+        '',
+        'permanentAddress'
+      ),
+      createRow(isBn ? 'ভোটার জেলা' : 'Voter District', '', 'voterArea'),
+      createRow(
+        isBn ? 'প্রেষনে/সংযুক্ত আছেন?' : 'On deputation/ attachment?',
+        '',
+        'onDeputation'
+      ),
+    ];
+  } else {
+    return [
+      createRow(
+        isBn ? 'বি-গ্রেড নিবন্ধন সংখ্যা' : 'Registration number',
+        '',
+        'regNumber'
+      ),
+      createRow(isBn ? 'নাম (English)' : 'Name (English)', '', 'name'),
+      createRow(isBn ? 'নাম (বাংলা)' : 'Name (বাংলা)', '', 'bn_name'),
+      createRow(isBn ? 'ইমেইল' : 'Email', '', 'email'),
+      createRow(
+        isBn ? 'সদস্য সনাক্তকারী সংখ্যা' : 'BDPA member ID',
+        '',
+        'memberId'
+      ),
+      createRow(isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment', '', 'jobDepertment'),
+      createRow(
+        isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Current Postiong/Address',
+        '',
+        'mainPosting'
+      ),
+      createRow(isBn ? 'ভোটার জেলা' : 'Voter District', '', 'voterArea'),
+    ];
+  }
+};
+
 const useDetailsPharmacist = () => {
   let { regNumber } = useParams();
   const navigate = useNavigate();
-  const [tableRows, setTableRows] = useState([]);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    severity: 'info',
-    text: '',
-  });
 
   const {
     ui: { language },
     auth: { user },
     pharmacist: { loading, details: pharmacist, submitting, error },
   } = useStoreState((state) => state);
-  const { getDetailsPharmacistData, deletePharmacistData } = useStoreActions(
-    (actions) => actions.pharmacist
-  );
+  const { getDetailsPharmacistData, setLoading, deletePharmacistData } =
+    useStoreActions((actions) => actions.pharmacist);
   const isBn = language === 'BN' ? true : false;
+
+  const [tableRows, setTableRows] = useState(getInitialRows(user, isBn));
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    severity: 'info',
+    text: '',
+  });
 
   const isPermittedForEdit =
     user?.accountStatus === 'ACTIVE' &&
@@ -374,7 +448,7 @@ const useDetailsPharmacist = () => {
     if (regNumber) {
       getDetailsPharmacistData(regNumber);
     }
-  }, [regNumber, getDetailsPharmacistData]);
+  }, [regNumber]);
 
   useEffect(() => {
     if (!loading && !submitting && error && typeof error === 'string') {

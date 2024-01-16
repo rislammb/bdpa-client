@@ -1,18 +1,8 @@
 import Skeleton from '@mui/material/Skeleton';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
-
-const DetailsPharmacistSkeleton = ({ rows }) => {
-  return (
-    <>
-      {rows.map((row) => (
-        <TableRowSkeleton key={row.th} row={row} />
-      ))}
-    </>
-  );
-};
-
-export default DetailsPharmacistSkeleton;
 
 const TableRowSkeleton = ({ row }) => {
   return (
@@ -31,13 +21,17 @@ const TableRowSkeleton = ({ row }) => {
         component='th'
         scope='row'
       >
-        <Skeleton
-          sx={{
-            height: row.name === 'imageUrl' ? 45 : 16,
-            width: row.name === 'imageUrl' ? 40 : '100%',
-            transform: 'scale(1)',
-          }}
-        />
+        {row.name === 'imageUrl' ? (
+          <Skeleton
+            sx={{
+              height: 45,
+              width: 40,
+              transform: 'scale(1)',
+            }}
+          />
+        ) : (
+          row.th
+        )}
       </TableCell>
       <TableCell
         sx={{
@@ -56,3 +50,17 @@ const TableRowSkeleton = ({ row }) => {
     </TableRow>
   );
 };
+
+const DetailsPharmacistSkeleton = ({ rows }) => {
+  return (
+    <Table size='small'>
+      <TableBody>
+        {rows.map((row) => (
+          <TableRowSkeleton key={row.th} row={row} />
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
+
+export default DetailsPharmacistSkeleton;
