@@ -182,8 +182,6 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
       dataForCell = inputValue;
     }
 
-    console.log('data for submit =>', dataForSubmit);
-
     const res = await updatePharmacistData({
       regNumber: pharmacist.regNumber,
       data: dataForSubmit,
