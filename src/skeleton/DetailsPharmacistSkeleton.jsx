@@ -1,10 +1,11 @@
+import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 
-const TableRowSkeleton = ({ row }) => {
+const TableRowSkeleton = ({ row, isPermittedForEdit }) => {
   return (
     <TableRow
       sx={{
@@ -47,16 +48,41 @@ const TableRowSkeleton = ({ row }) => {
           }}
         />
       </TableCell>
+      {isPermittedForEdit && (
+        <TableCell
+          sx={{
+            flexBasis: { xs: '45px', sm: '55px' },
+            padding: { xs: '8px', sm: '12px 16px' },
+          }}
+        >
+          {row.isEditable && (
+            <Box sx={{ textAlign: 'right' }}>
+              <Skeleton
+                variant='circular'
+                width={24}
+                height={24}
+                sx={{
+                  bgcolor: '#29b6f6',
+                }}
+              />
+            </Box>
+          )}
+        </TableCell>
+      )}
     </TableRow>
   );
 };
 
-const DetailsPharmacistSkeleton = ({ rows }) => {
+const DetailsPharmacistSkeleton = ({ rows, isPermittedForEdit }) => {
   return (
     <Table size='small'>
       <TableBody>
         {rows.map((row) => (
-          <TableRowSkeleton key={row.th} row={row} />
+          <TableRowSkeleton
+            key={row.th}
+            row={row}
+            isPermittedForEdit={isPermittedForEdit}
+          />
         ))}
       </TableBody>
     </Table>

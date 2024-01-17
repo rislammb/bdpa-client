@@ -20,6 +20,7 @@ const DetailsPharmacist = () => {
     isAdmin,
     pharmacist,
     tableRows,
+    isPermittedForEdit,
     handleDelete,
     snackbar,
     setSnackbar,
@@ -36,8 +37,14 @@ const DetailsPharmacist = () => {
       }}
       component={Paper}
     >
-      {loading || (pharmacist && tableRows[tableRows.length - 1]?.td === '') ? (
-        <DetailsPharmacistSkeleton rows={tableRows} />
+      {loading ||
+      (pharmacist &&
+        tableRows[tableRows.length - 1]?.td === '' &&
+        tableRows[tableRows.length - 2]?.td === '') ? (
+        <DetailsPharmacistSkeleton
+          rows={tableRows}
+          isPermittedForEdit={isPermittedForEdit}
+        />
       ) : (
         <Table size='small'>
           <TableBody>

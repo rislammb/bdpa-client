@@ -31,8 +31,18 @@ const DetailsCommitteeRowSkeleton = ({ columns }) => {
                 gap: 1,
               }}
             >
-              <Skeleton width={16} sx={{ bgcolor: '#d32f2f' }} height={30} />
-              <Skeleton width={16} sx={{ bgcolor: '#0288d1' }} height={30} />
+              <Skeleton
+                width={24}
+                height={24}
+                sx={{ bgcolor: '#d32f2f' }}
+                variant='circular'
+              />
+              <Skeleton
+                width={24}
+                height={24}
+                sx={{ bgcolor: '#0288d1' }}
+                variant='circular'
+              />
             </Box>
           ) : (
             <Skeleton
@@ -68,8 +78,9 @@ const DtetailsCommitteeSkeleton = ({ columns, isPermittedForEdit }) => {
         {isPermittedForEdit && (
           <Skeleton
             sx={{ alignSelf: 'end', bgcolor: '#0288d1', mr: 1 }}
-            width={23}
-            height={42}
+            width={32}
+            height={32}
+            variant='circular'
           />
         )}
         <Skeleton
