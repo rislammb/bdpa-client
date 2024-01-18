@@ -35,10 +35,10 @@ const committeeModel = {
     try {
       const { data } = await getCommittees();
       actions.setCommittees(data);
-      actions.setLoading(false);
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setLoading(false);
     }
   }),
@@ -62,12 +62,11 @@ const committeeModel = {
 
     try {
       const { data } = await getDetailsCommittee(payload);
-
       actions.setDetailsCommittee(data);
-      actions.setLoading(false);
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setLoading(false);
     }
   }),
@@ -78,12 +77,11 @@ const committeeModel = {
 
     try {
       const { data } = await getDetailsCommitteeById(payload);
-
       actions.setDetailsCommittee(data);
-      actions.setLoading(false);
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setLoading(false);
     }
   }),
@@ -93,11 +91,11 @@ const committeeModel = {
 
     try {
       const { data } = await addCommittee(payload);
-      actions.setSubmitting(false);
       return data;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),
@@ -107,11 +105,11 @@ const committeeModel = {
 
     try {
       const { data } = await updateCommitteeByPath(payload);
-      actions.setSubmitting(false);
       return data;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),
@@ -121,11 +119,11 @@ const committeeModel = {
     try {
       await deleteCommittee(payload);
       actions.setDetailsCommittee(null);
-      actions.setSubmitting(false);
       return true;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),

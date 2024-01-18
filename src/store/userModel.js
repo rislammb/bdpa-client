@@ -27,10 +27,10 @@ const userModel = {
     try {
       const { data } = await getUsers();
       actions.setUsers(data);
-      actions.setLoading(false);
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setLoading(false);
     }
   }),
@@ -50,11 +50,11 @@ const userModel = {
 
     try {
       const { data } = await updateUserById(payload);
-      actions.setSubmitting(false);
       return data;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),
@@ -63,11 +63,11 @@ const userModel = {
 
     try {
       await deleteUser(payload);
-      actions.setSubmitting(false);
       actions.getUsersData();
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),

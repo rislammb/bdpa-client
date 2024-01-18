@@ -27,11 +27,9 @@ const authModel = {
   }),
   setToken: action((state, payload) => {
     state.token = payload;
-    state.submitting = false;
   }),
   setUser: action((state, payload) => {
     state.user = payload;
-    state.loading = false;
   }),
   getVerifyedData: thunk(async (actions) => {
     actions.setError(null);
@@ -45,6 +43,7 @@ const authModel = {
         actions.setToken(null);
         setAuthToken('');
       } else actions.setError(e.message);
+    } finally {
       actions.setLoading(false);
     }
   }),
@@ -58,6 +57,7 @@ const authModel = {
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),
@@ -67,11 +67,11 @@ const authModel = {
 
     try {
       const { data } = await userRegistration(payload);
-      actions.setSubmitting(false);
       return data;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),
@@ -81,11 +81,11 @@ const authModel = {
 
     try {
       const { data } = await resendEmail(payload);
-      actions.setSubmitting(false);
       return data;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),
@@ -95,11 +95,11 @@ const authModel = {
 
     try {
       const { data } = await resetPassword(payload);
-      actions.setSubmitting(false);
       return data;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),
@@ -109,11 +109,11 @@ const authModel = {
 
     try {
       const { data } = await verifyEmail(payload);
-      actions.setSubmitting(false);
       return data;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),
@@ -123,11 +123,11 @@ const authModel = {
 
     try {
       const { data } = await setPassword(payload);
-
       actions.setToken(data?.token);
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),

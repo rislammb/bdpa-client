@@ -16,25 +16,25 @@ const memberModel = {
 
     try {
       const { data } = await addMember(payload);
-
-      actions.setSubmitting(false);
       return data;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),
   updateMemberData: thunk(async (actions, payload) => {
     actions.setError(null);
     actions.setSubmitting(true);
+
     try {
       const { data } = await updateMemberById(payload);
-      actions.setSubmitting(false);
       return data;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),
@@ -44,11 +44,11 @@ const memberModel = {
 
     try {
       await deleteMemberById(payload);
-      actions.setSubmitting(false);
       return true;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),

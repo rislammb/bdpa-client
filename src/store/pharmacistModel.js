@@ -49,10 +49,10 @@ const pharmacistModel = {
     try {
       const { data } = await getPharmacists(payload);
       actions.setPharmacists(data);
-      actions.setLoading(false);
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setLoading(false);
     }
   }),
@@ -79,10 +79,10 @@ const pharmacistModel = {
     try {
       const { data } = await getDetailsPharmacist(payload);
       actions.setDetailsPharmacist(data);
-      actions.setLoading(false);
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setLoading(false);
     }
   }),
@@ -92,12 +92,11 @@ const pharmacistModel = {
 
     try {
       const { data } = await addPharmacist(payload);
-      actions.setSubmitting(false);
-
       return data;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),
@@ -108,11 +107,11 @@ const pharmacistModel = {
     try {
       const { data } = await updatePharmacist(payload);
       actions.setDetailsPharmacist(data);
-      actions.setSubmitting(false);
       return data;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),
@@ -123,11 +122,11 @@ const pharmacistModel = {
     try {
       await deletePharmacist(payload);
       actions.setDetailsPharmacist(null);
-      actions.setSubmitting(false);
       return true;
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
       else actions.setError(e.message);
+    } finally {
       actions.setSubmitting(false);
     }
   }),
