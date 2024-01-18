@@ -1,7 +1,6 @@
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { Paper, Tooltip, Typography } from '@mui/material';
-import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import { useStoreActions, useStoreState } from 'easy-peasy';
@@ -10,7 +9,7 @@ import { createContext, useContext, useEffect, useMemo } from 'react';
 import './App.css';
 import { setAuthToken } from './api/config';
 import Navbar from './components/Navbar';
-import Loading from './components/ui/Loading';
+import Loading from './components/ui/loading';
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -51,7 +50,7 @@ const LanguageButton = () => {
 export default function AppProvider() {
   const {
     auth: { loading, token },
-    ui: { mode, language },
+    ui: { mode },
   } = useStoreState((state) => state);
   const {
     ui: { setMode },
@@ -98,16 +97,12 @@ export default function AppProvider() {
     }
   }, [token]);
 
-  return (
+  return loading ? (
+    <Loading type='launch' />
+  ) : (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
-        {loading ? (
-          <Box sx={{ p: 3 }}>
-            <Loading />
-          </Box>
-        ) : (
-          <App />
-        )}
+        <App />
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
