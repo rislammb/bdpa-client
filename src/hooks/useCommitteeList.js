@@ -48,8 +48,10 @@ const useCommitteeList = () => {
   }, [isBn]);
 
   useEffect(() => {
-    getCommitteesData(searchParams);
-  }, [searchParams.get('query')]);
+    getCommitteesData({
+      query: searchParams.get('query').toString() ?? ''
+                      });
+  }, [searchParams.get('query').toString()]);
 
   useEffect(() => {
     if (!loading && error && typeof error === 'string') {
