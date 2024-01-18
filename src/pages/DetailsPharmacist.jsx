@@ -1,4 +1,5 @@
 import DeleteIcon from '@mui/icons-material/Delete';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -6,6 +7,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 
 import DetailsPharmacistRow from '../components/DetailsPharmacistRow';
 import SnackbarComp from '../components/Snackbar';
@@ -37,18 +39,21 @@ const DetailsPharmacist = () => {
       }}
       component={Paper}
     >
-      {loading ||
-      (pharmacist &&
-        tableRows[tableRows.length - 1]?.td === '' &&
-        tableRows[tableRows.length - 2]?.td === '') ? (
+      {loading ? (
         <DetailsPharmacistSkeleton
           rows={tableRows}
           isPermittedForEdit={isPermittedForEdit}
         />
-      ) : (
-        <Table size='small'>
-          <TableBody>
-            {pharmacist ? (
+      ) : pharmacist ? (
+        tableRows[tableRows.length - 1]?.td === '' &&
+        tableRows[tableRows.length - 2]?.td === '' ? (
+          <DetailsPharmacistSkeleton
+            rows={tableRows}
+            isPermittedForEdit={isPermittedForEdit}
+          />
+        ) : (
+          <Table size='small'>
+            <TableBody>
               <>
                 {tableRows.map((row) => (
                   <DetailsPharmacistRow
@@ -79,26 +84,24 @@ const DetailsPharmacist = () => {
                   </TableRow>
                 )}
               </>
-            ) : (
-              <TableRow
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell
-                  sx={{
-                    p: 5,
-                    textAlign: 'center',
-                    color: '#de6176',
-                    fontSize: 17,
-                  }}
-                >
-                  {isBn
-                    ? 'ফার্মাসিস্ট খুঁজে পাওয়া যায় নি!'
-                    : 'Pharmacist not found!'}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            </TableBody>
+          </Table>
+        )
+      ) : (
+        <Box>
+          <Typography
+            sx={{
+              p: 5,
+              textAlign: 'center',
+              color: '#de6176',
+              fontSize: 17,
+            }}
+          >
+            {isBn
+              ? 'ফার্মাসিস্ট খুঁজে পাওয়া যায় নি!'
+              : 'Pharmacist not found!'}
+          </Typography>
+        </Box>
       )}
 
       <SnackbarComp
