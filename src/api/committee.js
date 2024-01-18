@@ -1,6 +1,7 @@
 import { axiosInstance } from './config';
 
-export const getCommittees = () => axiosInstance.get('/committee');
+export const getCommittees = (payload) =>
+  axiosInstance.get('/committee', { params: payload });
 
 export const getDetailsCommittee = (committeePath) =>
   axiosInstance.get(`/committee/${committeePath}`);

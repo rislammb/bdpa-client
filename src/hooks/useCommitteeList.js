@@ -2,6 +2,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 const getColumns = (isBn) => [
   { id: 'committeeTitle', label: isBn ? 'কমিটি' : 'Committee', minWidth: 170 },
@@ -14,6 +15,7 @@ const getColumns = (isBn) => [
 ];
 
 const useCommitteeList = () => {
+  const [searchParams] = useSearchParams();
   const {
     ui: { language },
     auth: { user },
@@ -46,8 +48,8 @@ const useCommitteeList = () => {
   }, [isBn]);
 
   useEffect(() => {
-    getCommitteesData();
-  }, []);
+    getCommitteesData(searchParams);
+  }, [searchParams.get('query')]);
 
   useEffect(() => {
     if (!loading && error && typeof error === 'string') {

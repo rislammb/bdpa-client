@@ -1,21 +1,18 @@
 import AddIcon from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
 import {
   Box,
   Button,
-  IconButton,
-  InputAdornment,
   Paper,
   Table,
   TableBody,
   TableContainer,
-  TextField,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import CommitteeListRow from '../components/CommitteeListRow';
 import EmptyTableRow from '../components/EmptyTableRow';
 import SnackbarComp from '../components/Snackbar';
 import TableHeader from '../components/TableHeader';
+import Search from '../components/shared/Search';
 import useCommitteeList from '../hooks/useCommitteeList';
 import CommitteeListSkeleton from '../skeleton/CommitteeListSkeleton';
 
@@ -50,7 +47,12 @@ const CommitteeList = () => {
           gap: 2,
         }}
       >
-        <TextField
+        <Search
+          label={isBn ? 'কমিটি অনুসন্ধান' : 'Search Committee'}
+          placeholder={isBn ? 'কেন্দ্রীয় কমিটি..' : 'Central Committee..'}
+          sx={{ width: '215px' }}
+        />
+        {/* <TextField
           InputLabelProps={{ color: 'info' }}
           InputProps={{
             endAdornment: (
@@ -72,7 +74,7 @@ const CommitteeList = () => {
           placeholder={isBn ? 'কেন্দ্রীয় কমিটি...' : 'Central Committee'}
           variant='standard'
           sx={{ width: '215px' }}
-        />
+        /> */}
         {isAdmin && (
           <Button
             startIcon={<AddIcon />}

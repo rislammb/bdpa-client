@@ -27,13 +27,13 @@ const committeeModel = {
   setCommittees: action((state, payload) => {
     state.list = payload;
   }),
-  getCommitteesData: thunk(async (actions) => {
+  getCommitteesData: thunk(async (actions, payload) => {
     actions.setCommittees([]);
     actions.setError(null);
     actions.setLoading(true);
 
     try {
-      const { data } = await getCommittees();
+      const { data } = await getCommittees(payload);
       actions.setCommittees(data);
     } catch (e) {
       if (e.response) actions.setError(e.response.data);

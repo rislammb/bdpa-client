@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 import EmptyTableRow from '../components/EmptyTableRow';
 import UserRow from '../components/UserRow';
 import ColorTitle from '../components/ui/ColorTitle';
-import Loading from '../components/ui/Loading';
+import Loading from '../components/ui/loading';
 
 const Users = () => {
   const {
