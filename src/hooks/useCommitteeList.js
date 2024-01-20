@@ -1,5 +1,3 @@
-import { useDebouncedCallback } from 'use-debounce';
-
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -19,11 +17,9 @@ const useCommitteeList = () => {
   const {
     ui: { language },
     auth: { user },
-    committee: { loading, error, filteredList, searchTerm },
+    committee: { loading, error, list, committeesCount, totalCommitteesCount },
   } = useStoreState((state) => state);
-  const { getCommitteesData, setSearchTerm } = useStoreActions(
-    (actions) => actions.committee
-  );
+  const { getCommitteesData } = useStoreActions((actions) => actions.committee);
   const [snackbar, setSnackbar] = useState({
     open: false,
     severity: 'info',
@@ -33,8 +29,6 @@ const useCommitteeList = () => {
   const isAdmin =
     user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
   const isBn = language === 'BN' ? true : false;
-
-  const debounced = useDebouncedCallback((value) => setSearchTerm(value), 300);
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -48,10 +42,8 @@ const useCommitteeList = () => {
   }, [isBn]);
 
   useEffect(() => {
-    getCommitteesData({
-      query: searchParams.get('query')?.toString() ?? ''
-    });
-  }, [searchParams.get('query')?.toString()]);
+    getCommitteesData(searchParams);
+  }, [searchParams, getCommitteesData]);
 
   useEffect(() => {
     if (!loading && error && typeof error === 'string') {
@@ -67,13 +59,12 @@ const useCommitteeList = () => {
     loading,
     isBn,
     isAdmin,
-    filteredList,
+    list,
     columns: getColumns(isBn),
-    searchTerm,
-    setSearchTerm,
-    debounced,
     snackbar,
     handleSnackbarClose,
+    committeesCount,
+    totalCommitteesCount,
   };
 };
 

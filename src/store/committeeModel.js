@@ -1,4 +1,4 @@
-import { action, computed, thunk } from 'easy-peasy';
+import { action, thunk } from 'easy-peasy';
 import {
   addCommittee,
   deleteCommittee,
@@ -13,7 +13,8 @@ const committeeModel = {
   submitting: false,
   error: null,
   list: [],
-  searchTerm: '',
+  committeesCount: 0,
+  totalCommitteesCount: 0,
   details: null,
   setLoading: action((state, payload) => {
     state.loading = payload;
@@ -25,7 +26,9 @@ const committeeModel = {
     state.error = payload;
   }),
   setCommittees: action((state, payload) => {
-    state.list = payload;
+    state.list = payload.committees;
+    state.committeesCount = payload.committeesCount;
+    state.totalCommitteesCount = payload.totalCommitteesCount;
   }),
   getCommitteesData: thunk(async (actions, payload) => {
     actions.setCommittees([]);
@@ -42,16 +45,6 @@ const committeeModel = {
       actions.setLoading(false);
     }
   }),
-  setSearchTerm: action((state, payload) => {
-    state.searchTerm = payload.toLowerCase();
-  }),
-  filteredList: computed((state) =>
-    state.list.filter(
-      (item) =>
-        item.committeeTitle.toLowerCase().includes(state.searchTerm) ||
-        item.bn_committeeTitle.toLowerCase().includes(state.searchTerm)
-    )
-  ),
   setDetailsCommittee: action((state, payload) => {
     state.details = payload;
   }),

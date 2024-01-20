@@ -8,10 +8,12 @@ import {
   TableContainer,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+
 import CommitteeListRow from '../components/CommitteeListRow';
 import EmptyTableRow from '../components/EmptyTableRow';
 import SnackbarComp from '../components/Snackbar';
 import TableHeader from '../components/TableHeader';
+import CustomPagination from '../components/shared/CustomPagination';
 import Search from '../components/shared/Search';
 import useCommitteeList from '../hooks/useCommitteeList';
 import CommitteeListSkeleton from '../skeleton/CommitteeListSkeleton';
@@ -21,13 +23,11 @@ const CommitteeList = () => {
     loading,
     isBn,
     isAdmin,
-    filteredList,
-    searchTerm,
-    setSearchTerm,
-    debounced,
+    list,
     columns,
     snackbar,
     handleSnackbarClose,
+    committeesCount,
   } = useCommitteeList();
 
   return (
@@ -49,32 +49,9 @@ const CommitteeList = () => {
       >
         <Search
           label={isBn ? 'কমিটি অনুসন্ধান' : 'Search Committee'}
-          placeholder={isBn ? 'কেন্দ্রীয় কমিটি..' : 'Central Committee..'}
-          sx={{ width: '215px' }}
+          placeholder={isBn ? 'কমিটির নাম..' : 'Committee Name..'}
+          sx={{ maxWidth: '215px' }}
         />
-        {/* <TextField
-          InputLabelProps={{ color: 'info' }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position='end'>
-                <IconButton
-                  disabled={!searchTerm}
-                  onClick={() => setSearchTerm('')}
-                  size='small'
-                >
-                  <ClearIcon fontSize='small' />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          name='search'
-          defaultValue={searchTerm}
-          onChange={(e) => debounced(e.target.value)}
-          label={isBn ? 'কমিটি অনুসন্ধান' : 'Search Committee'}
-          placeholder={isBn ? 'কেন্দ্রীয় কমিটি...' : 'Central Committee'}
-          variant='standard'
-          sx={{ width: '215px' }}
-        /> */}
         {isAdmin && (
           <Button
             startIcon={<AddIcon />}
@@ -94,8 +71,8 @@ const CommitteeList = () => {
             <TableBody>
               {loading ? (
                 <CommitteeListSkeleton columns={columns} />
-              ) : filteredList?.length > 0 ? (
-                filteredList.map((committee) => (
+              ) : list?.length > 0 ? (
+                list.map((committee) => (
                   <CommitteeListRow
                     key={committee._id}
                     committee={committee}
@@ -111,6 +88,7 @@ const CommitteeList = () => {
         </TableContainer>
       </Paper>
 
+      <CustomPagination totalCount={committeesCount} />
       <SnackbarComp
         open={snackbar.open}
         severity={snackbar.severity}

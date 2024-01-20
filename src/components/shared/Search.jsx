@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 
 import ClearIcon from '@mui/icons-material/Clear';
-import { Box, IconButton, InputAdornment, TextField } from '@mui/material';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -11,53 +12,51 @@ const Search = ({
   sx = { width: '100%' },
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('query') || '');
 
-  const handleChange = (term) => {
+  const debounced = useDebouncedCallback((value) => {
     const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set('query', term);
+    params.set('page', 1);
+
+    if (value) {
+      params.set('query', value);
     } else {
       params.delete('query');
     }
 
     setSearchParams(params);
+  }, 300);
+
+  const handleChange = (value) => {
+    setQuery(value);
+    debounced(value);
   };
 
-  const debounced = useDebouncedCallback((value) => handleChange(value), 300);
-
   return (
-    <Box
-      sx={{
-        ml: -1.3,
-        mr: 2,
-        flex: '1 275px',
+    <TextField
+      InputLabelProps={{ color: 'info' }}
+      label={label}
+      InputProps={{
+        style: { fontSize: 14, paddingLeft: '5px', paddingBottom: 2 },
+        endAdornment: (
+          <InputAdornment position='end'>
+            <IconButton
+              disabled={!searchParams.get('query')}
+              onClick={() => handleChange('')}
+              size='small'
+            >
+              <ClearIcon fontSize='small' />
+            </IconButton>
+          </InputAdornment>
+        ),
       }}
-    >
-      <TextField
-        InputLabelProps={{ color: 'info' }}
-        label={label}
-        InputProps={{
-          style: { fontSize: 14, paddingLeft: '5px' },
-          endAdornment: (
-            <InputAdornment position='end'>
-              <IconButton
-                disabled={!searchParams.get('query')}
-                onClick={() => debounced('')}
-                size='small'
-              >
-                <ClearIcon fontSize='small' />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-        name='query'
-        defaultValue={searchParams.get('query')?.toString()}
-        onChange={(e) => debounced(e.target.value)}
-        placeholder={placeholder}
-        variant='standard'
-        sx={sx}
-      />
-    </Box>
+      name='query'
+      value={query}
+      onChange={(e) => handleChange(e.target.value)}
+      placeholder={placeholder}
+      variant='standard'
+      sx={sx}
+    />
   );
 };
 
