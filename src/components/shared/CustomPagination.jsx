@@ -4,18 +4,25 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
 import Select from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
+
+import { useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { enToBnNumber } from '../../helpers/number';
 
-const CustomPagination = ({ totalCount }) => {
+const CustomPagination = ({ count, totalCount, pageSize }) => {
+  const { language } = useStoreState((state) => state.ui);
   const [searchParams, setSearchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);
 
   const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
-  const [pageSize, setPageSize] = useState(
-    Number(searchParams.get('page_size')) || 15
+  const [size, setSize] = useState(
+    Number(searchParams.get('page_size')) || pageSize
   );
+
+  const isBn = language === 'BN' ? true : false;
 
   const handlePageSizeChange = (e) => {
     const value = e.target.value;
@@ -23,7 +30,7 @@ const CustomPagination = ({ totalCount }) => {
 
     if (value) {
       params.set('page_size', value);
-      setPageSize(value);
+      setSize(value);
     }
 
     setSearchParams(params);
@@ -40,7 +47,7 @@ const CustomPagination = ({ totalCount }) => {
 
   useEffect(() => {
     params.set('page', page);
-    params.set('page_size', pageSize);
+    params.set('page_size', size);
 
     setSearchParams(params);
   }, []);
@@ -53,42 +60,78 @@ const CustomPagination = ({ totalCount }) => {
     <Box
       sx={{
         display: 'flex',
-        gap: 3,
+        gap: { xs: 3, sm: 6 },
         flexDirection: { xs: 'column-reverse', sm: 'row' },
         justifyContent: 'space-between',
         alignItems: 'center',
-        mt: 2,
+        mt: 3,
       }}
     >
       <FormControl>
         <InputLabel color='info' id='pageSize'>
-          Rows per page
+          {isBn ? 'প্রতি পৃষ্ঠায় সারি' : 'Rows per page'}
         </InputLabel>
         <Select
           labelId='pageSize'
-          value={pageSize}
-          label='Rows per page'
+          value={size}
+          label={isBn ? 'প্রতি পৃষ্ঠায় সারি' : 'Rows per page'}
           onChange={handlePageSizeChange}
           variant='standard'
-          sx={{ width: 115 }}
+          sx={{ width: 125 }}
         >
-          <MenuItem value={15}>15 - Fifteen</MenuItem>
-          <MenuItem value={30}>30 - Thirty</MenuItem>
-          <MenuItem value={50}>50 - Fifty</MenuItem>
+          <MenuItem value={15}>{isBn ? '১৫ - পনের' : '15 - Fifteen'}</MenuItem>
+          <MenuItem value={30}>{isBn ? '৩০ - ত্রিশ' : '30 - Thirty'}</MenuItem>
+          <MenuItem value={50}>{isBn ? '৫০ - পঞ্চাশ' : '50 - Fifty'}</MenuItem>
+          <MenuItem value={100}>
+            {isBn ? '১০০ - একশো' : '100 - Hundred'}
+          </MenuItem>
         </Select>
       </FormControl>
 
-      <Pagination
-        count={totalCount && Math.ceil(totalCount / pageSize)}
-        page={page}
-        color='primary'
-        onChange={handleChange}
+      <Box
         sx={{
-          '.MuiPagination-ul': {
-            justifyContent: 'center',
-          },
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'space-between',
+          gap: 2,
+          flexDirection: { xs: 'column', md: 'row' },
         }}
-      />
+      >
+        {count > 0 && totalCount && (
+          <Typography>
+            {isBn
+              ? `${enToBnNumber(count)} টির মধ্যে ${enToBnNumber(
+                  count > 0 ? (page - 1) * size + 1 : 0
+                )} থেকে ${enToBnNumber(
+                  page * size < count ? page * size : count
+                )} টি দেখাচ্ছে `
+              : `Showing ${count > 0 ? (page - 1) * size + 1 : 0} to ${
+                  page * size < count ? page * size : count
+                } of ${count} entries `}
+            {count < totalCount && (
+              <Typography component={'span'}>
+                {isBn
+                  ? `( বাছাই করা হয়েছে মোট ${enToBnNumber(
+                      totalCount
+                    )} টি থেকে )`
+                  : `( filtered from ${totalCount} total entries )`}
+              </Typography>
+            )}
+          </Typography>
+        )}
+
+        <Pagination
+          count={Math.ceil(count / pageSize)}
+          page={page}
+          color='primary'
+          onChange={handleChange}
+          sx={{
+            '.MuiPagination-ul': {
+              justifyContent: 'center',
+            },
+          }}
+        />
+      </Box>
     </Box>
   );
 };
@@ -96,5 +139,7 @@ const CustomPagination = ({ totalCount }) => {
 export default CustomPagination;
 
 CustomPagination.propTypes = {
+  count: PropTypes.number.isRequired,
   totalCount: PropTypes.number,
+  pageSize: PropTypes.oneOf([15, 30, 50, 100]).isRequired,
 };

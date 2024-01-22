@@ -32,7 +32,7 @@ const TableRowSkeleton = ({ columns }) => {
           key={column.id}
           sx={{
             minWidth: column.minWidth,
-            padding: { xs: '8px 6px', sm: '12px' },
+            padding: { xs: '8px 6px', sm: '12px', md: '12px 16px' },
           }}
         >
           <Skeleton

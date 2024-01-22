@@ -41,7 +41,7 @@ const Navbar = (props) => {
   const isBn = language === 'BN' ? true : false;
 
   const navItems = [
-    { path: '/members/page/1', text: 'Members', bn_text: 'সদস্য' },
+    { path: '/members', text: 'Members', bn_text: 'সদস্য' },
     { path: '/committees', text: 'Committees', bn_text: 'কমিটি' },
     { path: '/about', text: 'About BDPA', bn_text: 'বিডিপিএ সম্পর্কে' },
   ];
@@ -178,7 +178,8 @@ const Navbar = (props) => {
       <Box
         component='main'
         sx={{
-          p: 1,
+          px: { xs: 1, md: 2 },
+          pb: 4,
           textAlign: 'center',
           width: '100%',
         }}
@@ -191,10 +192,7 @@ const Navbar = (props) => {
               isAdmin ? <AddPharmacist /> : <Navigate to={`/auth/login`} />
             }
           />
-          <Route
-            path='/members/page/:pageNumber'
-            element={<PharmacistList />}
-          />
+          <Route path='/members' element={<PharmacistList />} />
           <Route path='/members/:regNumber' element={<DetailsPharmacist />} />
           <Route path='/committees' element={<CommitteeList />} />
           <Route

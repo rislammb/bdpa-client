@@ -21,7 +21,8 @@ const PharmacistListItem = ({ pharmacist, columns }) => {
             align={column.align}
             sx={{
               minWidth: column.minWidth,
-              padding: { xs: '8px 6px', sm: '12px' },
+              padding: { xs: '8px 6px', sm: '12px', md: '12px 16px' },
+              whiteSpace: column.id === 'regNumber' && 'nowrap',
             }}
           >
             {column.id === 'dateOfBirth' ? (

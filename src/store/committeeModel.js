@@ -31,7 +31,6 @@ const committeeModel = {
     state.totalCommitteesCount = payload.totalCommitteesCount;
   }),
   getCommitteesData: thunk(async (actions, payload) => {
-    actions.setCommittees([]);
     actions.setError(null);
     actions.setLoading(true);
 

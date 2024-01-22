@@ -28,13 +28,14 @@ const CommitteeList = () => {
     snackbar,
     handleSnackbarClose,
     committeesCount,
+    totalCommitteesCount,
   } = useCommitteeList();
 
   return (
     <Box
       sx={{
         width: '100%',
-        maxWidth: '900px',
+        maxWidth: '1100px',
         margin: 'auto',
       }}
     >
@@ -50,7 +51,7 @@ const CommitteeList = () => {
         <Search
           label={isBn ? 'কমিটি অনুসন্ধান' : 'Search Committee'}
           placeholder={isBn ? 'কমিটির নাম..' : 'Committee Name..'}
-          sx={{ maxWidth: '215px' }}
+          sx={{ width: '100%', maxWidth: '330px' }}
         />
         {isAdmin && (
           <Button
@@ -88,7 +89,12 @@ const CommitteeList = () => {
         </TableContainer>
       </Paper>
 
-      <CustomPagination totalCount={committeesCount} />
+      <CustomPagination
+        count={committeesCount}
+        totalCount={totalCommitteesCount}
+        pageSize={15}
+      />
+
       <SnackbarComp
         open={snackbar.open}
         severity={snackbar.severity}

@@ -1,12 +1,16 @@
 import { Clear, FilterAltOutlined } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
+import { useStoreState } from 'easy-peasy';
 import { useState } from 'react';
 import FilterByJobDepertment from './FilterByJobDepertment';
 import FilterByLocation from './FilterByLocation';
-import SearchByText from './SearchByText';
+import Search from './shared/Search';
 
 const FilterGroup = () => {
+  const { language } = useStoreState((state) => state.ui);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const isBn = language === 'BN' ? true : false;
 
   const handleFilterToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -17,7 +21,7 @@ const FilterGroup = () => {
       sx={{
         my: 1.5,
         ml: 2,
-        mr: -2,
+        mr: -1,
       }}
     >
       <Box
@@ -48,7 +52,18 @@ const FilterGroup = () => {
         <FilterByLocation />
         <FilterByJobDepertment />
       </Box>
-      <SearchByText />
+      <Search
+        label={isBn ? 'ফার্মাসিস্ট অনুসন্ধান' : 'Search Pharmacist'}
+        placeholder={
+          isBn
+            ? 'নাম, নিবন্ধন, সদস্য পরিচিতি বা ইমেইল'
+            : 'Name, Registration, Member ID or Email'
+        }
+        sx={{
+          ml: -2.3,
+          width: '100%',
+        }}
+      />
     </Box>
   );
 
@@ -58,16 +73,27 @@ const FilterGroup = () => {
         display: 'flex',
         my: 2,
         ml: 2,
-        mr: -2,
         gap: 1,
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
         flexWrap: 'wrap',
       }}
     >
       <FilterByLocation />
       <FilterByJobDepertment />
-      <SearchByText />
+      <Search
+        label={isBn ? 'ফার্মাসিস্ট অনুসন্ধান' : 'Search Pharmacist'}
+        placeholder={
+          isBn
+            ? 'নাম, নিবন্ধন, সদস্য পরিচিতি বা ইমেইল'
+            : 'Name, Registration, Member ID or Email'
+        }
+        sx={{
+          ml: -1.3,
+          width: '100%',
+          maxWidth: '330px',
+        }}
+      />
     </Box>
   );
 

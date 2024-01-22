@@ -1,9 +1,12 @@
+import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Skeleton from '@mui/material/Skeleton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
+import { useStoreState } from 'easy-peasy';
 
 const TableRowSkeleton = ({ row, isPermittedForEdit }) => {
   return (
@@ -73,17 +76,40 @@ const TableRowSkeleton = ({ row, isPermittedForEdit }) => {
   );
 };
 
-const DetailsPharmacistSkeleton = ({ rows, isPermittedForEdit }) => {
+const DetailsPharmacistSkeleton = ({ rows, isPermittedForEdit, isAdmin }) => {
+  const {
+    ui: { language },
+  } = useStoreState((state) => state);
+  const isBn = language === 'BN' ? true : false;
+
   return (
     <Table size='small'>
       <TableBody>
-        {rows.map((row) => (
-          <TableRowSkeleton
-            key={row.th}
-            row={row}
-            isPermittedForEdit={isPermittedForEdit}
-          />
-        ))}
+        <>
+          {rows.map((row) => (
+            <TableRowSkeleton
+              key={row.th}
+              row={row}
+              isPermittedForEdit={isPermittedForEdit}
+            />
+          ))}
+          {isAdmin && (
+            <TableRow
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+              <TableCell colSpan={3} sx={{ padding: 1.5, textAlign: 'center' }}>
+                <Button
+                  disabled
+                  variant='contained'
+                  startIcon={<DeleteIcon />}
+                  color='error'
+                >
+                  {isBn ? 'ফার্মাসিস্ট মুছুন' : 'Delete Pharmacist'}
+                </Button>
+              </TableCell>
+            </TableRow>
+          )}
+        </>
       </TableBody>
     </Table>
   );

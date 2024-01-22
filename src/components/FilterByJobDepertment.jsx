@@ -6,42 +6,37 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import { useStoreActions, useStoreState } from 'easy-peasy';
+import { useStoreState } from 'easy-peasy';
+import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { DEPERTMENT_OPTIONS } from '../constants/initialInputInfo';
 
 const FilterByJobDepertment = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [depertmentId, setDepertmentId] = useState(
+    searchParams.get('job_depertment_id') || 'all'
+  );
+
   const {
-    pharmacist: { jobDepertmentInfo },
     ui: { language },
   } = useStoreState((state) => state);
-  const { setJobDepertmentInfo } = useStoreActions(
-    (actions) => actions.pharmacist
-  );
+
   const isBn = language === 'BN' ? true : false;
 
-  const handleJobDepertmentChange = (e) => {
-    jobDepertmentInfo.value = e.target.value;
-    setJobDepertmentInfo(jobDepertmentInfo);
+  const handleChange = (e) => {
+    const params = new URLSearchParams(searchParams);
+    const value = e.target.value;
+    setDepertmentId(value);
+    params.set('page', 1);
 
-    // if (e.target.value === 'all') {
-    //   handleForDepertmentChange(pharmacists);
-    // } else {
-    //   const nameFromId = jobDepertmentOptions.find(
-    //     (option) => option.id === e.target.value
-    //   )?.name;
-    //   handleForDepertmentChange(
-    //     pharmacists.filter(
-    //       (pharmacist) => pharmacist.jobDepertment === nameFromId
-    //     )
-    //   );
-    // }
+    if (value) {
+      params.set('job_depertment_id', value);
+    } else {
+      params.delete('job_depertment_id');
+    }
+
+    setSearchParams(params);
   };
-
-  // useEffect(() => {
-  //   handleForDepertmentChange(pharmacists);
-  //   setJobDepertmentInfo({
-  //     ...INITIAL_DEPERTMENT_INFO,
-  //   });
-  // }, [pharmacists]);
 
   return (
     <FormControl
@@ -63,27 +58,23 @@ const FilterByJobDepertment = () => {
               select
               name='jobDepertment'
               label={isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment'}
-              value={jobDepertmentInfo.value}
-              onChange={handleJobDepertmentChange}
+              value={depertmentId}
+              onChange={handleChange}
               variant='standard'
               sx={{
                 textAlign: 'left',
                 width: '100%',
               }}
             >
-              {jobDepertmentInfo.options.length > 0 ? (
-                jobDepertmentInfo.options.map((option) => (
-                  <MenuItem
-                    key={option.id}
-                    value={option.id}
-                    sx={{ fontSize: 14 }}
-                  >
-                    {isBn ? option.bn_name : option.name}
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem />
-              )}
+              {DEPERTMENT_OPTIONS.map((option) => (
+                <MenuItem
+                  key={option.id}
+                  value={option.id}
+                  sx={{ fontSize: 14 }}
+                >
+                  {isBn ? option.bn_name : option.name}
+                </MenuItem>
+              ))}
             </TextField>
           }
         />

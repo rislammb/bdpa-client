@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import { useStoreActions, useStoreState } from 'easy-peasy';
 
@@ -77,9 +77,7 @@ const getColumns = (isBn, user) => {
 };
 
 const usePharmacistList = () => {
-  let { pageNumber } = useParams();
-  const navigate = useNavigate();
-  const [page, setPage] = useState(Number(pageNumber) ?? 1);
+  const [searchParams] = useSearchParams();
 
   const {
     ui: { language },
@@ -87,9 +85,6 @@ const usePharmacistList = () => {
     pharmacist: {
       loading,
       error,
-      searchTerm,
-      locationInfo,
-      jobDepertmentInfo,
       list,
       pharmacistsCount,
       totalPharmacistsCount,
@@ -106,14 +101,8 @@ const usePharmacistList = () => {
   });
 
   const isBn = language === 'BN' ? true : false;
-  const rowsPerPage = 50;
 
-  const handleChange = (_event, value) => {
-    setPage(value);
-    navigate(`/members/page/${value}`);
-  };
-
-  const handleSnackbarClose = (event, reason) => {
+  const handleSnackbarClose = (_event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -121,26 +110,8 @@ const usePharmacistList = () => {
   };
 
   useEffect(() => {
-    navigate(`/members/page/1`);
-  }, [searchTerm]);
-
-  useEffect(() => {
-    const locationFilter = Object.keys(locationInfo).reduce((acc, cur) => {
-      acc[cur] = locationInfo[cur]?.value;
-      return acc;
-    }, {});
-
-    getPharmacistsData({
-      locationFilter,
-      depertmentFilter: jobDepertmentInfo.value,
-      searchTerm,
-      pageNumber,
-    });
-  }, [pageNumber, searchTerm, locationInfo, jobDepertmentInfo]);
-
-  useEffect(() => {
-    setPage(Number(pageNumber) ?? 1);
-  }, [pageNumber]);
+    getPharmacistsData(searchParams);
+  }, [searchParams, getPharmacistsData]);
 
   useEffect(() => {
     document.title = isBn ? 'বিডিপিএ | সদস্য' : 'BDPA | Members';
@@ -158,14 +129,10 @@ const usePharmacistList = () => {
 
   return {
     loading,
-    isBn,
     list,
     pharmacistsCount,
     totalPharmacistsCount,
     columns: getColumns(isBn, user),
-    rowsPerPage,
-    page,
-    handleChange,
     snackbar,
     handleSnackbarClose,
   };

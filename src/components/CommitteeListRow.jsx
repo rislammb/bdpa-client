@@ -6,7 +6,11 @@ import Link from './ui/Link';
 
 const CommitteeListRow = ({ committee, columns, isBn }) => {
   return (
-    <TableRow>
+    <TableRow
+      sx={{
+        '&:last-child td, &:last-child th': { border: 0 },
+      }}
+    >
       {columns.map((column) => {
         const value = committee[column.id];
 
@@ -16,7 +20,7 @@ const CommitteeListRow = ({ committee, columns, isBn }) => {
             align={column.align}
             sx={{
               minWidth: column.minWidth,
-              padding: { xs: '8px 6px', sm: '12px' },
+              padding: { xs: '8px 6px', sm: '12px', md: '12px 16px' },
             }}
           >
             {column.id === 'committeeTitle' ? (

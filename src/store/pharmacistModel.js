@@ -7,11 +7,6 @@ import {
   updatePharmacist,
 } from '../api/pharmacist';
 
-import {
-  INITIAL_DEPERTMENT_INFO,
-  INITIAL_LOCATION_INFO,
-} from '../constants/initialInputInfo';
-
 const pharmacistModel = {
   loading: false,
   submitting: false,
@@ -19,9 +14,6 @@ const pharmacistModel = {
   list: [],
   pharmacistsCount: 0,
   totalPharmacistsCount: 0,
-  locationInfo: { ...INITIAL_LOCATION_INFO },
-  jobDepertmentInfo: { ...INITIAL_DEPERTMENT_INFO },
-  searchTerm: '',
   details: null,
   setLoading: action((state, payload) => {
     state.loading = payload;
@@ -39,12 +31,6 @@ const pharmacistModel = {
   }),
   getPharmacistsData: thunk(async (actions, payload) => {
     actions.setLoading(true);
-    actions.setError(null);
-    actions.setPharmacists({
-      pharmacists: [],
-      pharmacistsCount: 0,
-      totalPharmacistsCount: 0,
-    });
 
     try {
       const { data } = await getPharmacists(payload);
@@ -55,18 +41,6 @@ const pharmacistModel = {
     } finally {
       actions.setLoading(false);
     }
-  }),
-  setLocationInfo: action((state, payload) => {
-    state.searchTerm = '';
-    state.jobDepertmentInfo = { ...INITIAL_DEPERTMENT_INFO };
-    state.locationInfo = { ...payload };
-  }),
-  setJobDepertmentInfo: action((state, payload) => {
-    state.searchTerm = '';
-    state.jobDepertmentInfo = { ...payload };
-  }),
-  setSearchTerm: action((state, payload) => {
-    state.searchTerm = payload;
   }),
   setDetailsPharmacist: action((state, payload) => {
     state.details = payload;

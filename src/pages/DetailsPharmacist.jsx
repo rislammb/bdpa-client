@@ -43,6 +43,7 @@ const DetailsPharmacist = () => {
         <DetailsPharmacistSkeleton
           rows={tableRows}
           isPermittedForEdit={isPermittedForEdit}
+          isAdmin={isAdmin}
         />
       ) : pharmacist ? (
         tableRows[tableRows.length - 1]?.td === '' &&
@@ -50,6 +51,7 @@ const DetailsPharmacist = () => {
           <DetailsPharmacistSkeleton
             rows={tableRows}
             isPermittedForEdit={isPermittedForEdit}
+            isAdmin={isAdmin}
           />
         ) : (
           <Table size='small'>

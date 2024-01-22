@@ -6,57 +6,24 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import { useStoreActions, useStoreState } from 'easy-peasy';
+import { useStoreState } from 'easy-peasy';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { districts } from '../constants/districts';
-import { INITIAL_LOCATION_INFO } from '../constants/initialInputInfo';
+import {
+  DIVISION_OPTIONS,
+  INITIAL_OPTIONS,
+  LOCATION_TYPE_OPTIONS,
+} from '../constants/initialInputInfo';
 import { upazilas } from '../constants/upazilas';
 
 const FilterByLocation = () => {
   const {
     ui: { language },
     auth: { user },
-    pharmacist: { locationInfo },
   } = useStoreState((state) => state);
 
-  const { setLocationInfo } = useStoreActions((actions) => actions.pharmacist);
-
   const isBn = language === 'BN' ? true : false;
-
-  const handleLocationChange = (e) => {
-    if (e.target.name === 'locationType') {
-      locationInfo.locationType.value = e.target.value;
-      locationInfo.division = { ...INITIAL_LOCATION_INFO.division };
-      locationInfo.district = { ...INITIAL_LOCATION_INFO.district };
-      locationInfo.upazila = { ...INITIAL_LOCATION_INFO.upazila };
-
-      setLocationInfo(locationInfo);
-    } else if (e.target.name === 'division') {
-      locationInfo.division.value = e.target.value;
-      locationInfo.district.value = 'all';
-      locationInfo.district.options = [
-        ...INITIAL_LOCATION_INFO.district.options,
-        ...districts.filter((dist) => dist.division_id === e.target.value),
-      ];
-      locationInfo.upazila = { ...INITIAL_LOCATION_INFO.upazila };
-      setLocationInfo(locationInfo);
-    } else if (e.target.name === 'district') {
-      locationInfo.district.value = e.target.value;
-      locationInfo.upazila.value = 'all';
-      locationInfo.upazila.options = [
-        ...INITIAL_LOCATION_INFO.upazila.options,
-        ...upazilas.filter((upazila) => upazila.district_id === e.target.value),
-      ];
-      setLocationInfo(locationInfo);
-    } else if (e.target.name === 'upazila') {
-      locationInfo.upazila.value = e.target.value;
-      setLocationInfo(locationInfo);
-    }
-  };
-
-  const locationInfoArray = Object.keys(locationInfo).reduce((acc, cur) => {
-    acc.push(locationInfo[cur]);
-    return acc;
-  }, []);
 
   return (
     <FormControl
@@ -68,99 +35,266 @@ const FilterByLocation = () => {
         {isBn ? 'ঠিকানা বা এলাকা অনুযায়ী বাছাই' : 'Filter by address/area'}
       </FormLabel>
       <FormGroup>
-        {locationInfoArray.length > 0 &&
-          locationInfoArray.map((field) => {
-            if (field.name === 'upazila') {
-              if (locationInfo.locationType.value === 'voterArea') {
-                return '';
-              } else {
-                return (
-                  <FormControlLabel
-                    key={field.name}
-                    control={
-                      <TextField
-                        InputLabelProps={{ color: 'info' }}
-                        InputProps={{
-                          style: { fontSize: 14, paddingLeft: '5px' },
-                        }}
-                        select
-                        name={field.name}
-                        label={isBn ? field.bn_label : field.label}
-                        value={field.value}
-                        onChange={handleLocationChange}
-                        variant='standard'
-                        sx={{
-                          textAlign: 'left',
-                          width: '100%',
-                        }}
-                      >
-                        {field.options.length > 0 ? (
-                          field.options.map((option) => (
-                            <MenuItem
-                              disabled={!user}
-                              key={field.name + option.id}
-                              value={option.id}
-                              sx={{ fontSize: 14 }}
-                            >
-                              {isBn ? option.bn_name : option.name}
-                            </MenuItem>
-                          ))
-                        ) : (
-                          <MenuItem />
-                        )}
-                      </TextField>
-                    }
-                  />
-                );
-              }
-            } else
-              return (
-                <FormControlLabel
-                  key={field.name}
-                  control={
-                    <TextField
-                      InputLabelProps={{ color: 'info' }}
-                      InputProps={{
-                        style: { fontSize: 14, paddingLeft: '5px' },
-                      }}
-                      select
-                      name={field.name}
-                      label={isBn ? field.bn_label : field.label}
-                      value={field.value}
-                      onChange={handleLocationChange}
-                      variant='standard'
-                      sx={{
-                        textAlign: 'left',
-                        width: '100%',
-                      }}
-                    >
-                      {field.options.length > 0 ? (
-                        field.options.map((option) => (
-                          <MenuItem
-                            key={field.name + option.id}
-                            value={option.id}
-                            sx={{ fontSize: 14 }}
-                            disabled={
-                              !user &&
-                              field.name === 'locationType' &&
-                              (option.id === 'deputationPosting' ||
-                                option.id === 'permanentAddress')
-                            }
-                          >
-                            {isBn ? option.bn_name : option.name}
-                          </MenuItem>
-                        ))
-                      ) : (
-                        <MenuItem />
-                      )}
-                    </TextField>
-                  }
-                />
-              );
-          })}
+        <FilterLocationType />
+        <FilterDivision />
+        <FilterDistrict />
+        {user && <FilterUpazila />}
       </FormGroup>
     </FormControl>
   );
 };
 
 export default FilterByLocation;
+
+const FilterLocationType = () => {
+  const {
+    ui: { language },
+  } = useStoreState((state) => state);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [locationType, setLocationType] = useState(
+    searchParams.get('location_type') || 'all'
+  );
+
+  const isBn = language === 'BN' ? true : false;
+
+  const handleChange = (e) => {
+    const params = new URLSearchParams(searchParams);
+    const value = e.target.value;
+    setLocationType(value);
+    params.set('division', 'all');
+    params.set('district', 'all');
+    params.set('upazila', 'all');
+
+    if (value) {
+      params.set('location_type', value);
+    } else {
+      params.delete('location_type');
+    }
+
+    setSearchParams(params);
+  };
+
+  return (
+    <FormControlLabel
+      control={
+        <TextField
+          InputLabelProps={{ color: 'info' }}
+          InputProps={{ style: { fontSize: 14, paddingLeft: '5px' } }}
+          select
+          name='locationType'
+          label={isBn ? 'ঠিকানা বা এলাকার ধরন' : 'Location Type'}
+          value={locationType}
+          onChange={handleChange}
+          variant='standard'
+          sx={{
+            textAlign: 'left',
+            width: '100%',
+          }}
+        >
+          {LOCATION_TYPE_OPTIONS.map((option) => (
+            <MenuItem key={option.id} value={option.id} sx={{ fontSize: 14 }}>
+              {isBn ? option.bn_name : option.name}
+            </MenuItem>
+          ))}
+        </TextField>
+      }
+    />
+  );
+};
+
+const FilterDivision = () => {
+  const {
+    ui: { language },
+  } = useStoreState((state) => state);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [division, setDivision] = useState(
+    searchParams.get('division') || 'all'
+  );
+
+  const isBn = language === 'BN' ? true : false;
+
+  const handleChange = (e) => {
+    const params = new URLSearchParams(searchParams);
+    const value = e.target.value;
+    setDivision(value);
+    params.set('district', 'all');
+    params.set('upazila', 'all');
+    params.set('page', 1);
+
+    if (value) {
+      params.set('division', value);
+    } else {
+      params.delete('division');
+    }
+
+    setSearchParams(params);
+  };
+
+  useEffect(() => {
+    setDivision(searchParams.get('division') || 'all');
+  }, [searchParams.get('location_type')]);
+
+  return (
+    <FormControlLabel
+      control={
+        <TextField
+          InputLabelProps={{ color: 'info' }}
+          InputProps={{ style: { fontSize: 14, paddingLeft: '5px' } }}
+          select
+          name='division'
+          label={isBn ? 'বিভাগ' : 'Division'}
+          value={division}
+          onChange={handleChange}
+          variant='standard'
+          sx={{
+            textAlign: 'left',
+            width: '100%',
+          }}
+        >
+          {DIVISION_OPTIONS.map((option) => (
+            <MenuItem key={option.id} value={option.id} sx={{ fontSize: 14 }}>
+              {isBn ? option.bn_name : option.name}
+            </MenuItem>
+          ))}
+        </TextField>
+      }
+    />
+  );
+};
+
+const FilterDistrict = () => {
+  const {
+    ui: { language },
+  } = useStoreState((state) => state);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [district, setDistrict] = useState(
+    searchParams.get('district') || 'all'
+  );
+  const [options, setOptions] = useState([
+    ...INITIAL_OPTIONS,
+    ...districts.filter(
+      (dist) => dist.division_id === searchParams.get('division')
+    ),
+  ]);
+
+  const isBn = language === 'BN' ? true : false;
+
+  const handleChange = (e) => {
+    const params = new URLSearchParams(searchParams);
+    const value = e.target.value;
+    setDistrict(value);
+    params.set('upazila', 'all');
+    params.set('page', 1);
+
+    if (value) {
+      params.set('district', value);
+    } else {
+      params.delete('district');
+    }
+
+    setSearchParams(params);
+  };
+
+  useEffect(() => {
+    setDistrict(searchParams.get('district') || 'all');
+    setOptions([
+      ...INITIAL_OPTIONS,
+      ...districts.filter(
+        (dist) => dist.division_id === searchParams.get('division')
+      ),
+    ]);
+  }, [searchParams.get('division')]);
+
+  return (
+    <FormControlLabel
+      control={
+        <TextField
+          InputLabelProps={{ color: 'info' }}
+          InputProps={{ style: { fontSize: 14, paddingLeft: '5px' } }}
+          select
+          name='district'
+          label={isBn ? 'জেলা' : 'District'}
+          value={district}
+          onChange={handleChange}
+          variant='standard'
+          sx={{
+            textAlign: 'left',
+            width: '100%',
+          }}
+        >
+          {options.map((option) => (
+            <MenuItem key={option.id} value={option.id} sx={{ fontSize: 14 }}>
+              {isBn ? option.bn_name : option.name}
+            </MenuItem>
+          ))}
+        </TextField>
+      }
+    />
+  );
+};
+
+const FilterUpazila = () => {
+  const {
+    ui: { language },
+  } = useStoreState((state) => state);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [upazila, setUpazila] = useState(searchParams.get('upazila') || 'all');
+  const [options, setOptions] = useState([
+    ...INITIAL_OPTIONS,
+    ...upazilas.filter((up) => up.district_id === searchParams.get('district')),
+  ]);
+
+  const isBn = language === 'BN' ? true : false;
+
+  const handleChange = (e) => {
+    const params = new URLSearchParams(searchParams);
+    const value = e.target.value;
+    setUpazila(value);
+    params.set('page', 1);
+
+    if (value) {
+      params.set('upazila', value);
+    } else {
+      params.delete('upazila');
+    }
+
+    setSearchParams(params);
+  };
+
+  useEffect(() => {
+    setUpazila(searchParams.get('upazila') || 'all');
+    setOptions([
+      ...INITIAL_OPTIONS,
+      ...upazilas.filter(
+        (up) => up.district_id === searchParams.get('district')
+      ),
+    ]);
+  }, [searchParams.get('district')]);
+
+  return (
+    <FormControlLabel
+      control={
+        <TextField
+          InputLabelProps={{ color: 'info' }}
+          InputProps={{ style: { fontSize: 14, paddingLeft: '5px' } }}
+          select
+          name='upazila'
+          label={isBn ? 'উপজেলা' : 'Upazila'}
+          value={upazila}
+          onChange={handleChange}
+          variant='standard'
+          sx={{
+            textAlign: 'left',
+            width: '100%',
+          }}
+        >
+          {options.map((option) => (
+            <MenuItem key={option.id} value={option.id} sx={{ fontSize: 14 }}>
+              {isBn ? option.bn_name : option.name}
+            </MenuItem>
+          ))}
+        </TextField>
+      }
+    />
+  );
+};

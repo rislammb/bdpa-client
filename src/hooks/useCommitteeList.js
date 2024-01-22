@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 const getColumns = (isBn) => [
-  { id: 'committeeTitle', label: isBn ? 'কমিটি' : 'Committee', minWidth: 170 },
+  { id: 'committeeTitle', label: isBn ? 'কমিটি' : 'Committee', minWidth: 210 },
   {
     id: 'workHasStarted',
     label: isBn ? 'কার্যক্রম শুরু' : 'Work has started',
