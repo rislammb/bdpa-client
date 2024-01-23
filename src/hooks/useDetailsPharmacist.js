@@ -14,160 +14,334 @@ const createRow = (th, value, name, type, isEditable, textGroupFields) => ({
   textGroupFields,
 });
 
-const getInitialRows = (user, isBn, isPermittedForEdit, isAdmin) => {
+const getPharmacistRows = ({
+  user,
+  pharmacist,
+  isPermittedForEdit,
+  isBn,
+  isAdmin,
+}) => {
+  let rows = [];
+
   if (user) {
-    return [
-      createRow('', '', 'imageUrl', '', isPermittedForEdit),
+    rows = [
+      createRow(
+        '',
+        pharmacist?.imageUrl || '',
+        'imageUrl',
+        'text',
+        isPermittedForEdit
+      ),
       createRow(
         isBn ? 'বি-গ্রেড নিবন্ধন সংখ্যা' : 'Registration number',
+        pharmacist?.regNumber || '',
+        'regNumber',
         '',
-        'regNumber'
+        false
       ),
       createRow(
         isBn ? 'নাম (English)' : 'Name (English)',
-        '',
+        pharmacist?.name || '',
         'name',
-        '',
+        'text',
         isPermittedForEdit
       ),
       createRow(
         isBn ? 'নাম (বাংলা)' : 'Name (বাংলা)',
-        '',
+        pharmacist?.bn_name || '',
         'bn_name',
-        '',
+        'text',
         isPermittedForEdit
       ),
-      createRow(isBn ? 'ইমেইল' : 'Email', '', 'email', '', isAdmin),
+      createRow(
+        isBn ? 'ইমেইল' : 'Email',
+        pharmacist?.email || '',
+        'email',
+        'text',
+        isAdmin
+      ),
       createRow(
         isBn ? 'মোবাইল নাম্বার' : 'Mobile number',
-        '',
+        pharmacist
+          ? isBn
+            ? pharmacist.mobile?.bn_name ?? ''
+            : pharmacist.mobile?.name ?? ''
+          : '',
         'mobile',
-        '',
+        'text',
         isPermittedForEdit
       ),
       createRow(
         isBn ? 'পিতার নাম' : 'Fathers Name',
-        '',
+        pharmacist
+          ? isBn
+            ? pharmacist.fathersName?.bn_name
+            : pharmacist.fathersName?.name
+          : '',
         'fathersName',
-        '',
-        isPermittedForEdit
+        'textGroup',
+        isPermittedForEdit,
+        [
+          {
+            name: 'name',
+            label: "Father's name (English)",
+            bn_label: 'পিতার নাম (English)',
+          },
+          {
+            name: 'bn_name',
+            label: "Father's name (বাংলা)",
+            bn_label: 'পিতার নাম (বাংলা)',
+          },
+        ]
       ),
       createRow(
         isBn ? 'মাতার নাম' : 'Mothers Name',
-        '',
+        pharmacist
+          ? isBn
+            ? pharmacist.mothersName?.bn_name
+            : pharmacist.mothersName?.name
+          : '',
         'mothersName',
-        '',
-        isPermittedForEdit
+        'textGroup',
+        isPermittedForEdit,
+        [
+          {
+            name: 'name',
+            label: "Mother's name (English)",
+            bn_label: 'মায়ের নাম (English)',
+          },
+          {
+            name: 'bn_name',
+            label: "Mother's name (বাংলা)",
+            bn_label: 'মায়ের নাম (বাংলা)',
+          },
+        ]
       ),
       createRow(
         isBn ? 'লিঙ্গ' : 'Gender',
-        '',
+        pharmacist
+          ? pharmacist.gender?.id
+            ? isBn
+              ? pharmacist.gender?.bn_name
+              : pharmacist.gender?.name
+            : ''
+          : '',
         'gender',
-        '',
+        'select',
         isPermittedForEdit
       ),
       createRow(
         isBn ? 'জন্ম তারিখ' : 'Date of birth',
-        '',
+        pharmacist
+          ? pharmacist.dateOfBirth
+            ? isBn
+              ? getBnDate(pharmacist.dateOfBirth)
+              : dayjs(pharmacist.dateOfBirth).format('DD MMM YYYY')
+            : ''
+          : '',
         'dateOfBirth',
-        '',
+        'date',
         isPermittedForEdit
       ),
       createRow(
         isBn ? 'জাতীয় পরিচয়পত্র নাম্বার' : 'National ID',
-        '',
+        pharmacist
+          ? isBn
+            ? pharmacist.nationalId?.bn_name
+            : pharmacist.nationalId?.name
+          : '',
         'nationalId',
-        '',
+        'text',
         isPermittedForEdit
       ),
       createRow(
         isBn ? 'ইনস্টিটিউটের নাম' : 'Institute Name',
-        '',
+        pharmacist
+          ? isBn
+            ? pharmacist.institute?.bn_name
+            : pharmacist.institute?.name
+          : '',
         'institute',
-        '',
-        isPermittedForEdit
+        'textGroup',
+        isPermittedForEdit,
+        [
+          {
+            name: 'name',
+            label: 'Institute Name (English)',
+            bn_label: 'ইনস্টিটিউটের নাম (English)',
+          },
+          {
+            name: 'bn_name',
+            label: 'Institute Name (বাংলা)',
+            bn_label: 'ইনস্টিটিউটের নাম (বাংলা)',
+          },
+        ]
       ),
       createRow(
         isBn ? 'পাশের বছর' : 'Passing year',
-        '',
+        pharmacist
+          ? isBn
+            ? pharmacist.passingYear?.bn_name
+            : pharmacist.passingYear?.name
+          : '',
         'passingYear',
-        '',
+        'text',
         isPermittedForEdit
       ),
       createRow(
         isBn ? 'সদস্য সনাক্তকারী সংখ্যা' : 'BDPA member ID',
-        '',
+        pharmacist?.memberId || '',
         'memberId',
-        '',
+        'text',
         isAdmin
       ),
       createRow(
         isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment',
-        '',
+        pharmacist
+          ? pharmacist.jobDepertment?.id
+            ? isBn
+              ? pharmacist.jobDepertment?.bn_name
+              : pharmacist.jobDepertment?.name
+            : ''
+          : '',
         'jobDepertment',
-        '',
+        'select',
         isPermittedForEdit
       ),
       createRow(
         isBn ? 'যোগদানের তারিখ' : 'Date of join',
-        '',
+        pharmacist
+          ? pharmacist.dateOfJoin
+            ? isBn
+              ? getBnDate(pharmacist.dateOfJoin)
+              : dayjs(pharmacist.dateOfJoin).format('DD MMM YYYY')
+            : ''
+          : '',
         'dateOfJoin',
-        '',
+        'date',
         isPermittedForEdit
       ),
       createRow(
         isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Current Postiong/Address',
-        '',
+        pharmacist
+          ? isBn
+            ? getBnAreaInfo(pharmacist, 'posting')
+            : getAreaInfo(pharmacist, 'posting')
+          : '',
         'mainPosting',
-        '',
+        'area',
         isPermittedForEdit
       ),
       createRow(
         isBn ? 'স্থায়ী ঠিকানা' : 'Permanent Address',
-        '',
+        pharmacist
+          ? isBn
+            ? getBnAreaInfo(pharmacist, 'permanent')
+            : getAreaInfo(pharmacist, 'permanent')
+          : '',
         'permanentAddress',
-        '',
+        'area',
         isPermittedForEdit
       ),
       createRow(
         isBn ? 'ভোটার জেলা' : 'Voter District',
-        '',
+        pharmacist
+          ? isBn
+            ? getBnAreaInfo(pharmacist, 'voter')
+            : getAreaInfo(pharmacist, 'voter')
+          : '',
         'voterArea',
-        '',
+        'area',
         isAdmin
       ),
       createRow(
         isBn ? 'প্রেষনে/সংযুক্ত আছেন?' : 'On deputation/ attachment?',
-        '',
+        pharmacist
+          ? isBn
+            ? pharmacist.onDeputation?.bn_name
+            : pharmacist.onDeputation?.name
+          : '',
         'onDeputation',
-        '',
+        'select',
         isPermittedForEdit
       ),
     ];
+
+    pharmacist &&
+      pharmacist.onDeputation?.name === 'Yes' &&
+      rows.push(
+        createRow(
+          isBn ? 'প্রেষন/সংযুক্ত কর্মস্থল' : 'Deputation/attachment posting',
+          isBn
+            ? getBnAreaInfo(pharmacist, 'deputation')
+            : getAreaInfo(pharmacist, 'deputation'),
+          'deputationPosting',
+          'area',
+          isPermittedForEdit
+        )
+      );
   } else {
-    return [
+    rows = [
       createRow(
         isBn ? 'বি-গ্রেড নিবন্ধন সংখ্যা' : 'Registration number',
-        '',
+        pharmacist?.regNumber || '',
         'regNumber'
       ),
-      createRow(isBn ? 'নাম (English)' : 'Name (English)', '', 'name'),
-      createRow(isBn ? 'নাম (বাংলা)' : 'Name (বাংলা)', '', 'bn_name'),
-      createRow(isBn ? 'ইমেইল' : 'Email', '', 'email'),
+      createRow(
+        isBn ? 'নাম (English)' : 'Name (English)',
+        pharmacist?.name || '',
+        'name'
+      ),
+      createRow(
+        isBn ? 'নাম (বাংলা)' : 'Name (বাংলা)',
+        pharmacist?.bn_name || '',
+        'bn_name'
+      ),
+      createRow(
+        isBn ? 'ইমেইল' : 'Email',
+        pharmacist?.email || '',
+        'email',
+        'text',
+        isAdmin
+      ),
       createRow(
         isBn ? 'সদস্য সনাক্তকারী সংখ্যা' : 'BDPA member ID',
-        '',
+        pharmacist?.memberId || '',
         'memberId'
       ),
-      createRow(isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment', '', 'jobDepertment'),
+      createRow(
+        isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment',
+        pharmacist
+          ? pharmacist.jobDepertment?.id
+            ? isBn
+              ? pharmacist.jobDepertment?.bn_name
+              : pharmacist.jobDepertment?.name
+            : ''
+          : '',
+        'jobDepertment'
+      ),
       createRow(
         isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Current Postiong/Address',
-        '',
+        pharmacist
+          ? isBn
+            ? getBnAreaInfo(pharmacist, 'posting')
+            : getAreaInfo(pharmacist, 'posting')
+          : '',
         'mainPosting'
       ),
-      createRow(isBn ? 'ভোটার জেলা' : 'Voter District', '', 'voterArea'),
+      createRow(
+        isBn ? 'ভোটার জেলা' : 'Voter District',
+        pharmacist
+          ? isBn
+            ? getBnAreaInfo(pharmacist, 'voter')
+            : getAreaInfo(pharmacist, 'voter')
+          : '',
+        'voterArea'
+      ),
     ];
   }
+
+  return rows;
 };
 
 const useDetailsPharmacist = () => {
@@ -201,7 +375,7 @@ const useDetailsPharmacist = () => {
     (user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN'));
 
   const [tableRows, setTableRows] = useState(
-    getInitialRows(user, isBn, isPermittedForEdit, isAdmin)
+    getPharmacistRows({ user, isBn, isPermittedForEdit, isAdmin })
   );
 
   const handleSnackbarClose = (event, reason) => {
@@ -211,248 +385,21 @@ const useDetailsPharmacist = () => {
     setSnackbar({ open: false, severity: snackbar.severity, text: '' });
   };
 
-  const getPharmacistRows = (ph) => {
-    let rows = [];
-
-    if (user) {
-      rows = [
-        createRow('', ph.imageUrl, 'imageUrl', 'text', isPermittedForEdit),
-        createRow(
-          isBn ? 'বি-গ্রেড নিবন্ধন সংখ্যা' : 'Registration number',
-          ph.regNumber,
-          'regNumber',
-          '',
-          false
-        ),
-        createRow(
-          isBn ? 'নাম (English)' : 'Name (English)',
-          ph.name,
-          'name',
-          'text',
-          isPermittedForEdit
-        ),
-        createRow(
-          isBn ? 'নাম (বাংলা)' : 'Name (বাংলা)',
-          ph.bn_name,
-          'bn_name',
-          'text',
-          isPermittedForEdit
-        ),
-        createRow(isBn ? 'ইমেইল' : 'Email', ph.email, 'email', 'text', isAdmin),
-        createRow(
-          isBn ? 'মোবাইল নাম্বার' : 'Mobile number',
-          isBn ? ph.mobile?.bn_name ?? '' : ph.mobile?.name ?? '',
-          'mobile',
-          'text',
-          isPermittedForEdit
-        ),
-        createRow(
-          isBn ? 'পিতার নাম' : 'Fathers Name',
-          isBn ? ph.fathersName?.bn_name : ph.fathersName?.name,
-          'fathersName',
-          'textGroup',
-          isPermittedForEdit,
-          [
-            {
-              name: 'name',
-              label: "Father's name (English)",
-              bn_label: 'পিতার নাম (English)',
-            },
-            {
-              name: 'bn_name',
-              label: "Father's name (বাংলা)",
-              bn_label: 'পিতার নাম (বাংলা)',
-            },
-          ]
-        ),
-        createRow(
-          isBn ? 'মাতার নাম' : 'Mothers Name',
-          isBn ? ph.mothersName?.bn_name : ph.mothersName?.name,
-          'mothersName',
-          'textGroup',
-          isPermittedForEdit,
-          [
-            {
-              name: 'name',
-              label: "Mother's name (English)",
-              bn_label: 'মায়ের নাম (English)',
-            },
-            {
-              name: 'bn_name',
-              label: "Mother's name (বাংলা)",
-              bn_label: 'মায়ের নাম (বাংলা)',
-            },
-          ]
-        ),
-        createRow(
-          isBn ? 'লিঙ্গ' : 'Gender',
-          ph.gender?.id ? (isBn ? ph.gender?.bn_name : ph.gender?.name) : '',
-          'gender',
-          'select',
-          isPermittedForEdit
-        ),
-        createRow(
-          isBn ? 'জন্ম তারিখ' : 'Date of birth',
-          ph.dateOfBirth
-            ? isBn
-              ? getBnDate(ph.dateOfBirth)
-              : dayjs(ph.dateOfBirth).format('DD MMM YYYY')
-            : '',
-          'dateOfBirth',
-          'date',
-          isPermittedForEdit
-        ),
-        createRow(
-          isBn ? 'জাতীয় পরিচয়পত্র নাম্বার' : 'National ID',
-          isBn ? ph.nationalId?.bn_name : ph.nationalId?.name,
-          'nationalId',
-          'text',
-          isPermittedForEdit
-        ),
-        createRow(
-          isBn ? 'ইনস্টিটিউটের নাম' : 'Institute Name',
-          isBn ? ph.institute?.bn_name : ph.institute?.name,
-          'institute',
-          'textGroup',
-          isPermittedForEdit,
-          [
-            {
-              name: 'name',
-              label: 'Institute Name (English)',
-              bn_label: 'ইনস্টিটিউটের নাম (English)',
-            },
-            {
-              name: 'bn_name',
-              label: 'Institute Name (বাংলা)',
-              bn_label: 'ইনস্টিটিউটের নাম (বাংলা)',
-            },
-          ]
-        ),
-        createRow(
-          isBn ? 'পাশের বছর' : 'Passing year',
-          isBn ? ph.passingYear?.bn_name : ph.passingYear?.name,
-          'passingYear',
-          'text',
-          isPermittedForEdit
-        ),
-        createRow(
-          isBn ? 'সদস্য সনাক্তকারী সংখ্যা' : 'BDPA member ID',
-          ph.memberId || '',
-          'memberId',
-          'text',
-          isAdmin
-        ),
-        createRow(
-          isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment',
-          ph.jobDepertment?.id
-            ? isBn
-              ? ph.jobDepertment?.bn_name
-              : ph.jobDepertment?.name
-            : '',
-          'jobDepertment',
-          'select',
-          isPermittedForEdit
-        ),
-        createRow(
-          isBn ? 'যোগদানের তারিখ' : 'Date of join',
-          ph.dateOfJoin
-            ? isBn
-              ? getBnDate(ph.dateOfJoin)
-              : dayjs(ph.dateOfJoin).format('DD MMM YYYY')
-            : '',
-          'dateOfJoin',
-          'date',
-          isPermittedForEdit
-        ),
-        createRow(
-          isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Current Postiong/Address',
-          isBn ? getBnAreaInfo(ph, 'posting') : getAreaInfo(ph, 'posting'),
-          'mainPosting',
-          'area',
-          isPermittedForEdit
-        ),
-        createRow(
-          isBn ? 'স্থায়ী ঠিকানা' : 'Permanent Address',
-          isBn ? getBnAreaInfo(ph, 'permanent') : getAreaInfo(ph, 'permanent'),
-          'permanentAddress',
-          'area',
-          isPermittedForEdit
-        ),
-        createRow(
-          isBn ? 'ভোটার জেলা' : 'Voter District',
-          isBn ? getBnAreaInfo(ph, 'voter') : getAreaInfo(ph, 'voter'),
-          'voterArea',
-          'area',
-          isAdmin
-        ),
-        createRow(
-          isBn ? 'প্রেষনে/সংযুক্ত আছেন?' : 'On deputation/ attachment?',
-          isBn ? ph.onDeputation?.bn_name : ph.onDeputation?.name,
-          'onDeputation',
-          'select',
-          isPermittedForEdit
-        ),
-      ];
-
-      ph.onDeputation?.name === 'Yes' &&
-        rows.push(
-          createRow(
-            isBn ? 'প্রেষন/সংযুক্ত কর্মস্থল' : 'Deputation/attachment posting',
-            isBn
-              ? getBnAreaInfo(ph, 'deputation')
-              : getAreaInfo(ph, 'deputation'),
-            'deputationPosting',
-            'area',
-            isPermittedForEdit
-          )
-        );
-    } else {
-      rows = [
-        createRow(
-          isBn ? 'বি-গ্রেড নিবন্ধন সংখ্যা' : 'Registration number',
-          ph.regNumber,
-          'regNumber'
-        ),
-        createRow(isBn ? 'নাম (English)' : 'Name (English)', ph.name, 'name'),
-        createRow(isBn ? 'নাম (বাংলা)' : 'Name (বাংলা)', ph.bn_name, 'bn_name'),
-        createRow(isBn ? 'ইমেইল' : 'Email', ph.email, 'email', 'text', isAdmin),
-        createRow(
-          isBn ? 'সদস্য সনাক্তকারী সংখ্যা' : 'BDPA member ID',
-          ph.memberId || '',
-          'memberId'
-        ),
-        createRow(
-          isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment',
-          ph.jobDepertment?.id
-            ? isBn
-              ? ph.jobDepertment?.bn_name
-              : ph.jobDepertment?.name
-            : '',
-          'jobDepertment'
-        ),
-        createRow(
-          isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Current Postiong/Address',
-          isBn ? getBnAreaInfo(ph, 'posting') : getAreaInfo(ph, 'posting'),
-          'mainPosting'
-        ),
-        createRow(
-          isBn ? 'ভোটার জেলা' : 'Voter District',
-          isBn ? getBnAreaInfo(ph, 'voter') : getAreaInfo(ph, 'voter'),
-          'voterArea'
-        ),
-      ];
-    }
-
-    return rows;
-  };
-
   useEffect(() => {
     if (pharmacist && pharmacist.regNumber === regNumber) {
-      const rows = getPharmacistRows(pharmacist);
+      const rows = getPharmacistRows({
+        user,
+        pharmacist,
+        isBn,
+        isPermittedForEdit,
+        isAdmin,
+      });
       if (rows) setTableRows(rows);
     } else
-      setTableRows(getInitialRows(user, isBn, isPermittedForEdit, isAdmin));
-  }, [user, regNumber, pharmacist, isBn]);
+      setTableRows(
+        getPharmacistRows({ user, isBn, isPermittedForEdit, isAdmin })
+      );
+  }, [user, regNumber, pharmacist, isBn, isAdmin, isPermittedForEdit]);
 
   const handleDelete = async () => {
     if (

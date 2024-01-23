@@ -11,6 +11,11 @@ const CommitteeListSkeleton = ({ columns }) => {
       <TableRowSkeleton columns={columns} />
       <TableRowSkeleton columns={columns} />
       <TableRowSkeleton columns={columns} />
+      <TableRowSkeleton columns={columns} />
+      <TableRowSkeleton columns={columns} />
+      <TableRowSkeleton columns={columns} />
+      <TableRowSkeleton columns={columns} />
+      <TableRowSkeleton columns={columns} />
     </>
   );
 };

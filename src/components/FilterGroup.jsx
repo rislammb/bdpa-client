@@ -61,6 +61,7 @@ const FilterGroup = () => {
         }
         sx={{
           ml: -2.3,
+          mt: mobileOpen && 4,
           width: '100%',
         }}
       />
@@ -73,7 +74,7 @@ const FilterGroup = () => {
         display: 'flex',
         my: 2,
         ml: 2,
-        gap: 1,
+        gap: 2,
         justifyContent: 'center',
         alignItems: 'center',
         flexWrap: 'wrap',

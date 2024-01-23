@@ -61,7 +61,7 @@ const UserMenu = () => {
       <Menu
         sx={{
           mt: '45px',
-          display: { xs: 'none', md: 'block' },
+          display: { xs: 'none', sm: 'block' },
         }}
         anchorEl={anchorElUser}
         anchorOrigin={{

@@ -1,8 +1,10 @@
-import { Box } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { Box, Button } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
+import { Link as RouterLink } from 'react-router-dom';
 import EmptyTableRow from '../components/EmptyTableRow';
 import FilterGroup from '../components/FilterGroup';
 import PharmacistListItem from '../components/PharmacistListItem';
@@ -10,6 +12,7 @@ import PharmacistListItem from '../components/PharmacistListItem';
 import TableHeader from '../components/TableHeader';
 import usePharmacistList from '../hooks/usePharmacistList';
 
+import { useDeferredValue } from 'react';
 import SnackbarComp from '../components/Snackbar';
 import CustomPagination from '../components/shared/CustomPagination';
 import PharmacistListSkeleton from '../skeleton/PharmacistListSkeleton';
@@ -17,6 +20,8 @@ import PharmacistListSkeleton from '../skeleton/PharmacistListSkeleton';
 const PharmacistList = () => {
   const {
     loading,
+    isAdmin,
+    isBn,
     list,
     pharmacistsCount,
     totalPharmacistsCount,
@@ -24,6 +29,8 @@ const PharmacistList = () => {
     snackbar,
     handleSnackbarClose,
   } = usePharmacistList();
+
+  const deferredList = useDeferredValue(list);
 
   return (
     <Box
@@ -33,6 +40,18 @@ const PharmacistList = () => {
         margin: 'auto',
       }}
     >
+      <Box sx={{ mt: 2.5, textAlign: 'right' }}>
+        {isAdmin && (
+          <Button
+            startIcon={<AddIcon />}
+            component={RouterLink}
+            to='/members/add'
+            variant='contained'
+          >
+            {isBn ? 'ফার্মাসিস্ট' : 'Pharmacist'}
+          </Button>
+        )}
+      </Box>
       <FilterGroup />
 
       <Paper>
@@ -42,8 +61,8 @@ const PharmacistList = () => {
             <TableBody>
               {loading ? (
                 <PharmacistListSkeleton columns={columns} />
-              ) : list?.length > 0 ? (
-                list.map((pharmacist) => (
+              ) : deferredList?.length > 0 ? (
+                deferredList.map((pharmacist) => (
                   <PharmacistListItem
                     key={pharmacist._id}
                     pharmacist={pharmacist}

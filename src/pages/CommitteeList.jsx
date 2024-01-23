@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
+import { useDeferredValue } from 'react';
 import CommitteeListRow from '../components/CommitteeListRow';
 import EmptyTableRow from '../components/EmptyTableRow';
 import SnackbarComp from '../components/Snackbar';
@@ -30,6 +31,8 @@ const CommitteeList = () => {
     committeesCount,
     totalCommitteesCount,
   } = useCommitteeList();
+
+  const deferredList = useDeferredValue(list);
 
   return (
     <Box
@@ -72,8 +75,8 @@ const CommitteeList = () => {
             <TableBody>
               {loading ? (
                 <CommitteeListSkeleton columns={columns} />
-              ) : list?.length > 0 ? (
-                list.map((committee) => (
+              ) : deferredList?.length > 0 ? (
+                deferredList.map((committee) => (
                   <CommitteeListRow
                     key={committee._id}
                     committee={committee}

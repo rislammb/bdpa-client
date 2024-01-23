@@ -20,7 +20,6 @@ import { upazilas } from '../constants/upazilas';
 const FilterByLocation = () => {
   const {
     ui: { language },
-    auth: { user },
   } = useStoreState((state) => state);
 
   const isBn = language === 'BN' ? true : false;
@@ -38,7 +37,7 @@ const FilterByLocation = () => {
         <FilterLocationType />
         <FilterDivision />
         <FilterDistrict />
-        {user && <FilterUpazila />}
+        <FilterUpazila />
       </FormGroup>
     </FormControl>
   );
@@ -89,6 +88,7 @@ const FilterLocationType = () => {
           sx={{
             textAlign: 'left',
             width: '100%',
+            mt: 1,
           }}
         >
           {LOCATION_TYPE_OPTIONS.map((option) => (
@@ -149,6 +149,7 @@ const FilterDivision = () => {
           sx={{
             textAlign: 'left',
             width: '100%',
+            mt: 1,
           }}
         >
           {DIVISION_OPTIONS.map((option) => (
@@ -220,6 +221,7 @@ const FilterDistrict = () => {
           sx={{
             textAlign: 'left',
             width: '100%',
+            mt: 1,
           }}
         >
           {options.map((option) => (
@@ -236,6 +238,7 @@ const FilterDistrict = () => {
 const FilterUpazila = () => {
   const {
     ui: { language },
+    auth: { user },
   } = useStoreState((state) => state);
   const [searchParams, setSearchParams] = useSearchParams();
   const [upazila, setUpazila] = useState(searchParams.get('upazila') || 'all');
@@ -286,10 +289,16 @@ const FilterUpazila = () => {
           sx={{
             textAlign: 'left',
             width: '100%',
+            mt: 1,
           }}
         >
           {options.map((option) => (
-            <MenuItem key={option.id} value={option.id} sx={{ fontSize: 14 }}>
+            <MenuItem
+              disabled={!user}
+              key={option.id}
+              value={option.id}
+              sx={{ fontSize: 14 }}
+            >
               {isBn ? option.bn_name : option.name}
             </MenuItem>
           ))}

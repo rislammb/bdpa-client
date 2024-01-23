@@ -55,7 +55,7 @@ const DrawerComp = ({ handleDrawerToggle, navItems }) => {
       <List>
         <ListItem disablePadding>
           <ListItemButton>
-            <NavLink style={linkStyle()} to='/'>
+            <NavLink style={({ isActive }) => linkStyle(isActive)} end to='/'>
               {isBn ? 'হোম' : 'Home'}
             </NavLink>
           </ListItemButton>

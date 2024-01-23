@@ -51,11 +51,6 @@ const Navbar = (props) => {
     (user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN'));
 
   if (isAdmin) {
-    navItems.unshift({
-      path: '/members/add',
-      text: 'Add Member',
-      bn_text: 'সদস্য যোগ',
-    });
     navItems.push({
       path: '/users',
       text: 'Users',
@@ -110,7 +105,7 @@ const Navbar = (props) => {
             onClick={handleDrawerToggle}
             sx={{
               ml: 1,
-              display: { xs: 'block', md: 'none' },
+              display: { xs: 'block', sm: 'none' },
             }}
           >
             {user ? (
@@ -122,7 +117,7 @@ const Navbar = (props) => {
             )}
           </Box>
 
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ display: { xs: 'none', sm: 'flex' } }}>
             {navItems.map((item) => (
               <Button key={item.text} sx={{ color: '#f1f1f1' }}>
                 <NavLink
@@ -161,7 +156,7 @@ const Navbar = (props) => {
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            display: { xs: 'block', md: 'none' },
+            display: { xs: 'block', sm: 'none' },
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,

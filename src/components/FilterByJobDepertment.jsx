@@ -64,6 +64,7 @@ const FilterByJobDepertment = () => {
               sx={{
                 textAlign: 'left',
                 width: '100%',
+                mt: 1,
               }}
             >
               {DEPERTMENT_OPTIONS.map((option) => (

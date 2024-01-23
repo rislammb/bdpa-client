@@ -24,7 +24,7 @@ const getColumns = (isBn, user) => {
         {
           id: 'memberId',
           label: isBn ? 'সদস্য সনাক্তকারী' : 'Member ID',
-          minWidth: 90,
+          minWidth: 100,
         },
         {
           id: 'dateOfBirth',
@@ -100,6 +100,8 @@ const usePharmacistList = () => {
     text: '',
   });
 
+  const isAdmin =
+    user?.roles?.includes('SUPER_ADMIN') || user?.roles?.includes('ADMIN');
   const isBn = language === 'BN' ? true : false;
 
   const handleSnackbarClose = (_event, reason) => {
@@ -129,6 +131,8 @@ const usePharmacistList = () => {
 
   return {
     loading,
+    isAdmin,
+    isBn,
     list,
     pharmacistsCount,
     totalPharmacistsCount,
