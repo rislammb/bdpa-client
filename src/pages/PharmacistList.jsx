@@ -52,6 +52,7 @@ const PharmacistList = () => {
           </Button>
         )}
       </Box>
+
       <FilterGroup />
 
       <Paper>

@@ -46,7 +46,23 @@ const DetailsCommitteeRow = ({
           } else if (key === 'bn_postName') {
             fields[key].value = member.postName?.bn_name;
           } else if (key === 'pharmacistId') {
-            fields[key].value = member;
+            const {
+              bn_name,
+              bn_posting,
+              name,
+              pharmacistId,
+              posting,
+              regNumber,
+            } = member;
+
+            fields[key].value = {
+              bn_name,
+              bn_posting,
+              name,
+              _id: pharmacistId,
+              posting,
+              regNumber,
+            };
           }
         });
       }
@@ -72,12 +88,12 @@ const DetailsCommitteeRow = ({
     const data = await updateMemberData({
       memberId: member._id,
       data: {
-        serialNumber: memberFields.serialNumber.value,
+        serialNumber: memberFields.serialNumber?.value,
         postName: {
-          name: memberFields.postName.value,
-          bn_name: memberFields.bn_postName.value,
+          name: memberFields.postName?.value,
+          bn_name: memberFields.bn_postName?.value,
         },
-        pharmacistId: memberFields.pharmacistId.value?._id ?? null,
+        pharmacistId: memberFields.pharmacistId?.value?._id,
       },
     });
 

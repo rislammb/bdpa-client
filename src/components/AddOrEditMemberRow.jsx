@@ -7,7 +7,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import { useStoreState } from 'easy-peasy';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
 import { getPharmacists } from '../api/pharmacist';
 import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
 
@@ -25,13 +27,39 @@ const AddOrEditMemberRow = ({
     ui: { language },
     member: { submitting },
   } = useStoreState((state) => state);
+  const [searchParams] = useSearchParams();
 
   const [options, setOptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState(
-    type === 'EDIT' ? member.pharmacistId.value?.regNumber : ''
+    type === 'EDIT' ? member?.pharmacistId?.value?.regNumber : ''
   );
 
   const isBn = language === 'BN' ? true : false;
+
+  const debounced = useDebouncedCallback(async (value) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (value) {
+      params.set('query', value);
+    } else {
+      params.delete('query');
+    }
+    const {
+      data: { pharmacists },
+    } = await getPharmacists(params);
+
+    if (pharmacists?.length > 0) {
+      setOptions(pharmacists);
+    }
+  }, 300);
+
+  const handleChange = (e) => {
+    setOptions([]);
+    const value = e.target.value;
+
+    setSearchTerm(value);
+    debounced(value);
+  };
 
   const memberArray = Object.keys(member).reduce((acc, cur) => {
     if (cur === 'id') return acc;
@@ -40,20 +68,6 @@ const AddOrEditMemberRow = ({
     }
     return acc;
   }, []);
-
-  useEffect(() => {
-    setOptions([]);
-
-    (async () => {
-      const {
-        data: { pharmacists },
-      } = await getPharmacists({ searchTerm });
-
-      if (pharmacists?.length > 0) {
-        setOptions(pharmacists);
-      }
-    })();
-  }, [searchTerm]);
 
   return (
     <TableRow sx={type ? { verticalAlign: 'top' } : { display: 'flex' }}>
@@ -90,7 +104,7 @@ const AddOrEditMemberRow = ({
                     );
                   }}
                   isOptionEqualToValue={(option, value) =>
-                    option.regNumber === value?.regNumber
+                    option?.regNumber === value?.regNumber
                   }
                   renderInput={(params) => (
                     <TextField
@@ -107,7 +121,7 @@ const AddOrEditMemberRow = ({
                       }}
                       variant='standard'
                       value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onChange={handleChange}
                       color='info'
                       error={error && error['email'] ? true : false}
                       helperText={

@@ -27,7 +27,9 @@ const Search = ({
     setSearchParams(params);
   }, 300);
 
-  const handleChange = (value) => {
+  const handleChange = (e) => {
+    const value = e.target.value;
+
     setQuery(value);
     debounced(value);
   };
@@ -52,7 +54,7 @@ const Search = ({
       }}
       name='query'
       value={query}
-      onChange={(e) => handleChange(e.target.value)}
+      onChange={handleChange}
       placeholder={placeholder}
       variant='standard'
       sx={sx}

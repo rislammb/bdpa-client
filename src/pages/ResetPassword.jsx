@@ -1,3 +1,5 @@
+import { useDebouncedCallback } from 'use-debounce';
+
 import {
   Alert,
   Box,
@@ -13,7 +15,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { useTheme } from '@mui/material/styles';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { getPharmacists } from '../api/pharmacist';
 import SnackbarComp from '../components/Snackbar';
 import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
@@ -21,6 +23,7 @@ import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
 const ResetPassword = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const {
     ui: { language },
@@ -42,6 +45,25 @@ const ResetPassword = () => {
   const [successAlert, setSuccessAlert] = useState(null);
 
   const isBn = language === 'BN' ? true : false;
+
+  const debounced = useDebouncedCallback((value) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (value) {
+      params.set('query', value);
+    } else {
+      params.delete('query');
+    }
+
+    setSearchParams(params);
+  }, 300);
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+
+    setSearchTerm(value);
+    debounced(value);
+  };
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -92,13 +114,13 @@ const ResetPassword = () => {
     (async () => {
       const {
         data: { pharmacists },
-      } = await getPharmacists({ searchTerm });
+      } = await getPharmacists(searchParams);
 
       if (pharmacists?.length > 0) {
         setOptions(pharmacists);
       }
     })();
-  }, [searchTerm]);
+  }, [searchParams]);
 
   useEffect(() => {
     document.title = isBn
@@ -157,7 +179,7 @@ const ResetPassword = () => {
               }}
               variant='standard'
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleChange}
               color='info'
               error={error && error['email'] ? true : false}
               helperText={

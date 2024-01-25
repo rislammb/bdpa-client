@@ -48,7 +48,9 @@ export default FilterByLocation;
 const FilterLocationType = () => {
   const {
     ui: { language },
+    auth: { user },
   } = useStoreState((state) => state);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [locationType, setLocationType] = useState(
     searchParams.get('location_type') || 'all'
@@ -92,7 +94,16 @@ const FilterLocationType = () => {
           }}
         >
           {LOCATION_TYPE_OPTIONS.map((option) => (
-            <MenuItem key={option.id} value={option.id} sx={{ fontSize: 14 }}>
+            <MenuItem
+              key={option.id}
+              value={option.id}
+              sx={{ fontSize: 14 }}
+              disabled={
+                !user &&
+                (option.id === 'permanentAddress' ||
+                  option.id === 'deputationPosting')
+              }
+            >
               {isBn ? option.bn_name : option.name}
             </MenuItem>
           ))}
@@ -294,7 +305,9 @@ const FilterUpazila = () => {
         >
           {options.map((option) => (
             <MenuItem
-              disabled={!user}
+              disabled={
+                !user || searchParams.get('location_type') === 'voterArea'
+              }
               key={option.id}
               value={option.id}
               sx={{ fontSize: 14 }}

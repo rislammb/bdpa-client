@@ -19,6 +19,7 @@ const FilterByJobDepertment = () => {
 
   const {
     ui: { language },
+    auth: { user },
   } = useStoreState((state) => state);
 
   const isBn = language === 'BN' ? true : false;
@@ -72,6 +73,7 @@ const FilterByJobDepertment = () => {
                   key={option.id}
                   value={option.id}
                   sx={{ fontSize: 14 }}
+                  disabled={!user}
                 >
                   {isBn ? option.bn_name : option.name}
                 </MenuItem>

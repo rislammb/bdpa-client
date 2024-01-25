@@ -1,3 +1,6 @@
+import { useSearchParams } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
+
 import {
   Alert,
   Box,
@@ -29,6 +32,7 @@ const Signup = () => {
   const {
     auth: { getRegistrationData, resendEmailData },
   } = useStoreActions((actions) => actions);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [state, setState] = useState(null);
   const [snackbar, setSnackbar] = useState({
@@ -42,6 +46,25 @@ const Signup = () => {
   const [successAlert, setSuccessAlert] = useState(null);
 
   const isBn = language === 'BN' ? true : false;
+
+  const debounced = useDebouncedCallback((value) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (value) {
+      params.set('query', value);
+    } else {
+      params.delete('query');
+    }
+
+    setSearchParams(params);
+  }, 300);
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+
+    setSearchTerm(value);
+    debounced(value);
+  };
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -107,22 +130,22 @@ const Signup = () => {
   };
 
   useEffect(() => {
+    document.title = isBn ? 'বিডিপিএ | সাইন আপ' : 'BDPA | Signup';
+  }, [isBn]);
+
+  useEffect(() => {
     setOptions([]);
 
     (async () => {
       const {
         data: { pharmacists },
-      } = await getPharmacists({ searchTerm });
+      } = await getPharmacists(searchParams);
 
       if (pharmacists?.length > 0) {
         setOptions(pharmacists);
       }
     })();
-  }, [searchTerm]);
-
-  useEffect(() => {
-    document.title = isBn ? 'বিডিপিএ | সাইন আপ' : 'BDPA | Signup';
-  }, [isBn]);
+  }, [searchParams]);
 
   return (
     <Card sx={{ maxWidth: 370, margin: '20px auto' }}>
@@ -175,7 +198,7 @@ const Signup = () => {
               }}
               variant='standard'
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleChange}
               color='info'
               error={error && error['email'] ? true : false}
               helperText={
