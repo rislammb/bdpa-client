@@ -7,6 +7,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import { useStoreState } from 'easy-peasy';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDebouncedCallback } from 'use-debounce';
@@ -201,3 +202,14 @@ const AddOrEditMemberRow = ({
 };
 
 export default AddOrEditMemberRow;
+
+AddOrEditMemberRow.propTypes = {
+  member: PropTypes.object,
+  error: PropTypes.object,
+  onChange: PropTypes.func,
+  deleteMemberRow: PropTypes.func,
+  disableDeleteMemberRow: PropTypes.bool,
+  type: PropTypes.string,
+  cancelEdit: PropTypes.func,
+  onSubmit: PropTypes.func,
+};

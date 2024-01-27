@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import { useStoreState } from 'easy-peasy';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link, Navigate, NavLink, Route, Routes } from 'react-router-dom';
 
@@ -29,9 +30,8 @@ import UserMenu from './UserMenu';
 
 const drawerWidth = 240;
 
-const Navbar = (props) => {
+const Navbar = ({ window, children }) => {
   const theme = useTheme();
-  const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const {
     auth: { user },
@@ -97,7 +97,7 @@ const Navbar = (props) => {
               />
             </Link>
           </Box>
-          <div>{props.children}</div>
+          <div>{children}</div>
 
           <Box
             aria-label='open drawer'
@@ -283,3 +283,8 @@ const Navbar = (props) => {
 };
 
 export default Navbar;
+
+Navbar.propTypes = {
+  window: PropTypes.object,
+  children: PropTypes.node,
+};

@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/material';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const ColorLink = ({ to, text }) => {
@@ -20,3 +21,8 @@ const ColorLink = ({ to, text }) => {
 };
 
 export default ColorLink;
+
+ColorLink.propTypes = {
+  to: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+};

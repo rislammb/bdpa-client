@@ -2,6 +2,7 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import dayjs from 'dayjs';
 import { useStoreState } from 'easy-peasy';
+import PropTypes from 'prop-types';
 import { getBnDate } from '../helpers/date';
 import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
 import Link from './ui/Link';
@@ -53,3 +54,8 @@ const PharmacistListItem = ({ pharmacist, columns }) => {
 };
 
 export default PharmacistListItem;
+
+PharmacistListItem.propTypes = {
+  pharmacist: PropTypes.object.isRequired,
+  columns: PropTypes.array.isRequired,
+};

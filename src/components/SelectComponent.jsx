@@ -1,5 +1,6 @@
 import { MenuItem, TextField } from '@mui/material';
 import { useStoreState } from 'easy-peasy';
+import PropTypes from 'prop-types';
 
 const SelectComponent = ({
   name,
@@ -36,3 +37,13 @@ const SelectComponent = ({
 };
 
 export default SelectComponent;
+
+SelectComponent.propTypes = {
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  value: PropTypes.string.isRequired,
+  options: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+  style: PropTypes.object,
+  error: PropTypes.object,
+};

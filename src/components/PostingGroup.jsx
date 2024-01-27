@@ -4,6 +4,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
 import { useStoreState } from 'easy-peasy';
+import PropTypes from 'prop-types';
 
 const PostingGroup = ({ postingInfo, onChange, label, error, style }) => {
   const { language } = useStoreState((state) => state.ui);
@@ -90,3 +91,11 @@ const PostingGroup = ({ postingInfo, onChange, label, error, style }) => {
 };
 
 export default PostingGroup;
+
+PostingGroup.propTypes = {
+  postingInfo: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+  label: PropTypes.string,
+  error: PropTypes.object,
+  style: PropTypes.object,
+};

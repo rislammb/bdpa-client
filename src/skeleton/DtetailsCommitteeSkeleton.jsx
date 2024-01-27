@@ -9,57 +9,8 @@ import {
 } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 import { useTheme } from '@mui/material/styles';
+import PropTypes from 'prop-types';
 import TableHeader from '../components/TableHeader';
-
-const DetailsCommitteeRowSkeleton = ({ columns }) => {
-  const theme = useTheme();
-
-  return (
-    <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-      {columns.map((column) => (
-        <TableCell
-          key={column.id}
-          sx={{
-            padding: { xs: '8px 6px', sm: '12px' },
-          }}
-        >
-          {column.id === 'delete' ? (
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                gap: 1,
-              }}
-            >
-              <Skeleton
-                width={24}
-                height={24}
-                sx={{ bgcolor: '#d32f2f' }}
-                variant='circular'
-              />
-              <Skeleton
-                width={24}
-                height={24}
-                sx={{ bgcolor: '#0288d1' }}
-                variant='circular'
-              />
-            </Box>
-          ) : (
-            <Skeleton
-              sx={{
-                bgcolor:
-                  (column.id === 'name' || column.id === 'bn_name') &&
-                  (theme.palette.mode === 'dark'
-                    ? theme.palette.primary.light
-                    : theme.palette.primary.main),
-              }}
-            />
-          )}
-        </TableCell>
-      ))}
-    </TableRow>
-  );
-};
 
 const DtetailsCommitteeSkeleton = ({ columns, isPermittedForEdit }) => {
   const theme = useTheme();
@@ -125,3 +76,62 @@ const DtetailsCommitteeSkeleton = ({ columns, isPermittedForEdit }) => {
 };
 
 export default DtetailsCommitteeSkeleton;
+
+DtetailsCommitteeSkeleton.propTypes = {
+  columns: PropTypes.array.isRequired,
+  isPermittedForEdit: PropTypes.bool,
+};
+
+const DetailsCommitteeRowSkeleton = ({ columns }) => {
+  const theme = useTheme();
+
+  return (
+    <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+      {columns.map((column) => (
+        <TableCell
+          key={column.id}
+          sx={{
+            padding: { xs: '8px 6px', sm: '12px' },
+          }}
+        >
+          {column.id === 'delete' ? (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                gap: 1,
+              }}
+            >
+              <Skeleton
+                width={24}
+                height={24}
+                sx={{ bgcolor: '#d32f2f' }}
+                variant='circular'
+              />
+              <Skeleton
+                width={24}
+                height={24}
+                sx={{ bgcolor: '#0288d1' }}
+                variant='circular'
+              />
+            </Box>
+          ) : (
+            <Skeleton
+              sx={{
+                bgcolor:
+                  (column.id === 'name' || column.id === 'bn_name') &&
+                  (theme.palette.mode === 'dark'
+                    ? theme.palette.primary.light
+                    : theme.palette.primary.main),
+              }}
+            />
+          )}
+        </TableCell>
+      ))}
+    </TableRow>
+  );
+};
+
+DetailsCommitteeRowSkeleton.propTypes = {
+  columns: PropTypes.array.isRequired,
+};

@@ -2,6 +2,7 @@ import Close from '@mui/icons-material/Close';
 import Done from '@mui/icons-material/Done';
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import { Box, IconButton, TableCell, TableRow, TextField } from '@mui/material';
+import PropTypes from 'prop-types';
 
 import { genderOptionsWithEmpty } from '../constants/gender';
 import { jobDepertmentOptionsWithEmpty } from '../constants/jobDepertment';
@@ -144,7 +145,10 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
               postingInfo={addressFieldsArray}
               onChange={handleChange}
               error={error}
-              style={{ width: '100%' }}
+              style={{
+                width: '100%',
+                '& .MuiTextField-root': { m: 1, width: '33.33333ch' },
+              }}
             />
           ) : row.name === 'onDeputation' ? (
             <SelectComponent
@@ -227,3 +231,9 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
 };
 
 export default DetailsPharmacistRow;
+
+DetailsPharmacistRow.propTypes = {
+  row: PropTypes.object.isRequired,
+  pharmacist: PropTypes.object.isRequired,
+  setSnackbar: PropTypes.func,
+};

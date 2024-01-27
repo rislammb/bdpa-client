@@ -9,6 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { useStoreActions, useStoreState } from 'easy-peasy';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
 const DrawerComp = ({ handleDrawerToggle, navItems }) => {
@@ -136,3 +137,8 @@ const DrawerComp = ({ handleDrawerToggle, navItems }) => {
 };
 
 export default DrawerComp;
+
+DrawerComp.propTypes = {
+  handleDrawerToggle: PropTypes.func.isRequired,
+  navItems: PropTypes.array.isRequired,
+};

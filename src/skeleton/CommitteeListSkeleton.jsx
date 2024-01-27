@@ -2,6 +2,7 @@ import Skeleton from '@mui/material/Skeleton';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import { useTheme } from '@mui/material/styles';
+import PropTypes from 'prop-types';
 
 const CommitteeListSkeleton = ({ columns }) => {
   return (
@@ -21,6 +22,10 @@ const CommitteeListSkeleton = ({ columns }) => {
 };
 
 export default CommitteeListSkeleton;
+
+CommitteeListSkeleton.propTypes = {
+  columns: PropTypes.array.isRequired,
+};
 
 const TableRowSkeleton = ({ columns }) => {
   const theme = useTheme();
@@ -50,4 +55,8 @@ const TableRowSkeleton = ({ columns }) => {
       ))}
     </TableRow>
   );
+};
+
+TableRowSkeleton.propTypes = {
+  columns: PropTypes.array.isRequired,
 };

@@ -1,5 +1,6 @@
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
+import PropTypes from 'prop-types';
 
 import { useTheme } from '@mui/material/styles';
 import { useStoreState } from 'easy-peasy';
@@ -28,3 +29,7 @@ const EmptyTableRow = ({ colSpan }) => {
 };
 
 export default EmptyTableRow;
+
+EmptyTableRow.propTypes = {
+  colSpan: PropTypes.number,
+};

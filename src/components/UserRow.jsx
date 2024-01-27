@@ -8,21 +8,11 @@ import {
 } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { useStoreActions, useStoreState } from 'easy-peasy';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import { objDeepClone } from '../helpers/utilities';
 import ColorLink from './ui/ColorLink';
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
 
 const UserRow = ({ user }) => {
   const {
@@ -193,3 +183,7 @@ const UserRow = ({ user }) => {
 };
 
 export default UserRow;
+
+UserRow.propTypes = {
+  user: PropTypes.object.isRequired,
+};

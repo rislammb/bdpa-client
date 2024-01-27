@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { useStoreState } from 'easy-peasy';
+import PropTypes from 'prop-types';
 import DatePickerComp from './DatePickerComp';
 
 const AddOrEditCommittee = ({
@@ -99,3 +100,11 @@ const AddOrEditCommittee = ({
 };
 
 export default AddOrEditCommittee;
+
+AddOrEditCommittee.propTypes = {
+  committeeInfoArray: PropTypes.array,
+  handleCommitteeInfoChange: PropTypes.func,
+  type: PropTypes.string,
+  toggleIsEditCommitttee: PropTypes.func,
+  handleCommitteeSubmit: PropTypes.func,
+};

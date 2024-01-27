@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/material/styles';
+import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 
 const Link = ({ to, text, target = '', sx }) => {
@@ -23,3 +24,10 @@ const Link = ({ to, text, target = '', sx }) => {
 };
 
 export default Link;
+
+Link.propTypes = {
+  to: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  target: PropTypes.string,
+  sx: PropTypes.object,
+};

@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 import EmptyTableRow from '../components/EmptyTableRow';
 import UserRow from '../components/UserRow';
 import ColorTitle from '../components/ui/ColorTitle';
-import Loading from '../components/ui/loading';
+import UserListSkeleton from '../skeleton/UserListSkeleton';
 
 const Users = () => {
   const {
@@ -47,7 +47,7 @@ const Users = () => {
       <ColorTitle variant={'h4'} text={isBn ? 'ব্যবহারকারীগণ' : 'Users'} />
 
       {loading ? (
-        <Loading />
+        <UserListSkeleton isBn={isBn} />
       ) : (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 630 }} aria-label='simple table'>

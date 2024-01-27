@@ -1,6 +1,7 @@
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Stack from '@mui/material/Stack';
+import PropTypes from 'prop-types';
 import * as React from 'react';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -19,3 +20,10 @@ const SnackbarComp = ({ open, severity, text, handleClose }) => {
   );
 };
 export default SnackbarComp;
+
+SnackbarComp.propTypes = {
+  open: PropTypes.bool.isRequired,
+  severity: PropTypes.string,
+  text: PropTypes.string.isRequired,
+  handleClose: PropTypes.func.isRequired,
+};

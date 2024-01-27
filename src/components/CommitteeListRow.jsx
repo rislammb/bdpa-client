@@ -1,6 +1,7 @@
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import dayjs from 'dayjs';
+import PropTypes from 'prop-types';
 import { getBnDate } from '../helpers/date';
 import Link from './ui/Link';
 
@@ -48,3 +49,9 @@ const CommitteeListRow = ({ committee, columns, isBn }) => {
 };
 
 export default CommitteeListRow;
+
+CommitteeListRow.propTypes = {
+  committee: PropTypes.object.isRequired,
+  columns: PropTypes.array.isRequired,
+  isBn: PropTypes.bool,
+};

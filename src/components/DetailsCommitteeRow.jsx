@@ -6,6 +6,7 @@ import { Box, IconButton } from '@mui/material';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import { useStoreActions, useStoreState } from 'easy-peasy';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { committeeMemberFields } from '../constants/committeeMemberFields';
 import { objDeepClone } from '../helpers/utilities';
@@ -214,3 +215,10 @@ const DetailsCommitteeRow = ({
 };
 
 export default DetailsCommitteeRow;
+
+DetailsCommitteeRow.propTypes = {
+  member: PropTypes.object.isRequired,
+  columns: PropTypes.array.isRequired,
+  disableDeleteMember: PropTypes.bool,
+  setSnackbar: PropTypes.func,
+};
