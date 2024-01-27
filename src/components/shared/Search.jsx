@@ -1,7 +1,6 @@
-import PropTypes from 'prop-types';
-
 import ClearIcon from '@mui/icons-material/Clear';
 import { IconButton, InputAdornment, TextField } from '@mui/material';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDebouncedCallback } from 'use-debounce';
@@ -34,6 +33,11 @@ const Search = ({
     debounced(value);
   };
 
+  const handleClear = () => {
+    setQuery('');
+    debounced('');
+  };
+
   return (
     <TextField
       InputLabelProps={{ color: 'info' }}
@@ -44,7 +48,7 @@ const Search = ({
           <InputAdornment position='end'>
             <IconButton
               disabled={!searchParams.get('query')}
-              onClick={() => handleChange('')}
+              onClick={handleClear}
               size='small'
             >
               <ClearIcon fontSize='small' />
