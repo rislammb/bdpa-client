@@ -14,12 +14,17 @@ import { useEffect } from 'react';
 import EmptyTableRow from '../components/EmptyTableRow';
 import UserRow from '../components/UserRow';
 import ColorTitle from '../components/ui/ColorTitle';
+
+import { useSearchParams } from 'react-router-dom';
+import CustomPagination from '../components/shared/CustomPagination';
+import Search from '../components/shared/Search';
 import UserListSkeleton from '../skeleton/UserListSkeleton';
 
 const Users = () => {
+  const [searchParams] = useSearchParams();
   const {
     ui: { language },
-    user: { loading, list },
+    user: { loading, list, usersCount, totalUsersCount },
   } = useStoreState((state) => state);
   const { getUsersData } = useStoreActions((actions) => actions.user);
 
@@ -30,8 +35,8 @@ const Users = () => {
   }, [isBn]);
 
   useEffect(() => {
-    getUsersData();
-  }, [getUsersData]);
+    getUsersData(searchParams);
+  }, [searchParams]);
 
   return (
     <Box
@@ -40,11 +45,19 @@ const Users = () => {
         mx: 'auto',
         display: 'flex',
         flexDirection: 'column',
-        gap: 2,
+        gap: 1,
         py: 2,
       }}
     >
       <ColorTitle variant={'h4'} text={isBn ? 'ব্যবহারকারীগণ' : 'Users'} />
+
+      <Search
+        label={isBn ? 'ব্যবহারকারী অনুসন্ধান' : 'Search Users'}
+        placeholder={
+          isBn ? 'ইমেইল বা রেজিস্ট্রেশন ..' : 'Email  or Registration ..'
+        }
+        sx={{ alignSelf: 'end' }}
+      />
 
       {loading ? (
         <UserListSkeleton isBn={isBn} />
@@ -72,6 +85,12 @@ const Users = () => {
           </Table>
         </TableContainer>
       )}
+
+      <CustomPagination
+        count={usersCount}
+        pageSize={30}
+        totalCount={totalUsersCount}
+      />
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import { action, computed, thunk } from 'easy-peasy';
+import { action, thunk } from 'easy-peasy';
 import { deleteUser, getUsers, updateUserById } from '../api/user';
 
 const userModel = {
@@ -6,6 +6,8 @@ const userModel = {
   submitting: false,
   error: null,
   list: [],
+  usersCount: 0,
+  totalUsersCount: 0,
   filterCondition: 'all',
   setLoading: action((state, payload) => {
     state.loading = payload;
@@ -17,15 +19,17 @@ const userModel = {
     state.error = payload;
   }),
   setUsers: action((state, payload) => {
-    state.list = payload;
+    state.list = payload.users;
+    state.usersCount = payload.usersCount;
+    state.totalUsersCount = payload.totalUsersCount;
   }),
-  getUsersData: thunk(async (actions) => {
+  getUsersData: thunk(async (actions, payload) => {
     actions.setLoading(true);
     actions.setUsers([]);
     actions.setError(null);
 
     try {
-      const { data } = await getUsers();
+      const { data } = await getUsers(payload);
       actions.setUsers(data);
     } catch (e) {
       if (e.response) actions.setError(e.response.data);
@@ -37,13 +41,6 @@ const userModel = {
   setFilterCondition: action((state, payload) => {
     state.filterCondition = payload;
   }),
-  filteredList: computed((state) =>
-    state.list.filter((item) =>
-      state.filterCondition === 'all'
-        ? state.list
-        : item.accountStatus === state.filterCondition
-    )
-  ),
   updateUserData: thunk(async (actions, payload) => {
     actions.setError(null);
     actions.setSubmitting(true);
