@@ -62,6 +62,7 @@ const CommitteeList = () => {
             component={RouterLink}
             to='/committees/add'
             variant='contained'
+            sx={{ fontSize: { xs: 11, sm: 14 }, px: { xs: 3, sm: 2 } }}
           >
             {isBn ? 'কমিটি' : 'Committee'}
           </Button>
