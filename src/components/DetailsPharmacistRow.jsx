@@ -76,6 +76,7 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
               onChange={handleChange}
               color='info'
               label={row.name === 'imageUrl' && 'Image URL'}
+              placeholder={row.placeholder}
               variant='standard'
               sx={{ width: '100%', fontSize: '7px' }}
               error={error && error[row.name] ? true : false}
@@ -96,6 +97,7 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
                   color='info'
                   label={isBn ? item.bn_label : item.label}
                   value={inputValue && inputValue[item.name]}
+                  placeholder={item.placeholder}
                   onChange={handleChange}
                   variant='standard'
                   sx={{ width: '100%', fontSize: '7px' }}

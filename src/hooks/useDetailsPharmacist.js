@@ -5,13 +5,22 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getBnDate } from '../helpers/date';
 import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
 
-const createRow = (th, value, name, type, isEditable, textGroupFields) => ({
+const createRow = (
+  th,
+  value,
+  name,
+  type,
+  isEditable,
+  textGroupFields,
+  placeholder
+) => ({
   th,
   td: value,
   name,
   type,
   isEditable,
   textGroupFields,
+  placeholder,
 });
 
 const getPharmacistRows = ({
@@ -30,35 +39,45 @@ const getPharmacistRows = ({
         pharmacist?.imageUrl || '',
         'imageUrl',
         'text',
-        isPermittedForEdit
+        isPermittedForEdit,
+        null,
+        'https://bdpa.org/image/member7.jpg'
       ),
       createRow(
         isBn ? 'বি-গ্রেড নিবন্ধন সংখ্যা' : 'Registration number',
         pharmacist?.regNumber || '',
         'regNumber',
         '',
-        false
+        false,
+        null,
+        'B-0123'
       ),
       createRow(
         isBn ? 'নাম (English)' : 'Name (English)',
         pharmacist?.name || '',
         'name',
         'text',
-        isPermittedForEdit
+        isPermittedForEdit,
+        null,
+        'ABDULLAH'
       ),
       createRow(
         isBn ? 'নাম (বাংলা)' : 'Name (বাংলা)',
         pharmacist?.bn_name || '',
         'bn_name',
         'text',
-        isPermittedForEdit
+        isPermittedForEdit,
+        null,
+        'আবদুল্লাহ'
       ),
       createRow(
         isBn ? 'ইমেইল' : 'Email',
         pharmacist?.email || '',
         'email',
         'text',
-        isAdmin
+        isAdmin,
+        null,
+        'abdullah@email.com'
       ),
       createRow(
         isBn ? 'মোবাইল নাম্বার' : 'Mobile number',
@@ -69,7 +88,9 @@ const getPharmacistRows = ({
           : '',
         'mobile',
         'text',
-        isPermittedForEdit
+        isPermittedForEdit,
+        null,
+        '01712123456'
       ),
       createRow(
         isBn ? 'পিতার নাম' : 'Fathers Name',
@@ -86,11 +107,13 @@ const getPharmacistRows = ({
             name: 'name',
             label: "Father's name (English)",
             bn_label: 'পিতার নাম (English)',
+            placeholder: 'ABDUR RAHMAN',
           },
           {
             name: 'bn_name',
             label: "Father's name (বাংলা)",
             bn_label: 'পিতার নাম (বাংলা)',
+            placeholder: 'আব্দুর রহমান',
           },
         ]
       ),
@@ -109,11 +132,13 @@ const getPharmacistRows = ({
             name: 'name',
             label: "Mother's name (English)",
             bn_label: 'মায়ের নাম (English)',
+            placeholder: 'AYESHA',
           },
           {
             name: 'bn_name',
             label: "Mother's name (বাংলা)",
             bn_label: 'মায়ের নাম (বাংলা)',
+            placeholder: 'আয়েশা',
           },
         ]
       ),
@@ -152,7 +177,9 @@ const getPharmacistRows = ({
           : '',
         'nationalId',
         'text',
-        isPermittedForEdit
+        isPermittedForEdit,
+        null,
+        '1372362372'
       ),
       createRow(
         isBn ? 'ইনস্টিটিউটের নাম' : 'Institute Name',
@@ -169,11 +196,13 @@ const getPharmacistRows = ({
             name: 'name',
             label: 'Institute Name (English)',
             bn_label: 'ইনস্টিটিউটের নাম (English)',
+            placeholder: 'Institute of Health Technology, Rajshahi',
           },
           {
             name: 'bn_name',
             label: 'Institute Name (বাংলা)',
             bn_label: 'ইনস্টিটিউটের নাম (বাংলা)',
+            placeholder: 'ইনস্টিটিউট অব হেলথ টেকনোলজি, রাজশাহী',
           },
         ]
       ),
@@ -186,14 +215,18 @@ const getPharmacistRows = ({
           : '',
         'passingYear',
         'text',
-        isPermittedForEdit
+        isPermittedForEdit,
+        null,
+        '2012'
       ),
       createRow(
         isBn ? 'সদস্য সনাক্তকারী সংখ্যা' : 'BDPA member ID',
         pharmacist?.memberId || '',
         'memberId',
         'text',
-        isAdmin
+        isAdmin,
+        null,
+        'BDP00321'
       ),
       createRow(
         isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment',
