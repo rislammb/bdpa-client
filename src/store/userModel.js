@@ -8,7 +8,6 @@ const userModel = {
   list: [],
   usersCount: 0,
   totalUsersCount: 0,
-  filterCondition: 'all',
   setLoading: action((state, payload) => {
     state.loading = payload;
   }),
@@ -25,8 +24,6 @@ const userModel = {
   }),
   getUsersData: thunk(async (actions, payload) => {
     actions.setLoading(true);
-    actions.setUsers([]);
-    actions.setError(null);
 
     try {
       const { data } = await getUsers(payload);
@@ -37,9 +34,6 @@ const userModel = {
     } finally {
       actions.setLoading(false);
     }
-  }),
-  setFilterCondition: action((state, payload) => {
-    state.filterCondition = payload;
   }),
   updateUserData: thunk(async (actions, payload) => {
     actions.setError(null);

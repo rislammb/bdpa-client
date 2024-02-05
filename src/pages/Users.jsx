@@ -16,6 +16,7 @@ import UserRow from '../components/UserRow';
 import ColorTitle from '../components/ui/ColorTitle';
 
 import { useSearchParams } from 'react-router-dom';
+import StatusFilter from '../components/StatusFilter';
 import CustomPagination from '../components/shared/CustomPagination';
 import Search from '../components/shared/Search';
 import UserListSkeleton from '../skeleton/UserListSkeleton';
@@ -45,19 +46,22 @@ const Users = () => {
         mx: 'auto',
         display: 'flex',
         flexDirection: 'column',
-        gap: 1,
-        py: 2,
+        gap: 2,
+        pt: 2.5,
       }}
     >
       <ColorTitle variant={'h4'} text={isBn ? 'ব্যবহারকারীগণ' : 'Users'} />
 
-      <Search
-        label={isBn ? 'ব্যবহারকারী অনুসন্ধান' : 'Search Users'}
-        placeholder={
-          isBn ? 'ইমেইল বা রেজিস্ট্রেশন ..' : 'Email  or Registration ..'
-        }
-        sx={{ alignSelf: 'end' }}
-      />
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <StatusFilter />
+        <Search
+          label={isBn ? 'ব্যবহারকারী অনুসন্ধান' : 'Search Users'}
+          placeholder={
+            isBn ? 'ইমেইল বা রেজিস্ট্রেশন ..' : 'Email  or Registration ..'
+          }
+          sx={{ alignSelf: 'end' }}
+        />
+      </Box>
 
       {loading ? (
         <UserListSkeleton isBn={isBn} />

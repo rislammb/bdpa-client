@@ -11,16 +11,18 @@ import { useStoreActions, useStoreState } from 'easy-peasy';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
+import { useSearchParams } from 'react-router-dom';
 import { objDeepClone } from '../helpers/utilities';
 import ColorLink from './ui/ColorLink';
 
 const UserRow = ({ user }) => {
+  const [searchParams] = useSearchParams();
   const {
     ui: { language },
     user: { submitting },
     auth: { user: authUser },
   } = useStoreState((state) => state);
-  const { updateUserData, deleteUserData } = useStoreActions(
+  const { updateUserData, deleteUserData, getUsersData } = useStoreActions(
     (actions) => actions.user
   );
   const [dataForEdit, setDataForEdit] = useState(user);
@@ -55,6 +57,7 @@ const UserRow = ({ user }) => {
     });
     if (res) {
       setIsRowEdit(false);
+      getUsersData(searchParams);
     }
   };
 
@@ -96,9 +99,10 @@ const UserRow = ({ user }) => {
                   width: '100%',
                 }}
               >
-                <MenuItem value={'PEDNING'}>PEDNING</MenuItem>
                 <MenuItem value={'ACTIVE'}>ACTIVE</MenuItem>
+                <MenuItem value={'PENDING'}>PENDING</MenuItem>
                 <MenuItem value={'SUSPEND'}>SUSPEND</MenuItem>
+                <MenuItem value={'REJECTED'}>REJECTED</MenuItem>
               </TextField>
             }
           />
