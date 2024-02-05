@@ -38,6 +38,9 @@ const PharmacistList = () => {
         width: '100%',
         maxWidth: '1300px',
         margin: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
       }}
     >
       <Box sx={{ mt: 2.5, textAlign: 'right' }}>

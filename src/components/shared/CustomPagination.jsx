@@ -64,7 +64,6 @@ const CustomPagination = ({ count, totalCount, pageSize }) => {
         flexDirection: { xs: 'column-reverse', sm: 'row' },
         justifyContent: 'space-between',
         alignItems: 'center',
-        mt: 3,
       }}
     >
       <FormControl>

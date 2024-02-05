@@ -40,11 +40,14 @@ const CommitteeList = () => {
         width: '100%',
         maxWidth: '1100px',
         margin: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
       }}
     >
       <Box
         sx={{
-          my: 2,
+          mt: 2.5,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',

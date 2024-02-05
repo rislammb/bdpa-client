@@ -19,7 +19,6 @@ const FilterGroup = () => {
   const temporaryJSX = (
     <Box
       sx={{
-        my: 1.5,
         ml: 2,
         mr: -1,
       }}
@@ -72,7 +71,6 @@ const FilterGroup = () => {
     <Box
       sx={{
         display: 'flex',
-        my: 2,
         ml: 2,
         gap: 2,
         justifyContent: 'center',
