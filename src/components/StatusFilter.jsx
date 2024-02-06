@@ -1,9 +1,11 @@
 import { FormControlLabel, MenuItem, TextField } from '@mui/material';
+import { useStoreState } from 'easy-peasy';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 const StatusFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { language } = useStoreState((state) => state.ui);
   const [accountStatus, setAccountStatus] = useState(
     searchParams.get('account_status') || 'ALL'
   );
@@ -26,7 +28,7 @@ const StatusFilter = () => {
           InputLabelProps={{ color: 'info' }}
           select
           name={'accountStatus'}
-          label={'Account Status'}
+          label={language === 'BN' ? 'একাউন্টের অবস্থা' : 'Account Status'}
           value={accountStatus}
           onChange={handleChange}
           variant='standard'
