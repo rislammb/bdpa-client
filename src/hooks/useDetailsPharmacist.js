@@ -229,15 +229,15 @@ const getPharmacistRows = ({
         'BDP00321'
       ),
       createRow(
-        isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment',
+        isBn ? 'চাকুরীর বিভাগ' : 'Job Department',
         pharmacist
-          ? pharmacist.jobDepertment?.id
+          ? pharmacist.jobDepartment?.id
             ? isBn
-              ? pharmacist.jobDepertment?.bn_name
-              : pharmacist.jobDepertment?.name
+              ? pharmacist.jobDepartment?.bn_name
+              : pharmacist.jobDepartment?.name
             : ''
           : '',
-        'jobDepertment',
+        'jobDepartment',
         'select',
         isPermittedForEdit
       ),
@@ -343,15 +343,15 @@ const getPharmacistRows = ({
         'memberId'
       ),
       createRow(
-        isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment',
+        isBn ? 'চাকুরীর বিভাগ' : 'Job Department',
         pharmacist
-          ? pharmacist.jobDepertment?.id
+          ? pharmacist.jobDepartment?.id
             ? isBn
-              ? pharmacist.jobDepertment?.bn_name
-              : pharmacist.jobDepertment?.name
+              ? pharmacist.jobDepartment?.bn_name
+              : pharmacist.jobDepartment?.name
             : ''
           : '',
-        'jobDepertment'
+        'jobDepartment'
       ),
       createRow(
         isBn ? 'বর্তমান কর্মস্থল/ঠিকানা' : 'Current Postiong/Address',

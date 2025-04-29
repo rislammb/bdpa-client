@@ -1,5 +1,5 @@
 import { genderField } from './gender';
-import { jobDepertmentField } from './jobDepertment';
+import { jobDepartmentField } from './jobDepartment';
 
 export const addFormFields = {
   regNumber: {
@@ -137,5 +137,5 @@ export const addFormFields = {
     bn_label: 'যোগদানের তারিখ',
     value: null,
   },
-  jobDepertment: { ...jobDepertmentField },
+  jobDepartment: { ...jobDepartmentField },
 };

@@ -5,7 +5,7 @@ import { Box, IconButton, TableCell, TableRow, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 
 import { genderOptionsWithEmpty } from '../constants/gender';
-import { jobDepertmentOptionsWithEmpty } from '../constants/jobDepertment';
+import { jobDepartmentOptionsWithEmpty } from '../constants/jobDepartment';
 import { onDeputationOptions } from '../constants/onDeputationFields';
 import useDetailsPharmacistRow from '../hooks/useDetailsPharmacistRow';
 import DatePickerComp from './DatePickerComp';
@@ -134,11 +134,11 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
               onChange={handleChange}
               style={{ width: '100%' }}
             />
-          ) : row.name === 'jobDepertment' ? (
+          ) : row.name === 'jobDepartment' ? (
             <SelectComponent
-              name='jobDepertment'
+              name='jobDepartment'
               value={inputValue.id}
-              options={jobDepertmentOptionsWithEmpty}
+              options={jobDepartmentOptionsWithEmpty}
               onChange={handleChange}
               style={{ width: '100%' }}
             />

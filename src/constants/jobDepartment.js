@@ -1,4 +1,4 @@
-export const jobDepertmentOptions = [
+export const jobDepartmentOptions = [
   {
     id: '1',
     name: 'Directorate General of Family Planning',
@@ -33,20 +33,20 @@ export const jobDepertmentOptions = [
   },
 ];
 
-export const jobDepertmentOptionsWithEmpty = [
+export const jobDepartmentOptionsWithEmpty = [
   {
     id: '',
     name: '--- Select ---',
     bn_name: '--- নির্বাচন ---',
   },
-  ...jobDepertmentOptions,
+  ...jobDepartmentOptions,
 ];
 
-export const jobDepertmentField = {
+export const jobDepartmentField = {
   type: 'select',
-  options: jobDepertmentOptionsWithEmpty,
-  name: 'jobDepertment',
-  label: 'Job Depertment',
+  options: jobDepartmentOptionsWithEmpty,
+  name: 'jobDepartment',
+  label: 'Job Department',
   bn_label: 'চাকুরীর বিভাগ',
   value: '',
 };

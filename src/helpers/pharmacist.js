@@ -119,12 +119,12 @@ const upazilaFilter = (list, locationValue, upazilaValue) => {
   }
 };
 
-const depertmentFilter = (list, depertmentInfo) => {
-  if (depertmentInfo.value === 'all') {
+const departmentFilter = (list, departmentInfo) => {
+  if (departmentInfo.value === 'all') {
     return list;
   } else {
     return list?.filter(
-      (item) => item.jobDepertment?.id === depertmentInfo.value
+      (item) => item.jobDepartment?.id === departmentInfo.value
     );
   }
 };
@@ -142,7 +142,7 @@ const searchFilter = (list, searchTerm) => {
 export const getFilteredPharmacists = (
   list,
   locationInfo,
-  jobDepertmentInfo,
+  jobDepartmentInfo,
   searchTerm
 ) => {
   const { locationType, division, district, upazila } = locationInfo;
@@ -163,10 +163,10 @@ export const getFilteredPharmacists = (
     upazila.value
   );
 
-  const listAfterDepertmentFilter = depertmentFilter(
+  const listAfterDepartmentFilter = departmentFilter(
     listAfterUpazilaFilter,
-    jobDepertmentInfo
+    jobDepartmentInfo
   );
 
-  return searchFilter(listAfterDepertmentFilter, searchTerm);
+  return searchFilter(listAfterDepartmentFilter, searchTerm);
 };
