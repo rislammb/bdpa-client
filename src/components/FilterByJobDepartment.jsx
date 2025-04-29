@@ -73,7 +73,7 @@ const FilterByJobDepartment = () => {
                   key={option.id}
                   value={option.id}
                   sx={{ fontSize: 14 }}
-                  disabled={!user}
+                  disabled={option.id !== "all" && !user}
                 >
                   {isBn ? option.bn_name : option.name}
                 </MenuItem>
