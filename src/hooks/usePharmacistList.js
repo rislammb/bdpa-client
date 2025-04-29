@@ -29,7 +29,7 @@ const getColumns = (isBn, user) => {
         {
           id: 'dateOfBirth',
           label: isBn ? 'জন্ম তারিখ' : 'Date of Birth',
-          minWidth: 145,
+          minWidth: 155,
         },
         {
           id: 'mainPosting',
