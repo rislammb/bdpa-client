@@ -20,6 +20,7 @@ export const jobDepertmentOptions = [
   { id: '6', name: 'Bangladesh Bank', bn_name: 'বাংলাদেশ ব্যাংক' },
   { id: '7', name: 'Retired', bn_name: 'অবসরপ্রাপ্ত' },
   { id: '8', name: 'University', bn_name: 'বিশ্ববিদ্যালয়' },
+  { id: "9", name: "Department of Prison", bn_name: "কারা অধিদপ্তর" },
   {
     id: '17',
     name: 'Pharmacy/Medicine Store',
