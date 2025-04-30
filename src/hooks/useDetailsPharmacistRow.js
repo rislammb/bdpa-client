@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import dayjs from 'dayjs';
 import { genderOptionsWithEmpty } from '../constants/gender';
-import { jobDepertmentOptionsWithEmpty } from '../constants/jobDepertment';
+import { jobDepartmentOptionsWithEmpty } from '../constants/jobDepartment';
 import { onDeputationOptions } from '../constants/onDeputationFields';
 import {
   areaFieldsFromPharmacist,
@@ -85,9 +85,9 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
       setInputValue(
         genderOptionsWithEmpty.find((item) => item.id === e.target.value)
       );
-    } else if (row.name === 'jobDepertment') {
+    } else if (row.name === 'jobDepartment') {
       setInputValue(
-        jobDepertmentOptionsWithEmpty.find((item) => item.id === e.target.value)
+        jobDepartmentOptionsWithEmpty.find((item) => item.id === e.target.value)
       );
     } else if (row.name === 'onDeputation') {
       setInputValue(

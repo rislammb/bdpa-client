@@ -1,5 +1,5 @@
 import { divisions } from './divisions';
-import { jobDepertmentOptions } from './jobDepertment';
+import { jobDepartmentOptions } from './jobDepartment';
 
 export const INITIAL_OPTIONS = [
   {
@@ -35,4 +35,4 @@ export const LOCATION_TYPE_OPTIONS = [
 
 export const DIVISION_OPTIONS = [...INITIAL_OPTIONS, ...divisions];
 
-export const DEPERTMENT_OPTIONS = [...INITIAL_OPTIONS, ...jobDepertmentOptions];
+export const DEPARTMENT_OPTIONS = [...INITIAL_OPTIONS, ...jobDepartmentOptions];

@@ -9,12 +9,12 @@ import {
 import { useStoreState } from 'easy-peasy';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { DEPERTMENT_OPTIONS } from '../constants/initialInputInfo';
+import { DEPARTMENT_OPTIONS } from '../constants/initialInputInfo';
 
-const FilterByJobDepertment = () => {
+const FilterByJobDepartment = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [depertmentId, setDepertmentId] = useState(
-    searchParams.get('job_depertment_id') || 'all'
+  const [departmentId, setDepartmentId] = useState(
+    searchParams.get('job_department_id') || 'all'
   );
 
   const {
@@ -27,13 +27,13 @@ const FilterByJobDepertment = () => {
   const handleChange = (e) => {
     const params = new URLSearchParams(searchParams);
     const value = e.target.value;
-    setDepertmentId(value);
+    setDepartmentId(value);
     params.set('page', 1);
 
     if (value) {
-      params.set('job_depertment_id', value);
+      params.set('job_department_id', value);
     } else {
-      params.delete('job_depertment_id');
+      params.delete('job_department_id');
     }
 
     setSearchParams(params);
@@ -48,7 +48,7 @@ const FilterByJobDepertment = () => {
       }}
     >
       <FormLabel component='legend'>
-        {isBn ? 'চাকুরীর বিভাগ অনুযায়ী বাছাই' : 'Filter by job depertment'}
+        {isBn ? 'চাকুরীর বিভাগ অনুযায়ী বাছাই' : 'Filter by job department'}
       </FormLabel>
       <FormGroup>
         <FormControlLabel
@@ -57,9 +57,9 @@ const FilterByJobDepertment = () => {
               InputLabelProps={{ color: 'info' }}
               InputProps={{ style: { fontSize: 14, paddingLeft: '5px' } }}
               select
-              name='jobDepertment'
-              label={isBn ? 'চাকুরীর বিভাগ' : 'Job Depertment'}
-              value={depertmentId}
+              name='jobDepartment'
+              label={isBn ? 'চাকুরীর বিভাগ' : 'Job Department'}
+              value={departmentId}
               onChange={handleChange}
               variant='standard'
               sx={{
@@ -68,12 +68,12 @@ const FilterByJobDepertment = () => {
                 mt: 1,
               }}
             >
-              {DEPERTMENT_OPTIONS.map((option) => (
+              {DEPARTMENT_OPTIONS.map((option) => (
                 <MenuItem
                   key={option.id}
                   value={option.id}
                   sx={{ fontSize: 14 }}
-                  disabled={!user}
+                  disabled={option.id !== "all" && !user}
                 >
                   {isBn ? option.bn_name : option.name}
                 </MenuItem>
@@ -86,4 +86,4 @@ const FilterByJobDepertment = () => {
   );
 };
 
-export default FilterByJobDepertment;
+export default FilterByJobDepartment;

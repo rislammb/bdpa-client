@@ -120,7 +120,7 @@ const CustomPagination = ({ count, totalCount, pageSize }) => {
         )}
 
         <Pagination
-          count={Math.ceil(count / pageSize)}
+          count={Math.ceil(count / size)}
           page={page}
           color='primary'
           onChange={handleChange}

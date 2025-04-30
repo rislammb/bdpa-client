@@ -306,7 +306,7 @@ const FilterUpazila = () => {
           {options.map((option) => (
             <MenuItem
               disabled={
-                !user || searchParams.get('location_type') === 'voterArea'
+                option.id !== "all" && (!user || searchParams.get('location_type') === 'voterArea')
               }
               key={option.id}
               value={option.id}

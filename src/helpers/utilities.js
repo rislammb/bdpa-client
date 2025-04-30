@@ -4,7 +4,7 @@ import { addPostingFields } from '../constants/addPostingFields';
 import { districts } from '../constants/districts';
 import { divisions } from '../constants/divisions';
 import { genderOptions } from '../constants/gender';
-import { jobDepertmentOptions } from '../constants/jobDepertment';
+import { jobDepartmentOptions } from '../constants/jobDepartment';
 import { onDeputationOptions } from '../constants/onDeputationFields';
 import { upazilas } from '../constants/upazilas';
 import { voterAreaFields } from '../constants/voterAreaFields';
@@ -174,11 +174,11 @@ export const pharmacistFromState = (
         (item) => item.id === formFields[cur].value
       );
       acc[cur] = gender;
-    } else if (cur === 'jobDepertment') {
-      const depertment = jobDepertmentOptions.find(
+    } else if (cur === 'jobDepartment') {
+      const department = jobDepartmentOptions.find(
         (item) => item.id === formFields[cur].value
       );
-      acc[cur] = depertment;
+      acc[cur] = department;
     } else acc[cur] = formFields[cur].value;
 
     return acc;

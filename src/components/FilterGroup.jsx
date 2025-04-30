@@ -2,7 +2,7 @@ import { Clear, FilterAltOutlined } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
 import { useStoreState } from 'easy-peasy';
 import { useState } from 'react';
-import FilterByJobDepertment from './FilterByJobDepertment';
+import FilterByJobDepartment from './FilterByJobDepartment';
 import FilterByLocation from './FilterByLocation';
 import Search from './shared/Search';
 
@@ -49,7 +49,7 @@ const FilterGroup = () => {
         }}
       >
         <FilterByLocation />
-        <FilterByJobDepertment />
+        <FilterByJobDepartment />
       </Box>
       <Search
         label={isBn ? 'ফার্মাসিস্ট অনুসন্ধান' : 'Search Pharmacist'}
@@ -79,7 +79,7 @@ const FilterGroup = () => {
       }}
     >
       <FilterByLocation />
-      <FilterByJobDepertment />
+      <FilterByJobDepartment />
       <Search
         label={isBn ? 'ফার্মাসিস্ট অনুসন্ধান' : 'Search Pharmacist'}
         placeholder={
