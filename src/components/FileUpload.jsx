@@ -104,7 +104,7 @@ const FileUpload = ({ regNumber, onUploadSuccess, onUploadError }) => {
     if (!imageSrc || !croppedAreaPixels) return;
     try {
       setUploading(true);
-      const blob = await getCroppedBlob(imageSrc, croppedAreaPixels, 600, 800);
+      const blob = await getCroppedBlob(imageSrc, croppedAreaPixels, 900, 900);
       const croppedFile = new File(
         [blob],
         fileName.replace(/\.[^.]+$/, "") + "_portrait.jpg",
