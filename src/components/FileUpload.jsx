@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Slider,
   Button,
 } from "@mui/material";
@@ -21,7 +20,7 @@ const FileUpload = ({ regNumber, onUploadSuccess, onUploadError }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-  const [fileName, setFileName] = useState("portrait.jpg");
+  const [fileName, setFileName] = useState("");
 
   useEffect(() => {
     return () => {
@@ -37,7 +36,8 @@ const FileUpload = ({ regNumber, onUploadSuccess, onUploadError }) => {
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    setFileName(file.name || "portrait.jpg");
+
+    setFileName(file.name || "");
     const objectUrl = URL.createObjectURL(file);
     setImageSrc(objectUrl);
     setCrop({ x: 0, y: 0 });
@@ -57,7 +57,7 @@ const FileUpload = ({ regNumber, onUploadSuccess, onUploadError }) => {
     });
 
   const getCroppedBlob = useCallback(
-    async (imageUrl, cropPixels, outputWidth = 600, outputHeight = 800) => {
+    async (imageUrl, cropPixels, outputWidth = 900, outputHeight = 900) => {
       const image = await createImage(imageUrl);
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
@@ -139,7 +139,7 @@ const FileUpload = ({ regNumber, onUploadSuccess, onUploadError }) => {
       <label htmlFor="file-upload">
         <IconButton
           component="span"
-          color="primary"
+          color="info"
           title="Supported: Images (JPG, PNG, GIF). Max size: 5MB"
         >
           {uploading ? <CircularProgress size={20} /> : <CloudUpload />}
@@ -180,10 +180,11 @@ const FileUpload = ({ regNumber, onUploadSuccess, onUploadError }) => {
             max={3}
             step={0.1}
             onChange={(_, v) => setZoom(v)}
+            color="info"
           />
         </Box>
         <DialogActions>
-          <Button onClick={handleCropCancel} disabled={uploading}>
+          <Button onClick={handleCropCancel} disabled={uploading} color="info">
             Cancel
           </Button>
           <Button
@@ -191,7 +192,7 @@ const FileUpload = ({ regNumber, onUploadSuccess, onUploadError }) => {
             onClick={handleCropConfirm}
             disabled={uploading}
           >
-            {uploading ? <CircularProgress size={18} /> : "Save & Upload"}
+            {uploading ? <CircularProgress size={18} /> : "Crop & Upload"}
           </Button>
         </DialogActions>
       </Dialog>
