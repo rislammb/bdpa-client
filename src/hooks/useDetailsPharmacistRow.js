@@ -1,17 +1,17 @@
-import { useStoreActions, useStoreState } from 'easy-peasy';
-import { useEffect, useState } from 'react';
+import { useStoreActions, useStoreState } from "easy-peasy";
+import { useEffect, useState } from "react";
 
-import dayjs from 'dayjs';
-import { genderOptionsWithEmpty } from '../constants/gender';
-import { jobDepartmentOptionsWithEmpty } from '../constants/jobDepartment';
-import { onDeputationOptions } from '../constants/onDeputationFields';
+import dayjs from "dayjs";
+import { genderOptionsWithEmpty } from "../constants/gender";
+import { jobDepartmentOptionsWithEmpty } from "../constants/jobDepartment";
+import { onDeputationOptions } from "../constants/onDeputationFields";
 import {
   areaFieldsFromPharmacist,
   areaValuesFromState,
   changeHandlerForAreaGroup,
   getAreaInfo,
   getBnAreaInfo,
-} from '../helpers/utilities';
+} from "../helpers/utilities";
 
 const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
   const {
@@ -27,20 +27,24 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [inputValue, setInputValue] = useState(null);
 
-  const isBn = language === 'BN' ? true : false;
+  const isBn = language === "BN" ? true : false;
 
   const isPermittedForEdit =
-    user?.accountStatus === 'ACTIVE' &&
-    (user.roles?.includes('SUPER_ADMIN') ||
-      user.roles?.includes('ADMIN') ||
+    user?.accountStatus === "ACTIVE" &&
+    (user.roles?.includes("SUPER_ADMIN") ||
+      user.roles?.includes("ADMIN") ||
       user.regNumber === pharmacist?.regNumber);
+
+  const isAdmin =
+    user?.accountStatus === "ACTIVE" &&
+    (user?.roles?.includes("SUPER_ADMIN") || user?.roles?.includes("ADMIN"));
 
   const addressFieldsArray =
     inputValue &&
-    (row.name === 'mainPosting' ||
-    row.name === 'permanentAddress' ||
-    row.name === 'voterArea' ||
-    row.name === 'deputationPosting'
+    (row.name === "mainPosting" ||
+    row.name === "permanentAddress" ||
+    row.name === "voterArea" ||
+    row.name === "deputationPosting"
       ? Object.keys(inputValue).reduce((acc, cur) => {
           acc.push(inputValue[cur]);
           return acc;
@@ -51,22 +55,22 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
     if (isEditOpen) {
       setIsEditOpen(false);
     } else {
-      if (row.name === 'mobile') {
+      if (row.name === "mobile") {
         setInputValue(pharmacist?.mobile?.name);
       } else if (
-        row.type === 'textGroup' ||
-        row.type === 'select' ||
-        row.type === 'date'
+        row.type === "textGroup" ||
+        row.type === "select" ||
+        row.type === "date"
       ) {
         setInputValue(pharmacist && pharmacist[row.name]);
-      } else if (row.name === 'mainPosting') {
-        setInputValue(areaFieldsFromPharmacist(pharmacist, 'posting'));
-      } else if (row.name === 'permanentAddress') {
-        setInputValue(areaFieldsFromPharmacist(pharmacist, 'permanent'));
-      } else if (row.name === 'voterArea') {
-        setInputValue(areaFieldsFromPharmacist(pharmacist, 'voter'));
-      } else if (row.name === 'deputationPosting') {
-        setInputValue(areaFieldsFromPharmacist(pharmacist, 'deputation'));
+      } else if (row.name === "mainPosting") {
+        setInputValue(areaFieldsFromPharmacist(pharmacist, "posting"));
+      } else if (row.name === "permanentAddress") {
+        setInputValue(areaFieldsFromPharmacist(pharmacist, "permanent"));
+      } else if (row.name === "voterArea") {
+        setInputValue(areaFieldsFromPharmacist(pharmacist, "voter"));
+      } else if (row.name === "deputationPosting") {
+        setInputValue(areaFieldsFromPharmacist(pharmacist, "deputation"));
       } else setInputValue(tableData);
 
       setIsEditOpen(true);
@@ -74,59 +78,59 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
   };
 
   const handleChange = (e, name) => {
-    if (name === 'dateOfBirth' || name === 'dateOfJoin') {
+    if (name === "dateOfBirth" || name === "dateOfJoin") {
       setInputValue(e);
-    } else if (row.type === 'textGroup') {
+    } else if (row.type === "textGroup") {
       setInputValue((prev) => ({
         ...prev,
         [e.target.name]: e.target.value,
       }));
-    } else if (row.name === 'gender') {
+    } else if (row.name === "gender") {
       setInputValue(
         genderOptionsWithEmpty.find((item) => item.id === e.target.value)
       );
-    } else if (row.name === 'jobDepartment') {
+    } else if (row.name === "jobDepartment") {
       setInputValue(
         jobDepartmentOptionsWithEmpty.find((item) => item.id === e.target.value)
       );
-    } else if (row.name === 'onDeputation') {
+    } else if (row.name === "onDeputation") {
       setInputValue(
         onDeputationOptions.find((item) => item.id === e.target.value)
       );
-    } else if (row.name === 'mainPosting') {
+    } else if (row.name === "mainPosting") {
       setInputValue(
         changeHandlerForAreaGroup(
           inputValue,
           e.target.name,
           e.target.value,
-          'posting'
+          "posting"
         )
       );
-    } else if (row.name === 'permanentAddress') {
+    } else if (row.name === "permanentAddress") {
       setInputValue(
         changeHandlerForAreaGroup(
           inputValue,
           e.target.name,
           e.target.value,
-          'permanent'
+          "permanent"
         )
       );
-    } else if (row.name === 'voterArea') {
+    } else if (row.name === "voterArea") {
       setInputValue(
         changeHandlerForAreaGroup(
           inputValue,
           e.target.name,
           e.target.value,
-          'voter'
+          "voter"
         )
       );
-    } else if (row.name === 'deputationPosting') {
+    } else if (row.name === "deputationPosting") {
       setInputValue(
         changeHandlerForAreaGroup(
           inputValue,
           e.target.name,
           e.target.value,
-          'deputation'
+          "deputation"
         )
       );
     } else {
@@ -136,47 +140,47 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
 
   const handleSubmit = async () => {
     let dataForSubmit = null;
-    let dataForCell = '';
+    let dataForCell = "";
 
-    if (row.type === 'textGroup') {
+    if (row.type === "textGroup") {
       dataForSubmit = { [row.name]: inputValue };
       dataForCell = isBn ? inputValue.bn_name : inputValue.name;
-    } else if (row.type === 'select') {
+    } else if (row.type === "select") {
       dataForSubmit = {
         [row.name]: inputValue.id
           ? inputValue
-          : { id: '', name: '', bn_name: '' },
+          : { id: "", name: "", bn_name: "" },
       };
       dataForCell = inputValue.id
         ? isBn
           ? inputValue.bn_name
           : inputValue.name
-        : '';
-    } else if (row.type === 'date') {
+        : "";
+    } else if (row.type === "date") {
       dataForSubmit = {
         [row.name]: inputValue,
       };
-      dataForCell = dayjs(inputValue).format('DD MMM YYYY');
-    } else if (row.name === 'mainPosting') {
-      dataForSubmit = areaValuesFromState(inputValue, 'posting');
+      dataForCell = dayjs(inputValue).format("DD MMM YYYY");
+    } else if (row.name === "mainPosting") {
+      dataForSubmit = areaValuesFromState(inputValue, "posting");
       dataForCell = isBn
-        ? getBnAreaInfo(dataForSubmit, 'posting')
-        : getAreaInfo(dataForSubmit, 'posting');
-    } else if (row.name === 'permanentAddress') {
-      dataForSubmit = areaValuesFromState(inputValue, 'permanent');
+        ? getBnAreaInfo(dataForSubmit, "posting")
+        : getAreaInfo(dataForSubmit, "posting");
+    } else if (row.name === "permanentAddress") {
+      dataForSubmit = areaValuesFromState(inputValue, "permanent");
       dataForCell = isBn
-        ? getBnAreaInfo(dataForSubmit, 'permanent')
-        : getAreaInfo(dataForSubmit, 'permanent');
-    } else if (row.name === 'voterArea') {
-      dataForSubmit = areaValuesFromState(inputValue, 'voter');
+        ? getBnAreaInfo(dataForSubmit, "permanent")
+        : getAreaInfo(dataForSubmit, "permanent");
+    } else if (row.name === "voterArea") {
+      dataForSubmit = areaValuesFromState(inputValue, "voter");
       dataForCell = isBn
-        ? getBnAreaInfo(dataForSubmit, 'voter')
-        : getAreaInfo(dataForSubmit, 'voter');
-    } else if (row.name === 'deputationPosting') {
-      dataForSubmit = areaValuesFromState(inputValue, 'deputation');
+        ? getBnAreaInfo(dataForSubmit, "voter")
+        : getAreaInfo(dataForSubmit, "voter");
+    } else if (row.name === "deputationPosting") {
+      dataForSubmit = areaValuesFromState(inputValue, "deputation");
       dataForCell = isBn
-        ? getBnAreaInfo(dataForSubmit, 'deputation')
-        : getAreaInfo(dataForSubmit, 'deputation');
+        ? getBnAreaInfo(dataForSubmit, "deputation")
+        : getAreaInfo(dataForSubmit, "deputation");
     } else {
       dataForSubmit = { [row.name]: inputValue };
       dataForCell = inputValue;
@@ -193,26 +197,39 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
 
       setSnackbar({
         open: true,
-        severity: 'success',
+        severity: "success",
         text: isBn
-          ? 'ফার্মাসিস্ট সফলভাবে আপডেট হয়েছে৷'
-          : 'The Pharmacist updated successfully.',
+          ? "ফার্মাসিস্ট সফলভাবে আপডেট হয়েছে৷"
+          : "The Pharmacist updated successfully.",
       });
     } else {
       setTableData(row.td);
       setSnackbar({
         open: true,
-        severity: 'error',
+        severity: "error",
         text:
-          typeof error === 'object'
+          typeof error === "object"
             ? isBn
               ? error.bn_text
               : error.text
             : isBn
-            ? 'ফার্মাসিস্ট আপডেট ব্যর্থ!'
-            : 'Pharmacist update failed!',
+            ? "ফার্মাসিস্ট আপডেট ব্যর্থ!"
+            : "Pharmacist update failed!",
       });
     }
+  };
+
+  const handleUploadSuccess = (url) => {
+    pharmacist.mainImageUrl = url;
+    setTableData(url);
+  };
+
+  const handleUploadError = (error) => {
+    setSnackbar({
+      open: true,
+      severity: "error",
+      text: error,
+    });
   };
 
   useEffect(() => {
@@ -223,6 +240,7 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
     isBn,
     user,
     isPermittedForEdit,
+    isAdmin,
     isEditOpen,
     inputValue,
     handleChange,
@@ -232,6 +250,8 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
     addressFieldsArray,
     tableData,
     handleSubmit,
+    handleUploadSuccess,
+    handleUploadError,
   };
 };
 
