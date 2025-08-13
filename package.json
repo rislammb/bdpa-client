@@ -20,6 +20,7 @@
     "easy-peasy": "^6.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-easy-crop": "^5.5.0",
     "react-router-dom": "^6.16.0",
     "react-share": "^4.4.1",
     "use-debounce": "^10.0.0"

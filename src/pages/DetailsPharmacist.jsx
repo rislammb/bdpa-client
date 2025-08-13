@@ -1,18 +1,18 @@
-import DeleteIcon from '@mui/icons-material/Delete';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
+import DeleteIcon from "@mui/icons-material/Delete";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
+import Typography from "@mui/material/Typography";
 
-import DetailsPharmacistRow from '../components/DetailsPharmacistRow';
-import SnackbarComp from '../components/Snackbar';
-import useDetailsPharmacist from '../hooks/useDetailsPharmacist';
-import DetailsPharmacistSkeleton from '../skeleton/DetailsPharmacistSkeleton';
+import DetailsPharmacistRow from "../components/DetailsPharmacistRow";
+import SnackbarComp from "../components/Snackbar";
+import useDetailsPharmacist from "../hooks/useDetailsPharmacist";
+import DetailsPharmacistSkeleton from "../skeleton/DetailsPharmacistSkeleton";
 
 const DetailsPharmacist = () => {
   const {
@@ -32,9 +32,9 @@ const DetailsPharmacist = () => {
   return (
     <TableContainer
       sx={{
-        overflow: 'auto',
+        overflow: "auto",
         maxWidth: 650,
-        margin: '10px auto',
+        margin: "10px auto",
         pb: 1.5,
       }}
       component={Paper}
@@ -46,15 +46,15 @@ const DetailsPharmacist = () => {
           isAdmin={isAdmin}
         />
       ) : pharmacist ? (
-        tableRows[tableRows.length - 1]?.td === '' &&
-        tableRows[tableRows.length - 2]?.td === '' ? (
+        tableRows[tableRows.length - 1]?.td === "" &&
+        tableRows[tableRows.length - 2]?.td === "" ? (
           <DetailsPharmacistSkeleton
             rows={tableRows}
             isPermittedForEdit={isPermittedForEdit}
             isAdmin={isAdmin}
           />
         ) : (
-          <Table size='small'>
+          <Table size="small">
             <TableBody>
               <>
                 {tableRows.map((row) => (
@@ -67,20 +67,20 @@ const DetailsPharmacist = () => {
                 ))}
                 {isAdmin && (
                   <TableRow
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell
                       colSpan={3}
-                      sx={{ padding: 1.5, textAlign: 'center' }}
+                      sx={{ padding: 1.5, textAlign: "center" }}
                     >
                       <Button
                         disabled={submitting}
                         onClick={handleDelete}
-                        variant='contained'
+                        variant="contained"
                         startIcon={<DeleteIcon />}
-                        color='error'
+                        color="error"
                       >
-                        {isBn ? 'ফার্মাসিস্ট মুছুন' : 'Delete Pharmacist'}
+                        {isBn ? "ফার্মাসিস্ট মুছুন" : "Delete Pharmacist"}
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -94,14 +94,14 @@ const DetailsPharmacist = () => {
           <Typography
             sx={{
               p: 5,
-              textAlign: 'center',
-              color: '#de6176',
+              textAlign: "center",
+              color: "#de6176",
               fontSize: 17,
             }}
           >
             {isBn
-              ? 'ফার্মাসিস্ট খুঁজে পাওয়া যায় নি!'
-              : 'Pharmacist not found!'}
+              ? "ফার্মাসিস্ট খুঁজে পাওয়া যায় নি!"
+              : "Pharmacist not found!"}
           </Typography>
         </Box>
       )}
