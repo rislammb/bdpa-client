@@ -234,8 +234,8 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
             ? error.bn_text
             : error.text
           : isBn
-          ? "ফার্মাসিস্ট আপডেট ব্যর্থ!"
-          : "Pharmacist update failed!",
+          ? "ছবি আপলোড ব্যর্থ হয়েছে!"
+          : "Failed to upload image!",
     });
   };
 
