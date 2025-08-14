@@ -7,6 +7,7 @@ import {
   DialogContent,
   Slider,
   Button,
+  Grid,
 } from "@mui/material";
 import { CloudUpload, Delete } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
@@ -127,7 +128,7 @@ const FileUpload = ({ regNumber, onUploadSuccess, onUploadError }) => {
   };
 
   return (
-    <Box>
+    <Grid item xs={6} sm={12}>
       <input
         accept="image/*"
         style={{ display: "none" }}
@@ -143,9 +144,6 @@ const FileUpload = ({ regNumber, onUploadSuccess, onUploadError }) => {
           title="Supported: Images (JPG, PNG, GIF). Max size: 5MB"
         >
           {uploading ? <CircularProgress size={20} /> : <CloudUpload />}
-        </IconButton>
-        <IconButton color="error">
-          <Delete />
         </IconButton>
       </label>
 
@@ -196,7 +194,7 @@ const FileUpload = ({ regNumber, onUploadSuccess, onUploadError }) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </Grid>
   );
 };
 

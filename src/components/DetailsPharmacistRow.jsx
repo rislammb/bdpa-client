@@ -19,6 +19,7 @@ import DatePickerComp from "./DatePickerComp";
 import PostingGroup from "./PostingGroup";
 import SelectComponent from "./SelectComponent";
 import FileUpload from "./FileUpload";
+import FileDelete from "./FileDelete";
 
 const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
   const {
@@ -37,6 +38,8 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
     handleSubmit,
     handleUploadSuccess,
     handleUploadError,
+    handleDeleteSuccess,
+    handleDeleteError,
   } = useDetailsPharmacistRow({
     row,
     pharmacist,
@@ -78,11 +81,17 @@ const DetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
                   style={{ borderRadius: "2px" }}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={4} container>
                 <FileUpload
                   regNumber={pharmacist.regNumber}
                   onUploadSuccess={handleUploadSuccess}
                   onUploadError={handleUploadError}
+                />
+                <FileDelete
+                  regNumber={pharmacist.regNumber}
+                  imageUrl={pharmacist.mainImageUrl}
+                  onDeleteSuccess={handleDeleteSuccess}
+                  onDeleteError={handleDeleteError}
                 />
               </Grid>
             </Grid>
