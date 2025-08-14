@@ -228,7 +228,34 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
     setSnackbar({
       open: true,
       severity: "error",
-      text: error,
+      text:
+        typeof error === "object"
+          ? isBn
+            ? error.bn_text
+            : error.text
+          : isBn
+          ? "ফার্মাসিস্ট আপডেট ব্যর্থ!"
+          : "Pharmacist update failed!",
+    });
+  };
+
+  const handleDeleteSuccess = () => {
+    pharmacist.mainImageUrl = "";
+    setTableData("");
+  };
+
+  const handleDeleteError = (error) => {
+    setSnackbar({
+      open: true,
+      severity: "error",
+      text:
+        typeof error === "object"
+          ? isBn
+            ? error.bn_text
+            : error.text
+          : isBn
+          ? "ছবি মুছতে ব্যর্থ হয়েছে!"
+          : "Failed to delete image!",
     });
   };
 
@@ -252,6 +279,8 @@ const useDetailsPharmacistRow = ({ row, pharmacist, setSnackbar }) => {
     handleSubmit,
     handleUploadSuccess,
     handleUploadError,
+    handleDeleteSuccess,
+    handleDeleteError,
   };
 };
 
