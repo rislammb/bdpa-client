@@ -1,18 +1,18 @@
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DoneIcon from '@mui/icons-material/Done';
-import { Box, TableCell, TableRow } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import IconButton from '@mui/material/IconButton';
-import TextField from '@mui/material/TextField';
-import { useStoreState } from 'easy-peasy';
-import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { useDebouncedCallback } from 'use-debounce';
-import { getPharmacists } from '../api/pharmacist';
-import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DoneIcon from "@mui/icons-material/Done";
+import { Box, TableCell, TableRow } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
+import { useStoreState } from "easy-peasy";
+import PropTypes from "prop-types";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce";
+import { getPharmacists } from "../api/pharmacist";
+import { getAreaInfo, getBnAreaInfo } from "../helpers/utilities";
 
 const AddOrEditMemberRow = ({
   member,
@@ -32,18 +32,18 @@ const AddOrEditMemberRow = ({
 
   const [options, setOptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState(
-    type === 'EDIT' ? member?.pharmacistId?.value?.regNumber : ''
+    type === "EDIT" ? member?.pharmacistId?.value?.regNumber : ""
   );
 
-  const isBn = language === 'BN' ? true : false;
+  const isBn = language === "BN" ? true : false;
 
   const debounced = useDebouncedCallback(async (value) => {
     const params = new URLSearchParams(searchParams);
 
     if (value) {
-      params.set('query', value);
+      params.set("query", value);
     } else {
-      params.delete('query');
+      params.delete("query");
     }
     const {
       data: { pharmacists },
@@ -63,7 +63,7 @@ const AddOrEditMemberRow = ({
   };
 
   const memberArray = Object.keys(member).reduce((acc, cur) => {
-    if (cur === 'id') return acc;
+    if (cur === "id") return acc;
     else {
       acc.push(member[cur]);
     }
@@ -71,20 +71,20 @@ const AddOrEditMemberRow = ({
   }, []);
 
   return (
-    <TableRow sx={type ? { verticalAlign: 'top' } : { display: 'flex' }}>
+    <TableRow sx={type ? { verticalAlign: "top" } : { display: "flex" }}>
       {memberArray?.length > 0 &&
         memberArray.map((property) => {
           return (
             <TableCell
               sx={{
-                padding: '8px 6px',
-                border: 'none',
+                padding: "8px 6px",
+                border: "none",
                 ...property.sx,
               }}
-              colSpan={property.name === 'pharmacistId' ? 2 : 1}
+              colSpan={property.name === "pharmacistId" ? 2 : 1}
               key={property.name}
             >
-              {property.type === 'autocomplete' ? (
+              {property.type === "autocomplete" ? (
                 <Autocomplete
                   options={options}
                   filterOptions={(x) => x}
@@ -93,8 +93,8 @@ const AddOrEditMemberRow = ({
                       option.regNumber
                     } | ${
                       isBn
-                        ? option.bn_posting ?? getBnAreaInfo(option, 'posting')
-                        : option.posting ?? getAreaInfo(option, 'posting')
+                        ? option.bn_posting ?? getBnAreaInfo(option, "posting")
+                        : option.posting ?? getAreaInfo(option, "posting")
                     }`
                   }
                   value={property.value}
@@ -110,37 +110,42 @@ const AddOrEditMemberRow = ({
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label={isBn ? 'ফার্মাসিস্ট আইডি' : 'Pharmacist Id'}
+                      label={isBn ? "ফার্মাসিস্ট আইডি" : "Pharmacist Id"}
+                      title={
+                        isBn
+                          ? "নাম, নিবন্ধন, আইডি, ইমেইল বা কর্মস্থল"
+                          : "Name, Registration, ID, Email or Posting"
+                      }
                       placeholder={
                         isBn
-                          ? 'নাম, নিবন্ধন, সদস্য পরিচিতি বা ইমেইল'
-                          : 'Name, Registration, Member ID or Email'
+                          ? "নাম, নিবন্ধন, আইডি, ইমেইল বা কর্মস্থল"
+                          : "Name, Registration, ID, Email or Posting"
                       }
                       InputProps={{
                         ...params.InputProps,
                         endAdornment: params.InputProps.endAdornment,
                       }}
-                      variant='standard'
+                      variant="standard"
                       value={searchTerm}
                       onChange={handleChange}
-                      color='info'
-                      error={error && error['email'] ? true : false}
+                      color="info"
+                      error={error && error["email"] ? true : false}
                       helperText={
                         error &&
-                        error['email'] &&
+                        error["email"] &&
                         (isBn
-                          ? error['email'].bn_text ?? ''
-                          : error['email'].text ?? '')
+                          ? error["email"].bn_text ?? ""
+                          : error["email"].text ?? "")
                       }
                     />
                   )}
                 />
               ) : (
                 <TextField
-                  color='info'
+                  color="info"
                   key={property.name}
                   name={property.name}
-                  sx={{ width: '100%' }}
+                  sx={{ width: "100%" }}
                   label={isBn ? property.bn_label : property.label}
                   value={property.value}
                   placeholder={property.placeholder}
@@ -150,39 +155,39 @@ const AddOrEditMemberRow = ({
                     error &&
                     error[property.name] &&
                     (isBn
-                      ? error[property.name].bn_text ?? ''
-                      : error[property.name].text ?? '')
+                      ? error[property.name].bn_text ?? ""
+                      : error[property.name].text ?? "")
                   }
-                  variant='standard'
+                  variant="standard"
                 />
               )}
             </TableCell>
           );
         })}
 
-      <TableCell sx={{ padding: '8px 6px', border: 'none' }}>
-        {type === 'ADD' || type === 'EDIT' ? (
+      <TableCell sx={{ padding: "8px 6px", border: "none" }}>
+        {type === "ADD" || type === "EDIT" ? (
           <Box
-            sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}
+            sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}
           >
             <IconButton
               disabled={submitting}
               onClick={cancelEdit}
-              variant='contained'
-              color='error'
+              variant="contained"
+              color="error"
             >
-              <CloseIcon fontSize='small' />
+              <CloseIcon fontSize="small" />
             </IconButton>
             <IconButton
               disabled={submitting}
               onClick={onSubmit}
-              variant='contained'
-              color='info'
+              variant="contained"
+              color="info"
             >
-              {type === 'ADD' ? (
-                <AddIcon fontSize='small' />
+              {type === "ADD" ? (
+                <AddIcon fontSize="small" />
               ) : (
-                <DoneIcon fontSize='small' />
+                <DoneIcon fontSize="small" />
               )}
             </IconButton>
           </Box>
@@ -190,10 +195,10 @@ const AddOrEditMemberRow = ({
           <IconButton
             disabled={disableDeleteMemberRow}
             onClick={() => deleteMemberRow(member.id)}
-            variant='contained'
-            color='error'
+            variant="contained"
+            color="error"
           >
-            <DeleteIcon fontSize='small' />
+            <DeleteIcon fontSize="small" />
           </IconButton>
         )}
       </TableCell>
