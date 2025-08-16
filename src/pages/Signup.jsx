@@ -1,5 +1,5 @@
-import { useSearchParams } from 'react-router-dom';
-import { useDebouncedCallback } from 'use-debounce';
+import { useSearchParams } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce";
 
 import {
   Alert,
@@ -11,15 +11,15 @@ import {
   CardHeader,
   TextField,
   Typography,
-} from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import { useTheme } from '@mui/material/styles';
-import { useStoreActions, useStoreState } from 'easy-peasy';
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { getPharmacists } from '../api/pharmacist';
-import SnackbarComp from '../components/Snackbar';
-import { getAreaInfo, getBnAreaInfo } from '../helpers/utilities';
+} from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import { useTheme } from "@mui/material/styles";
+import { useStoreActions, useStoreState } from "easy-peasy";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { getPharmacists } from "../api/pharmacist";
+import SnackbarComp from "../components/Snackbar";
+import { getAreaInfo, getBnAreaInfo } from "../helpers/utilities";
 
 const Signup = () => {
   const theme = useTheme();
@@ -37,23 +37,23 @@ const Signup = () => {
   const [state, setState] = useState(null);
   const [snackbar, setSnackbar] = useState({
     open: false,
-    severity: 'info',
-    text: '',
+    severity: "info",
+    text: "",
   });
   const [options, setOptions] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [successAlert, setSuccessAlert] = useState(null);
 
-  const isBn = language === 'BN' ? true : false;
+  const isBn = language === "BN" ? true : false;
 
   const debounced = useDebouncedCallback((value) => {
     const params = new URLSearchParams(searchParams);
 
     if (value) {
-      params.set('query', value);
+      params.set("query", value);
     } else {
-      params.delete('query');
+      params.delete("query");
     }
 
     setSearchParams(params);
@@ -67,10 +67,10 @@ const Signup = () => {
   };
 
   const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
-    setSnackbar({ open: false, severity: snackbar.severity, text: '' });
+    setSnackbar({ open: false, severity: snackbar.severity, text: "" });
   };
 
   const handleSubmit = async (e) => {
@@ -78,7 +78,7 @@ const Signup = () => {
 
     const res = await getRegistrationData({
       email: state.email,
-      clientUrl: import.meta.resolve('/') + 'auth/verify-email/',
+      clientUrl: import.meta.resolve("/") + "auth/verify-email/",
     });
 
     if (res) {
@@ -87,10 +87,10 @@ const Signup = () => {
     } else {
       setSnackbar({
         open: true,
-        severity: 'error',
+        severity: "error",
         text: isBn
-          ? 'ব্যবহারকারী নিবন্ধন ব্যর্থ!'
-          : 'User registration failed!',
+          ? "ব্যবহারকারী নিবন্ধন ব্যর্থ!"
+          : "User registration failed!",
       });
     }
   };
@@ -98,7 +98,7 @@ const Signup = () => {
   const handleResendEmail = async () => {
     const res = await resendEmailData({
       email: state.email,
-      clientUrl: import.meta.resolve('/') + 'auth/verify-email/',
+      clientUrl: import.meta.resolve("/") + "auth/verify-email/",
     });
 
     if (res) {
@@ -106,16 +106,16 @@ const Signup = () => {
       setState(null);
     } else {
       if (!submitting && error) {
-        if (typeof error === 'object') {
+        if (typeof error === "object") {
           setSnackbar({
             open: true,
-            severity: 'error',
+            severity: "error",
             text: isBn ? error.bn_text : error.text,
           });
-        } else if (typeof error === 'string') {
+        } else if (typeof error === "string") {
           setSnackbar({
             open: true,
-            severity: 'error',
+            severity: "error",
             text: error,
           });
         }
@@ -124,13 +124,13 @@ const Signup = () => {
   };
 
   const handleSetPassword = async () => {
-    return navigate('/auth/set-password', {
+    return navigate("/auth/set-password", {
       state: { email: state.email },
     });
   };
 
   useEffect(() => {
-    document.title = isBn ? 'বিডিপিএ | সাইন আপ' : 'BDPA | Signup';
+    document.title = isBn ? "বিডিপিএ | সাইন আপ" : "BDPA | Signup";
   }, [isBn]);
 
   useEffect(() => {
@@ -148,21 +148,21 @@ const Signup = () => {
   }, [searchParams]);
 
   return (
-    <Card sx={{ maxWidth: 370, margin: '20px auto' }}>
+    <Card sx={{ maxWidth: 370, margin: "20px auto" }}>
       <CardHeader
         sx={{
           mb: 3,
           color:
-            theme.palette.mode === 'dark'
+            theme.palette.mode === "dark"
               ? theme.palette.primary.light
               : theme.palette.primary.main,
         }}
-        title={isBn ? 'সাইন আপ' : 'Signup'}
+        title={isBn ? "সাইন আপ" : "Signup"}
       />
       <CardContent
-        component={'form'}
+        component={"form"}
         onSubmit={handleSubmit}
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
         <Autocomplete
           options={options}
@@ -172,8 +172,8 @@ const Signup = () => {
               option.regNumber
             } | ${
               isBn
-                ? getBnAreaInfo(option, 'posting')
-                : getAreaInfo(option, 'posting')
+                ? getBnAreaInfo(option, "posting")
+                : getAreaInfo(option, "posting")
             }`
           }
           value={state}
@@ -186,76 +186,81 @@ const Signup = () => {
           renderInput={(params) => (
             <TextField
               {...params}
-              label={isBn ? 'ফার্মাসিস্ট ইমেইল' : 'Pharmacist Email'}
+              label={isBn ? "ফার্মাসিস্ট ইমেইল" : "Pharmacist Email"}
+              title={
+                isBn
+                  ? "ইমেইল, নাম, নিবন্ধন, আইডি বা কর্মস্থল"
+                  : "Email, Name, Registration, ID or Posting"
+              }
               placeholder={
                 isBn
-                  ? 'ইমেইল, নাম, নিবন্ধন বা সদস্য পরিচিতি'
-                  : 'Email, Name, Registration or Member ID'
+                  ? "ইমেইল, নাম, নিবন্ধন, আইডি বা কর্মস্থল"
+                  : "Email, Name, Registration, ID or Posting"
               }
               InputProps={{
                 ...params.InputProps,
                 endAdornment: params.InputProps.endAdornment,
               }}
-              variant='standard'
+              variant="standard"
               value={searchTerm}
               onChange={handleChange}
-              color='info'
-              error={error && error['email'] ? true : false}
+              color="info"
+              error={error && error["email"] ? true : false}
               helperText={
                 error &&
-                error['email'] &&
+                error["email"] &&
                 (isBn
-                  ? error['email'].bn_text ?? ''
-                  : error['email'].text ?? '')
+                  ? error["email"].bn_text ?? ""
+                  : error["email"].text ?? "")
               }
             />
           )}
         />
 
         {successAlert && (
-          <Alert onClose={() => setSuccessAlert(null)} severity='success'>
+          <Alert onClose={() => setSuccessAlert(null)} severity="success">
             {isBn ? successAlert.bn_text : successAlert.text}
           </Alert>
         )}
 
         {error?.alreadySendEmail && (
-          <Box textAlign={'right'}>
-            <Button onClick={handleResendEmail} color='info' size='small'>
+          <Box textAlign={"right"}>
+            <Button onClick={handleResendEmail} color="info" size="small">
               Resend Email
             </Button>
           </Box>
         )}
 
         {error?.passwordNotSet && (
-          <Box textAlign={'right'}>
-            <Button onClick={handleSetPassword} color='info' size='small'>
+          <Box textAlign={"right"}>
+            <Button onClick={handleSetPassword} color="info" size="small">
               Set Password
             </Button>
           </Box>
         )}
 
-        <CardActions sx={{ flexDirection: 'column', rowGap: 1 }}>
+        <CardActions sx={{ flexDirection: "column", rowGap: 1 }}>
           <Button
             disabled={!state || submitting}
-            type='submit'
-            variant='contained'
+            type="submit"
+            variant="contained"
           >
-            {isBn ? 'সাইন আপ' : 'Signup'}
+            {isBn ? "সাইন আপ" : "Signup"}
           </Button>
-          <Typography variant='body2' component='span'>
+          <Typography variant="body2" component="span">
             {isBn
-              ? 'ইতোমধ্যে আপনার একাউন্ট আছে? '
-              : 'Already have an account? Please '}
+              ? "ইতোমধ্যে আপনার একাউন্ট আছে? "
+              : "Already have an account? Please "}
             <Link
-              to='/auth/login'
+              to="/auth/login"
               style={{
                 color:
-                  theme.palette.mode === 'dark'
+                  theme.palette.mode === "dark"
                     ? theme.palette.primary.light
                     : theme.palette.primary.main,
               }}
             >
-              {isBn ? 'লগইন করুন' : 'login'}
+              {isBn ? "লগইন করুন" : "login"}
             </Link>
           </Typography>
         </CardActions>

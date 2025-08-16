@@ -1,26 +1,27 @@
-import ClearIcon from '@mui/icons-material/Clear';
-import { IconButton, InputAdornment, TextField } from '@mui/material';
-import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { useDebouncedCallback } from 'use-debounce';
+import ClearIcon from "@mui/icons-material/Clear";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
+import PropTypes from "prop-types";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce";
 
 const Search = ({
-  label = 'Search',
-  placeholder = 'Search..',
-  sx = { width: '100%' },
+  label = "Search",
+  placeholder = "Search..",
+  sx = { width: "100%" },
+  ...props
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get('query') || '');
+  const [query, setQuery] = useState(searchParams.get("query") || "");
 
   const debounced = useDebouncedCallback((value) => {
     const params = new URLSearchParams(searchParams);
-    params.set('page', 1);
+    params.set("page", 1);
 
     if (value) {
-      params.set('query', value);
+      params.set("query", value);
     } else {
-      params.delete('query');
+      params.delete("query");
     }
 
     setSearchParams(params);
@@ -34,34 +35,35 @@ const Search = ({
   };
 
   const handleClear = () => {
-    setQuery('');
-    debounced('');
+    setQuery("");
+    debounced("");
   };
 
   return (
     <TextField
-      InputLabelProps={{ color: 'info' }}
+      InputLabelProps={{ color: "info" }}
       label={label}
       InputProps={{
-        style: { fontSize: 14, paddingLeft: '5px', paddingBottom: 2 },
+        style: { fontSize: 14, paddingLeft: "5px", paddingBottom: 2 },
         endAdornment: (
-          <InputAdornment position='end'>
+          <InputAdornment position="end">
             <IconButton
-              disabled={!searchParams.get('query')}
+              disabled={!searchParams.get("query")}
               onClick={handleClear}
-              size='small'
+              size="small"
             >
-              <ClearIcon fontSize='small' />
+              <ClearIcon fontSize="small" />
             </IconButton>
           </InputAdornment>
         ),
       }}
-      name='query'
+      name="query"
       value={query}
       onChange={handleChange}
       placeholder={placeholder}
-      variant='standard'
+      variant="standard"
       sx={sx}
+      {...props}
     />
   );
 };
